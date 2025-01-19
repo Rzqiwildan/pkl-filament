@@ -7,6 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <x-navbar>
+        halo
+    </x-navbar>
 </body>
 </html>

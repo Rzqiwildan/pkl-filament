@@ -33,6 +33,20 @@
                         class="appearance-none rounded relative block w-full px-3 py-2 pr-10 border placeholder-gray-500 text-gray-900 focus:outline-none focus:border-indigo-500 sm:text-sm"
                         placeholder="Confirm Password">
                 </div>
+                <!-- Radio button untuk pilihan role -->
+                <div class="m-2 mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Register as:</label>
+                    <div class="flex space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="role" value="mahasiswa" class="form-radio text-indigo-600" required>
+                            <span class="ml-2">Mahasiswa</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="role" value="umum" class="form-radio text-indigo-600" required>
+                            <span class="ml-2">Umum</span>
+                        </label>
+                    </div>
+                </div>
                 <div class="p-2 m-2">
                     <button type="submit"
                         class="group relative w-full flex justify-center py-2 px-4 border text-sm font-medium rounded-md text-black bg-white hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -47,26 +61,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    function togglePassword() {
-        const passwordInput = document.getElementById("password");
-        const confirmPasswordInput = document.getElementById("password_confirmation");
-        const eyeIcon = document.getElementById("eye-icon");
-        const eyePath = eyeIcon.querySelector("path");
-
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            confirmPasswordInput.type = "text";
-            eyePath.setAttribute("d",
-                "M13 10m0 0c0-2-2-4-4-4s-4 2-4 4 2 4 4 4 4-2 4-4zm6-2c0 3.5-4.5 7-8 7s-8-3.5-8-7 4.5-7 8-7 8 3.5 8 7z"
-                );
-        } else {
-            passwordInput.type = "password";
-            confirmPasswordInput.type = "password";
-            eyePath.setAttribute("d",
-                "M15 12m0 0c0 2-2 4-4 4s-4-2-4-4 2-4 4-4 4 2 4 4zm2-1c0 3.5-4.5 7-8 7s-8-3.5-8-7 4.5-7 8-7 8 3.5 8 7z"
-                );
-        }
-    }
-</script>

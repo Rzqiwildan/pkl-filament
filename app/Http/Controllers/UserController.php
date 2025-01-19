@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class StudentController extends Controller
+class UserController extends Controller
 {
     public function index(){
-        echo 'Welcome student!';
+        return view('user.dashboard');
     }
 }

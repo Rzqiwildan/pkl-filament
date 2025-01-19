@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\UserController;
 
 Route::get('/',function(){
     return view('welcome');
@@ -26,7 +26,7 @@ Route::get('/unauthorized', function () {
 
 // Rute setelah login untuk student
 Route::middleware(['auth', 'check.role'])->group(function () {
-    Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
 });
 // Rute setelah login untuk teacher
