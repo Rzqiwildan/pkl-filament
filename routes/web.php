@@ -26,6 +26,8 @@ Route::middleware('role:user')->group(function () {
     Route::get('/user/offline', [UserController::class, 'offline'])->name('user.offline');
     Route::get('/user/online', [UserController::class, 'online'])->name('user.online');
     Route::get('/user/quiz1', [UserController::class, 'quiz1'])->name('user.quiz1');
+    Route::get('/user/mycourse1', [UserController::class, 'mycourse1'])->name('user.mycourse1');
+    Route::get('/user/banner3', [UserController::class, 'banner3'])->name('user.banner3');
     Route::get('/mycourse', function () {
         return view('User.course');
     })->name('user.course');
@@ -35,6 +37,9 @@ Route::middleware('role:user')->group(function () {
     Route::get('/history', function () {
         return view('User.history');
     })->name('user.history');
+    Route::get('/profil', function () {
+        return view('User.profil');
+    })->name('user.profil');
 });
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

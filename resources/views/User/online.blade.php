@@ -8,18 +8,18 @@
 </head>
 @include('components.navbar')
 <body class="bg-gray-100">
-<div class="container mx-auto px-4 py-8 mt-24">
+<div class="container mx-auto px-4 py-8 mt-16">
     <!-- Header Section -->
-    <div class="flex items-start justify-between mb-6">
+    <div class="flex items-start justify-between mb-4">
         <!-- Gambar di Samping Kiri -->
-        <div class="w-1/3 mr-8">
+        <div class="w-1/3 mr-4">
             <img src="https://i.pinimg.com/736x/9f/d5/94/9fd5943aa427907cee81950f59ac8f54.jpg" class="rounded-lg shadow-lg object-cover w-full h-48">
         </div>
 
         <!-- Teks di Samping Kanan -->
         <div class="w-2/3">
-            <h1 class="text-3xl font-bold ml-8">Algoritma Pemrograman</h1>
-            <p class="text-gray-600 mt-2 ml-8">
+            <h1 class="text-3xl font-bold">Algoritma Pemrograman</h1>
+            <p class="text-gray-600 mt-2">
                 Pelatihan ini dirancang untuk membantu Anda memahami konsep dasar hingga lanjutan tentang algoritma, 
                 yang merupakan inti dari pengembangan perangkat lunak. Dalam kursus ini, Anda akan belajar cara 
                 memecahkan masalah secara sistematis, membuat solusi yang efisien, dan menerapkannya dalam kode.

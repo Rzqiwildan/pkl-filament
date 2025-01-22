@@ -8,8 +8,8 @@
 </head>
 <body class="bg-gray-100">
     @include('components.navbar')
-    <div class="container mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        <h2 class="text-2xl font-semibold mt-4">Riwayat Course yang Pernah Diikuti:</h2>
+    <div class="container mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4" style="width: 90%;">
+        <h2 class="text-xl font-bold mt-4">Riwayat Course yang Pernah Diikuti:</h2>
     </div>
     <!-- <div class="container mx-auto mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
