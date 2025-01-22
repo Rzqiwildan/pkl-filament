@@ -24,14 +24,14 @@
 
         <!-- Input File Bukti Pembayaran -->
         <div>
-          <label for="buktiPembayaran" class="block text-sm font-medium text-gray-700 mt-8 mb-2">Bukti Pembayaran</label>
+          <label for="buktiPembayaran" class="block text-sm font-medium text-gray-700 mt-8">Bukti Pembayaran</label>
           <input type="file" id="buktiPembayaran" name="buktiPembayaran" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" accept=".jpg,.jpeg,.png,.pdf" required/>
           <p class="mt-2 text-sm text-gray-500">Format file yang didukung: JPG, PNG, PDF. Maks: 5 MB.</p>
         </div>
 
         <!-- Tombol Submit -->
         <div>
-          <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-md focus:ring-4 focus:ring-blue-300 mt-4">
+          <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-md focus:ring-4 focus:ring-blue-300 mt-8">
             Unggah
           </button>
         </div>
