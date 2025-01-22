@@ -27,20 +27,21 @@
                 class="hidden md:flex flex-col md:flex-row md:items-center md:gap-8 absolute md:static top-16 left-0 w-full md:w-auto bg-white shadow-md md:shadow-none p-4 md:p-0">
                 <a href="{{ route('dashboard') }}"
                     class="text-gray-900 hover:text-cblue-0 px-3 py-2 rounded-md text-sm font-medium">
-                    Home
+                    Dashboard
                 </a>
-                <a href=""
+                <a href="{{route('user.payment')}}"
                     class="text-gray-900 hover:text-cblue-0 px-3 py-2 rounded-md text-sm font-medium">
                     Payment
                 </a>
-                <a href=""
+                <a href="{{ route('user.course') }}"
                     class="text-gray-900 hover:text-cblue-0 px-3 py-2 rounded-md text-sm font-medium">
                     MyCourse
                 </a>
-                <a href=""
+                <a href="{{route('user.history')}}"
                     class="text-gray-900 hover:text-cblue-0 px-3 py-2 rounded-md text-sm font-medium">
                     History
                 </a>
+                <img src="https://i.pinimg.com/736x/2d/9f/8d/2d9f8d4e12b1aceb0d77109f753e46cf.jpg" alt="User" class="w-10 h-10 rounded-full" style="border: 1px solid #000;">
             </div>
         </div>
     </div>
