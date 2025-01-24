@@ -18,12 +18,11 @@ class MateriResource extends Resource
     protected static ?string $model = Materi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
-    
     protected static ?string $navigationLabel = 'Materi';
-    
     protected static ?string $modelLabel = 'Materi';
-    
     protected static ?string $pluralModelLabel = 'Materi';
+    protected static ?string $navigationGroup = 'Course';
+
 
     public static function form(Form $form): Form
     {

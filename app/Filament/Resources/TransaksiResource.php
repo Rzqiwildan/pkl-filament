@@ -18,6 +18,8 @@ class TransaksiResource extends Resource
     protected static ?string $model = Transaksi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationGroup = 'Payment';
+
 
     public static function form(Form $form): Form
     {
