@@ -43,7 +43,7 @@
         <h2 class="text-lg font-semibold mb-4">Jadwal Pelatihan</h2>
         <div class="flex justify-between items-center bg-blue-50 border mb-4 px-4 py-2 rounded-lg" style="border: 1px solid #1E40AF;">
             <span>14 Jan 2025 - 14 Mar 2025</span>
-            <span class="font-semibold">1000 kuota tersedia</span>
+            <span class="font-semibold">999 kuota tersedia</span>
         </div>
     </div>
 </div>

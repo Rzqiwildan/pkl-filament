@@ -10,93 +10,64 @@
     @include('components.navbar')
     <!-- Carousel -->
     <div class="container mx-auto mt-24" style="width: 90%;">
-        <div class="swiper-container rounded-md overflow-hidden" style="width: 100%; height: 12rem; position: relative;">
-            <!-- Wrapper -->
-            <div class="swiper-wrapper" style="display: flex; transition: transform 0.3s;">
-                <!-- Slide 1 -->
-                <div class="swiper-slide" style="flex-shrink: 0; width: 100%; height: 100%;">
-                    <img 
-                        src="{{ asset('img/banner1.png') }}" 
-                        style="width: 100%; height: 100%; object-fit: cover;"
-                    />
-                </div>
-                <!-- Slide 2 -->
-                <div class="swiper-slide" style="flex-shrink: 0; width: 100%; height: 100%;">
-                    <img 
-                        src="{{ asset('img/banner2.png') }}" 
-                        style="width: 100%; height: 100%; object-fit: cover;"
-                    />
-                </div>
-                <!-- Slide 3 -->
-                    <div class="swiper-slide" style="flex-shrink: 0; width: 100%; height: 100%;">
-                        <a href="{{ route('user.banner3') }}">
+        <div class="splide_banner rounded-md" style="width: 100%; max-height: 12rem; overflow: hidden; position: relative;">
+            <div class="splide__track" style="width: 100%; height: 100%;">
+                <ul class="splide__list" style="margin: 0; padding: 0; display: flex;">
+                    <!-- Slide 1 -->
+                    <li class="splide__slide" style="flex: 0 0 100%; text-align: center;">
                         <img 
-                            src="{{ asset('img/banner3.png') }}" 
-                            style="width: 100%; height: 100%; object-fit: cover;"
+                            src="{{ asset('img/banner1.png') }}" 
+                            style="width: 100%; height: auto; object-fit: cover;"
                         />
+                    </li>
+                    <!-- Slide 2 -->
+                    <li class="splide__slide" style="flex: 0 0 100%; text-align: center;">
+                        <img 
+                            src="{{ asset('img/banner2.png') }}" 
+                            style="width: 100%; height: auto; object-fit: cover;"
+                        />
+                    </li>
+                    <!-- Slide 3 -->
+                    <li class="splide__slide" style="flex: 0 0 100%; text-align: center;">
+                        <a href="{{ route('user.banner3') }}">
+                            <img 
+                                src="{{ asset('img/banner3.png') }}" 
+                                style="width: 100%; height: auto; object-fit: cover;"
+                            />
                         </a>
-                    </div>
-                
-                <!-- Slide 4 -->
-                <div class="swiper-slide" style="flex-shrink: 0; width: 100%; height: 100%;">
-                    <img 
-                        src="{{ asset('img/banner2.png') }}" 
-                        style="width: 100%; height: 100%; object-fit: cover;"
-                    />
-                </div>
+                    </li>
+                    <!-- Slide 4 -->
+                    <li class="splide__slide" style="flex: 0 0 100%; text-align: center;">
+                        <img 
+                            src="{{ asset('img/banner2.png') }}" 
+                            style="width: 100%; height: auto; object-fit: cover;"
+                        />
+                    </li>
+                </ul>
             </div>
-            <!-- Pagination -->
-            <div 
-                class="swiper-pagination" 
-                style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px;"
-            ></div>
-            <!-- Navigation -->
-            <div 
-                class="swiper-button-prev" 
-                style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background-color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid #a2a2a2;"
-            >&#x276E;</div>
-            <div 
-                class="swiper-button-next" 
-                style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background-color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid #a2a2a2;"
-            >&#x276F;</div>
         </div>
     </div>
-    <!-- Swiper JS -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Splide JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.9/dist/js/splide.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.9/dist/css/splide.min.css">
+
     <script>
-        // Inisialisasi Swiper
-        const swiper = new Swiper('.swiper-container', {
-            loop: true, 
-            autoplay: {
-                delay: 3000, 
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true, // Pagination dapat diklik
-                renderBullet: function (index, className) {
-                    return `<span class="${className}" style="background-color: #2563eb; width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></span>`;
-                },
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            on: {
-                slideChange: function () {
-                    const bullets = document.querySelectorAll('.swiper-pagination span');
-                    bullets.forEach((bullet, index) => {
-                        if (index === swiper.realIndex) {
-                            bullet.style.backgroundColor = '#2563eb'; 
-                            bullet.style.transform = 'scale(1.2)'; 
-                        } else {
-                            bullet.style.backgroundColor = '#a2a2a2'; 
-                            bullet.style.transform = 'scale(1)'; 
-                        }
-                    });
-                },
-            },
-        }); 
+        document.addEventListener('DOMContentLoaded', function () {
+            var splide = new Splide('.splide_banner', {
+                type       : 'loop',      // Slider akan looping
+                perPage    : 1,           // Tampilkan 1 banner per halaman
+                perMove    : 1,           // Bergerak 1 banner setiap kali
+                gap        : '0rem',      // Tidak ada jarak antar banner
+                autoplay   : true,        // Auto play slider
+                interval   : 3000,        // Durasi antar slide (ms)
+                arrows     : true,        // Tombol navigasi prev/next
+                pagination : true,        // Pagination bulatan
+            });
+            splide.mount();
+        });
     </script>
+
     <!-- Filters -->
     <div class="container mx-auto mt-8 flex space-x-4 mb-8 mt-8" style="width: 90%;">
         <!-- Input -->
@@ -117,89 +88,59 @@
         </select>
     </div>
 
-    <!-- pilihan kategori -->
-    <div class="container mx-auto mt-16 mb-4" style="width: 90%;">
-        <h2 class="text-xl font-bold">Berbagai Macam Kategori Pelatihan:</h2>
+    <!-- Kategori Pelatihan -->
+    <div class="container mx-auto mt-16 mb-8" style="width: 90%;">
+        <h2 class="text-xl font-bold text-center">Berbagai Macam Kategori Pelatihan:</h2>
     </div>
 
-    <div class="container mx-auto" style="width: 90%;">
-        <div id="carousel" class="overflow-hidden relative">
-            <!-- Tombol Prev -->
-            <button id="prev" class="absolute left-0 top-1/3 transform -translate-y-1/2 p-2 w-12 h-12 rounded-full hover:bg-gray-300 z-10 ml-16">&#x276E;</button>
-            <!-- Container Kategori -->
-            <div id="category-container" class="flex transition-transform duration-300">
-                <div class="snap-item flex flex-shrink-0 justify-center items-center w-full mb-8">
-                    <div class="grid grid-cols-5 gap-4">
-                        <div class="text-center">
-                            <img src="https://i.pinimg.com/736x/93/ab/0a/93ab0ae21a1be5d6901853a4fce27e7f.jpg" class="h-auto w-40 rounded-md">
-                            <p class="mt-2 text-gray-700">Teknologi</p>
-                        </div>
-                        <div class="text-center">
-                            <img src="https://i.pinimg.com/736x/a4/03/4f/a4034f3e762d81e259b471e3b2b5906a.jpg" class="h-auto w-40 rounded-md">
-                            <p class="mt-2 text-gray-700">Ekonomi</p>
-                        </div>
-                        <div class="text-center">
-                            <img src="https://i.pinimg.com/736x/c4/ea/38/c4ea3823b1cc75ff077142540638ed40.jpg" class="h-auto w-40 rounded-md">
-                            <p class="mt-2 text-gray-700">Fashion</p>
-                        </div>
-                        <div class="text-center">
-                            <img src="https://i.pinimg.com/736x/44/29/45/442945d76703de1272e0a5eb34cdcb55.jpg" class="h-auto w-40 rounded-md">
-                            <p class="mt-2 text-gray-700">Memasak</p>
-                        </div>
-                        <div class="text-center">
-                            <img src="https://i.pinimg.com/736x/e4/6e/66/e46e6647ebfb1268ebea2d0258eb4b6d.jpg" class="h-auto w-40 rounded-md">
-                            <p class="mt-2 text-gray-700">Design</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="snap-item flex flex-shrink-0 justify-center items-center w-full mb-8 mt-8">
-                    <div class="grid grid-cols-5 gap-4">
-                        <div class="text-center">
-                            <img src="https://i.pinimg.com/736x/c3/39/9a/c3399a009bba3b3fccb8306dd5d85654.jpg" class="h-auto w-40 rounded-md">
-                            <p class="mt-2 text-gray-700">Kecantikan</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Tombol Next -->
-            <button id="next" class="absolute right-0 top-1/3 transform -translate-y-1/2 p-2 w-12 h-12 rounded-full hover:bg-gray-300 z-10 mr-16">&#x276F;</button>
+    <div class="container mx-auto splide" style="width: 90%;">
+        <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide text-center">
+                    <img src="https://i.pinimg.com/736x/93/ab/0a/93ab0ae21a1be5d6901853a4fce27e7f.jpg" class="h-auto w-40 rounded-md mx-auto">
+                    <p class="mt-2 text-gray-700">Teknologi</p>
+                </li>
+                <li class="splide__slide text-center">
+                    <img src="https://i.pinimg.com/736x/a4/03/4f/a4034f3e762d81e259b471e3b2b5906a.jpg" class="h-auto w-40 rounded-md mx-auto">
+                    <p class="mt-2 text-gray-700">Ekonomi</p>
+                </li>
+                <li class="splide__slide text-center">
+                    <img src="https://i.pinimg.com/736x/c4/ea/38/c4ea3823b1cc75ff077142540638ed40.jpg" class="h-auto w-40 rounded-md mx-auto">
+                    <p class="mt-2 text-gray-700">Fashion</p>
+                </li>
+                <li class="splide__slide text-center">
+                    <img src="https://i.pinimg.com/736x/44/29/45/442945d76703de1272e0a5eb34cdcb55.jpg" class="h-auto w-40 rounded-md mx-auto">
+                    <p class="mt-2 text-gray-700">Memasak</p>
+                </li>
+                <li class="splide__slide text-center">
+                    <img src="https://i.pinimg.com/736x/e4/6e/66/e46e6647ebfb1268ebea2d0258eb4b6d.jpg" class="h-auto w-40 rounded-md mx-auto">
+                    <p class="mt-2 text-gray-700">Design</p>
+                </li>
+                <li class="splide__slide text-center">
+                    <img src="https://i.pinimg.com/736x/c3/39/9a/c3399a009bba3b3fccb8306dd5d85654.jpg" class="h-auto w-40 rounded-md mx-auto">
+                    <p class="mt-2 text-gray-700">Kecantikan</p>
+                </li>
+            </ul>
         </div>
     </div>
 
+    <!-- Tambahkan script Splide.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.9/dist/js/splide.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.9/dist/css/splide.min.css">
+
     <script>
-        // Elemen
-        const categoryContainer = document.getElementById('category-container');
-        const nextButton = document.getElementById('next');
-        const prevButton = document.getElementById('prev');
+        document.addEventListener('DOMContentLoaded', function () {
+            var splide = new Splide('.splide', {
+                type   : 'loop',
+                perPage: 5,
+                perMove: 1,
+                gap    : '0.1rem', 
+                focus  : 'center', 
+                pagination: false, 
+                arrows: true,
+            });
 
-        // Variabel untuk posisi saat ini
-        let currentIndex = 0;
-
-        // Hitung jumlah kategori dan lebar tiap kategori
-        const categories = categoryContainer.children;
-        const gap = 16; // Gap dalam pixel (gap-4 = 1rem = 16px)
-
-        // Fungsi untuk geser carousel
-        function updateCarousel() {
-            const categoryWidth = categories[0].getBoundingClientRect().width + gap;
-            const translateX = -currentIndex * categoryWidth;
-            categoryContainer.style.transform = `translateX(${translateX}px)`;
-        }
-
-        // Event Listener Tombol Next
-        nextButton.addEventListener('click', () => {
-            if (currentIndex < categories.length - 1) {
-                currentIndex++;
-                updateCarousel();
-            }
-        });
-
-        // Event Listener Tombol Prev
-        prevButton.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
+            splide.mount();
         });
     </script>
 
