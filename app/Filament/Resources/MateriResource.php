@@ -18,12 +18,38 @@ class MateriResource extends Resource
     protected static ?string $model = Materi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $navigationLabel = 'Materi';
+    protected static ?string $modelLabel = 'Materi';
+    protected static ?string $pluralModelLabel = 'Materi';
+    protected static ?string $navigationGroup = 'Course';
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->label('Nama Materi')
+                    // ->placeholder('Masukkan nama materi')
+                    ->maxLength(255),
+                    
+                Forms\Components\TextInput::make('kode_materi')
+                    ->required()
+                    ->label('Kode Materi')
+                    // ->placeholder('Masukkan kode materi')
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
+                    
+                    Forms\Components\FileUpload::make('materials')
+                    ->required()
+                    ->label('File Materi')
+                    ->disk('public')
+                    ->directory('pdf-materials') // direktori khusus untuk PDF
+                    ->preserveFilenames() // menjaga nama file asli
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->maxSize(5120)
+                    ->downloadable(),
             ]);
     }
 
@@ -31,13 +57,26 @@ class MateriResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Materi')
+                    ->searchable()
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('kode_materi')
+                    ->label('Kode Materi')
+                    ->searchable()
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('materials')
+                    ->label('File Materi')
+                    ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

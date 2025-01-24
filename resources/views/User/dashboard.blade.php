@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('components.navbar')
     <!-- Carousel -->
     <div class="container mx-auto mt-24" style="width: 90%;">
