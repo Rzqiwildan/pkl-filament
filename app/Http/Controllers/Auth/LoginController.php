@@ -39,7 +39,7 @@ class LoginController extends Controller
             'email' => 'The provided credentials are incorrect.',
         ]);
     }
-
+    
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -72,4 +72,3 @@ class LoginController extends Controller
         return redirect('/login')->with('success', 'You have been logged out.');
     }
 }
-

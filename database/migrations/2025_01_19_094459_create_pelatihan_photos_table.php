@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal_pelatihans', function (Blueprint $table) {
+        Schema::create('pelatihan_photos', function (Blueprint $table) {
             $table->id();
-            $table->time('waktu');
-            $table->date('hari');
-            $table->text('lokasi');
+            $table->string('photo');
+            $table->foreignId('pelatihan_id')->constrained('pelatihans');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal__pelatihans');
+        Schema::dropIfExists('pelatihan__photos');
     }
 };

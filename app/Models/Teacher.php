@@ -11,19 +11,26 @@ class Teacher extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nip',
         'name',
         'email',
-        'no_telp',
-        'tgl_lahir'
+        'user_id',
+        'role'
     ];
- 
-    protected $casts = [
-        'tgl_lahir' => 'date'
-    ];
- 
+
+    public static function boot()
+{
+    parent::boot();
+
+    static::saving(function ($teacher) {
+        if (User::where('email', $teacher->email)->where('id', '!=', $teacher->user_id)->exists()) {
+            throw new \Exception('Email sudah digunakan.');
+        }
+    });
+}
+
+
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'email', 'email');
+        return $this->belongsTo(User::class);
     }
 }

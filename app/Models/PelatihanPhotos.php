@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Pelatihan_Photos extends Model
+class PelatihanPhotos extends Model
 {
     use HasFactory;
 

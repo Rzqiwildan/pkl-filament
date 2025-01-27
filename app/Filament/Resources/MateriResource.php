@@ -41,14 +41,12 @@ class MateriResource extends Resource
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                     
-                    Forms\Components\FileUpload::make('materials')
-                    ->required()
-                    ->label('File Materi')
-                    ->disk('public')
-                    ->directory('pdf-materials') // direktori khusus untuk PDF
-                    ->preserveFilenames() // menjaga nama file asli
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->maxSize(5120)
+                Forms\Components\FileUpload::make('materials') 
+                    ->label('Upload File')
+                    ->disk('public') // Disk penyimpanan
+                    ->directory('pdf-materials') // Direktori file
+                    ->preserveFilenames() // Jaga nama file asli
+                    ->maxSize(5120) 
                     ->downloadable(),
             ]);
     }

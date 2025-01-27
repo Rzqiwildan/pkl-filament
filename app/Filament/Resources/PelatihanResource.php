@@ -26,24 +26,27 @@ class PelatihanResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->label('Nama Pelatihan')
+                Forms\Components\TextInput::make('name')
+                    ->label('Nama Pelatihan')
                     ->required(),
                 Forms\Components\Select::make('category_id')
                     ->relationship('category', 'name')
                     ->required(),
                 Forms\Components\Select::make('kesulitan')
                     ->options([
-                        'pemula' => 'Pemula',
+                        'dasar' => 'Dasar',
                         'medium' => 'Menengah',
-                        'hard' => 'Sulit',
+                        'hard' => 'Lanjutan',
                     ])
                     ->required(),
                 Forms\Components\Select::make('jenis')
                     ->options([
                         'offline' => 'Offline',
                         'online' => 'Online',
-                        'hybrid' => 'Hybird',
-                    ]),
+                        'hybrid' => 'Hybrid',
+                    ])
+                    ->live() // Menambahkan live update untuk reactive form
+                    ->required(),
                 Forms\Components\Textarea::make('deskripsi')
                     ->required(),
                 Forms\Components\TextInput::make('thumbnail')
@@ -59,12 +62,12 @@ class PelatihanResource extends Resource
                     ->prefix('Qty'),
                 Forms\Components\Select::make('materi_id')
                     ->relationship('materi', 'name')
-                    ->required(),
-                // Forms\Components\Select::make('jadwal_id')
-                //     ->relationship('jadwalPelatihan', 'name')
-                //     ->required(),
-                // Forms\Components\TextInput::make('email')
-                //     ->required(),
+                    ->required(fn (Forms\Get $get): bool => $get('jenis') === 'online') // Wajib diisi jika online
+                    ->visible(fn (Forms\Get $get): bool => 
+                        $get('jenis') === 'online' || 
+                        $get('jenis') === 'hybrid'
+                    ) // Hanya tampil jika online atau hybrid
+                    ->label('Materi'),
             ]);
     }
 
@@ -73,6 +76,7 @@ class PelatihanResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('thumbnail'),
                 Tables\Columns\TextColumn::make('kesulitan')->label('Kesulitan'),
                 Tables\Columns\TextColumn::make('jenis'),
                 Tables\Columns\TextColumn::make('harga'),
