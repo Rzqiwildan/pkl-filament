@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
+use App\Models\Pelatihan_Photos;
 use Illuminate\Database\Seeder;
 use App\Models\Banner;
 
@@ -45,17 +46,18 @@ class DatabaseSeeder extends Seeder
         //     'status' => true,
         // ]);
 
-        Category::create([
-            'name' => 'Bisnis',
-            'slug' => 'bisnis',
-            'image' => 'img/bisnis.jpg',
+        // Category::create([
+        //     'name' => 'Bisnis',
+        //     'slug' => 'bisnis',
+        //     'image' => 'img/bisnis.jpg',
+        // ]);
+
+        Pelatihan_Photos::create([
+            'photo' => 'img/jarkom.jpg',
+            'pelatihan_id' => 7,
         ]);
 
-        Category::create([
-            'name' => 'Design',
-            'slug' => 'design',
-            'image' => 'img/design.jpg',
-        ]);
+        
 
     }
 }

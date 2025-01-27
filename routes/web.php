@@ -24,6 +24,8 @@ Route::middleware('role:user')->group(function () {
     Route::get('/offline/{id}', [UserController::class, 'offline'])->name('offline.show');
     Route::get('/online/{id}', [UserController::class, 'online'])->name('online.show');
     Route::get('/banner3/{id}', [UserController::class, 'showBanner'])->name('banner3.show');
+    Route::get('/kategori', [UserController::class, 'kategori'])->name('user.kategori');
+    Route::get('/kategori/{id}', [UserController::class, 'showKategori'])->name('kategori.show');
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/user/course1', [UserController::class, 'course1'])->name('user.course1');
     Route::get('/user/course3', [UserController::class, 'course3'])->name('user.course3');

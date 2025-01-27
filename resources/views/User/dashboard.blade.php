@@ -53,16 +53,16 @@
         <!-- Select: Jenis Pelatihan -->
         <select class="border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.8rem; color: #757575">
             <option value="" disabled selected hidden>Jenis Pelatihan</option>
-            <option>Online</option>
-            <option>Offline</option>
-            <option>Hybrid</option>
+            @foreach ($jenisOptions as $key => $value)
+                <option value="{{ $key }}">{{ $value }}</option>
+            @endforeach
         </select>
         <!-- Select: Kesulitan -->
         <select class="border rounded-md text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.8rem; color: #757575;">
             <option value="" disabled selected hidden>Kesulitan</option>
-            <option>Dasar</option>
-            <option>Menengah</option>
-            <option>Lanjutan</option>
+            @foreach ($kesulitanOptions as $key => $value)
+                <option value="{{ $key }}">{{ $value }}</option>
+            @endforeach
         </select>
     </div>
 
@@ -72,17 +72,20 @@
     </div>
 
     <div class="container mx-auto splide" style="width: 90%;">
-        <div class="splide__track">
-            <ul class="splide__list">
+    <div class="splide__track">
+        <ul class="splide__list">
             @foreach ($categories as $categorie)
                 <li class="splide__slide text-center">
-                    <img src="{{ $categorie->image }}" class="h-auto w-32 rounded-md mx-auto">  <!-- Sesuaikan ukuran gambar -->
-                    <p class="mt-2 text-gray-700">{{ $categorie->name }}</p>
+                    <a href="{{ route('kategori.show', $categorie->id) }}">
+                        <img src="{{ $categorie->image }}" class="h-auto w-32 rounded-md mx-auto"> <!-- Sesuaikan ukuran gambar -->
+                        <p class="mt-2 text-gray-700">{{ $categorie->name }}</p>
+                    </a>
                 </li>
             @endforeach
-            </ul>
-        </div>
+        </ul>
     </div>
+</div>
+
 
     <!-- Tambahkan script Splide.js -->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.9/dist/js/splide.min.js"></script>

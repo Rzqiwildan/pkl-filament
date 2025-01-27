@@ -22,6 +22,23 @@ class PelatihanResource extends Resource
     protected static ?string $navigationLabel = 'Pelatihan';
     protected static ?string $navigationGroup = 'Course';
 
+    public static function getJenisOptions(): array
+    {
+        return [
+            'offline' => 'Offline',
+            'online' => 'Online',
+            'hybrid' => 'Hybrid',
+        ];
+    }
+
+    public static function getKesulitanOptions(): array
+    {
+        return [
+            'pemula' => 'Pemula',
+            'medium' => 'Menengah',
+            'hard' => 'Sulit',
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form
