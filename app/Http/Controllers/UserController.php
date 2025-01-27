@@ -2,13 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Pelatihan;
+use App\Models\Pelatihan_Photos;
+use App\Models\Banner;
 
 class UserController extends Controller
 {
-    public function index(){
-        return view('user.dashboard');
+    public function index()
+    {
+        // Ambil semua data pelatihan
+        $pelatihans = Pelatihan::with('photos')->get(); 
+
+        // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
+        $photos = Pelatihan_Photos::all();
+
+        // Ambil semua data banner
+        $banners = Banner::all();
+
+        // Ambil semua data banner
+        $categories = Category::all();
+
+        // Kirimkan semua data ke view
+        return view('user.dashboard', compact('pelatihans', 'photos', 'banners', 'categories'));
     }
+
+
+    public function course1($id)
+    {
+        $pelatihans = Pelatihan::with('photos')->where('id', $id)->first();
+        
+        return view('user.course1', compact('pelatihans'));
+    }
+
+    public function showBanner($id)
+    {
+        // Ambil data banner berdasarkan ID
+        $banners = Banner::findOrFail($id);
+
+        // Arahkan ke halaman detail banner
+        return view('user.banner3', compact('banners'));
+    }
+
 
     public function course()
     {
@@ -16,14 +52,9 @@ class UserController extends Controller
         return view('user.course');
     }
 
-    public function course1()
-    {
-        return view('user.course1');
-    }
-
     public function course2()
     {
-        return view('user.course2');
+    return view('user.course2');
     }
 
     public function course3()
@@ -31,14 +62,20 @@ class UserController extends Controller
         return view('user.course3');
     }
 
-    public function offline()
+    public function offline($id)
     {
-        return view('user.offline');
+        $pelatihans = Pelatihan::with('photos')->where('id', $id)->first();
+        
+        return view('user.offline', compact('pelatihans'));
+        // return view('user.offline');
     }
 
-    public function online()
+    public function online($id)
     {
-        return view('user.online');
+        $pelatihans = Pelatihan::with('photos')->where('id', $id)->first();
+        
+        return view('user.online', compact('pelatihans'));
+        // return view('user.online');
     }
 
     public function quiz1()

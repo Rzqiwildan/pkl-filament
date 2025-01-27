@@ -18,11 +18,9 @@
 
         <!-- Teks di Samping Kanan -->
         <div class="w-2/3">
-            <h1 class="text-3xl font-bold">Algoritma Pemrograman</h1>
+            <h1 class="text-3xl font-bold">{{ $pelatihans->name }}</h1>
             <p class="text-gray-600 mt-2">
-                Pelatihan ini dirancang untuk membantu Anda memahami konsep dasar hingga lanjutan tentang algoritma, 
-                yang merupakan inti dari pengembangan perangkat lunak. Dalam kursus ini, Anda akan belajar cara 
-                memecahkan masalah secara sistematis, membuat solusi yang efisien, dan menerapkannya dalam kode.
+            {{ $pelatihans->deskripsi }}
             </p>
         </div>
     </div>
@@ -39,13 +37,13 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
             </svg>
-            <span class="text-gray-600 text-sm">Tingkat: Dasar</span>
+            <span class="text-gray-600 text-sm">Tingkat: {{ $pelatihans->kesulitan }}</span>
         </div> 
         <p class="text-sm text-gray-600 flex items-center">
-            <span class="mr-2">Kuota: 1000 Peserta</span>
+            <span class="mr-2">Kuota: {{ $pelatihans->kapasitas }} Peserta</span>
         </p>
         <div class="text-sm">
-            <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">Online</span>
+            <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">{{ $pelatihans->jenis }}</span>
         </div>
      </div>
 

@@ -19,9 +19,13 @@ Route::middleware('guest')->group(function () {
 
 //rute untuk user
 Route::middleware('role:user')->group(function () {
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
+    Route::get('/course1/{id}', [UserController::class, 'course1'])->name('course1.show');
+    Route::get('/offline/{id}', [UserController::class, 'offline'])->name('offline.show');
+    Route::get('/online/{id}', [UserController::class, 'online'])->name('online.show');
+    Route::get('/banner3/{id}', [UserController::class, 'showBanner'])->name('banner3.show');
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/user/course1', [UserController::class, 'course1'])->name('user.course1');
-    Route::get('/user/course2', [UserController::class, 'course2'])->name('user.course2');
     Route::get('/user/course3', [UserController::class, 'course3'])->name('user.course3');
     Route::get('/user/offline', [UserController::class, 'offline'])->name('user.offline');
     Route::get('/user/online', [UserController::class, 'online'])->name('user.online');

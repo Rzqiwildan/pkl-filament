@@ -18,9 +18,9 @@
             <!-- Detail Pelatihan -->
             <div class="col-span-2 border rounded-lg p-4" style="border: 1px solid #a2a2a2;">
                 <div class="flex items-center justify-between border-b border-gray-400 mb-8">
-                    <h2 class="text-lg font-bold mb-4">Dasar Pemrograman</h2>
+                    <h2 class="text-lg font-bold mb-4">{{ $pelatihans->name }}</h2>
                     <div class="text-sm mb-4">
-                        <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">Offline</span>
+                        <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">{{ $pelatihans->jenis }}</span>
                     </div>
                 </div>
                 
@@ -41,11 +41,11 @@
                 <h2 class="text-lg font-semibold mb-8">Ringkasan Pendaftaran</h2>
                 <div class="flex justify-between items-center mb-4">
                     <span>Biaya Pelatihan</span>
-                    <span class="font-regular text-green-600">Gratis</span>
+                    <span class="font-regular text-green-600">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between items-center mb-4">
                     <span class="font-semibold">Total Pembayaran</span>
-                    <span class="font-semibold text-green-600">Gratis</span>
+                    <span class="font-semibold text-green-600">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</span>
                 </div>
                 <button id="registerButton">Daftar Sekarang</button>
 
@@ -166,7 +166,7 @@
             <h2 class="text-lg font-semibold mb-4">Jadwal Pelatihan</h2>
             <div class="flex justify-between items-center bg-blue-50 border mb-4 px-4 py-2 rounded-lg" style="border: 1px solid #1E40AF;">
                 <span>14 Jan 2025 - 14 Mar 2025</span>
-                <span class="font-semibold">1000 kuota tersedia</span>
+                <span class="font-semibold">{{ $pelatihans->kapasitas }} kuota tersedia</span>
             </div>
         </div>
     </div>
