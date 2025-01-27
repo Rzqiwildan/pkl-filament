@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 @include('components.navbar')
+
 <body class="bg-gray-100">
     <div class="container mx-auto py-10 mt-16">
         <div class="rounded-lg p-6">
@@ -16,7 +17,7 @@
                     <!-- Header -->
                     <div class="flex justify-between items-center pb-4 border-b border-gray-400">
                         <div>
-                            <h1 class="text-2xl font-semibold mb-8">Dasar Pemrograman</h1>
+                            <h1 class="text-2xl font-semibold mb-8">{{ $pelatihans->name }}</h1>
                             <div class="flex items-center space-x-4">
                                 <div class="flex items-center space-x-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
@@ -28,15 +29,15 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
                                     </svg>
-                                    <span class="text-gray-600 text-sm">Tingkat: Dasar</span>
+                                    <span class="text-gray-600 text-sm">Tingkat: {{ $pelatihans->kesulitan }}</span>
                                 </div> 
                                 <p class="text-sm text-gray-600 flex items-center">
-                                    <span class="mr-2">Kuota: 1000 Peserta</span>
+                                    <span class="mr-2">Kuota: {{ $pelatihans->kapasitas }} Peserta</span>
                                 </p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-2 text-sm text-gray-600 mb-14">
-                            <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">Offline</span>
+                            <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">{{ $pelatihans->jenis }}</span>
                         </div>
                     </div>
 
@@ -44,7 +45,7 @@
                     <div class="mb-8 mt-8">
                         <h2 class="text-lg font-semibold mb-2">Tentang Pelatihan</h2>
                         <p class="text-gray-600">
-                            Pelatihan ini dirancang untuk membantu pemula memahami konsep-konsep fundamental dalam dunia pemrograman. Materi yang disediakan mencakup pengetahuan dasar dan praktik yang akan membekali peserta dengan keterampilan penting untuk memulai perjalanan mereka di bidang teknologi.
+                        {{ $pelatihans->deskripsi }}
                         </p>
                     </div>
 
@@ -64,10 +65,9 @@
                     <div class="p-4 rounded-lg border" style="border: 1px solid #a2a2a2;">
                         <div class="mb-8">
                             <p class="text-lg font-medium">Harga</p>
-                            <p class="text-2xl font-bold">Gratis</p>
+                            <p class="text-2xl font-bold">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</p>
                         </div>
-                        <a href="{{ route('user.offline') }}">
-                            <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
+                        <a href="{{ $pelatihans->jenis === 'offline' ? route('offline.show', $pelatihans->id) : route('online.show', $pelatihans->id) }}">                            <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
                                 Ikuti Pelatihan
                             </button>
                         </a>

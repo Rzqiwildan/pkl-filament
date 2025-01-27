@@ -4,20 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Pelatihan_Photos extends Model
+class Banner extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'photo',
-        'pelatihan_id'
+        'cover_banner',
+        'rincian_banner',
+        'pelatihan_id',
+        'order',
+        'status',
     ];
-    
-    public function pelatihan(): BelongsTo
+
+    // Jika ada relasi ke model lain (misalnya pelatihan)
+    public function pelatihan()
     {
         return $this->belongsTo(Pelatihan::class);
     }
-
 }
