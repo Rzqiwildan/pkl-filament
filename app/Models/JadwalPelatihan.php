@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Jadwal_Pelatihan extends Model
+class JadwalPelatihan extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -18,10 +18,6 @@ class Jadwal_Pelatihan extends Model
         'location_name',
     ];
 
-    protected $casts = [
-        'waktu' => 'datetime',
-        'hari' => 'date'
-    ];
 
     public function pelatihan(): BelongsTo
     {
