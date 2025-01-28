@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Pelatihan;
-use App\Models\Pelatihan_Photos;
+use App\Models\PelatihanPhotos;
 use App\Models\Banner;
 
 class UserController extends Controller
@@ -16,7 +16,7 @@ class UserController extends Controller
         $pelatihans = Pelatihan::with('photos')->get(); 
 
         // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
-        $photos = Pelatihan_Photos::all();
+        $photos = PelatihanPhotos::all();
 
         // Ambil semua data banner
         $banners = Banner::all();

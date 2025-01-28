@@ -54,14 +54,20 @@ Route::get('/unauthorized', function () {
 
 
 // Rute setelah login untuk student
-Route::middleware(['auth', 'check.role'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
-    Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
-});
+// Route::middleware(['auth', 'check.role'])->group(function () {
+//     // Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+//     Route::get('/teacher', [TeacherController::class, 'index'])->name('dashboard.index');
+// });
+
+
 // Rute setelah login untuk teacher
 Route::middleware(['auth', 'check.role.teacher'])->group(function () {
-    Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
+    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/teacher/courses', [TeacherController::class, 'courseT'])->name('teacher.courses');
+    Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
 });
+
 
 Route::get('/test-admin', function () {
     return 'Welcome Admin!';
