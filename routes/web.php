@@ -2,12 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 
-Route::get('/',function(){
-    return view('welcome');
-});
+Route::get('/', [Controller::class, 'index'])->name('welcome');
 
 // Rute untuk user tamu
 Route::middleware('guest')->group(function () {

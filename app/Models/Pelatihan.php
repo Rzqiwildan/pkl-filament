@@ -37,7 +37,7 @@ class Pelatihan extends Model
     
     public function jadwalPelatihan(): BelongsTo
     {
-        return $this->belongsTo(Jadwal_Pelatihan::class, 'jadwal_id');
+        return $this->belongsTo(JadwalPelatihan::class, 'jadwal_id');
     }
     
     public function user(): BelongsTo
@@ -47,7 +47,7 @@ class Pelatihan extends Model
     
     public function photos(): HasMany
     {
-        return $this->hasMany(Pelatihan_Photos::class);
+        return $this->hasMany(PelatihanPhotos::class);
     }
 
     public function transaksis(): HasMany
