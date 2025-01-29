@@ -28,7 +28,7 @@
             <!-- Navbar Links -->
             <div id="navbarLinks"
                 class="hidden md:flex flex-col md:flex-row md:items-center md:gap-8 absolute md:static top-16 left-0 w-full md:w-auto bg-white shadow-md md:shadow-none p-4 md:p-0">
-                <a href="{{ route('dashboard.index') }}"=======<a href="{{ route('user.dashboard') }}"
+                <a href="{{ route('dashboard.index') }}"
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     Home
                 </a>
