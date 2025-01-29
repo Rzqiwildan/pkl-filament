@@ -17,7 +17,7 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [LoginController::class, 'register']);
 });
 
-//rute untuk user
+//Rute untuk user
 Route::middleware('role:user')->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
     Route::get('/course1/{id}', [UserController::class, 'course1'])->name('course1.show');
@@ -26,6 +26,11 @@ Route::middleware('role:user')->group(function () {
     Route::get('/banner3/{id}', [UserController::class, 'showBanner'])->name('banner3.show');
     Route::get('/kategori', [UserController::class, 'kategori'])->name('user.kategori');
     Route::get('/kategori/{id}', [UserController::class, 'showKategori'])->name('kategori.show');
+    Route::get('/mycourse', [UserController::class, 'myCourses'])->name('user.course');
+    
+    // Rute untuk POST request menyimpan pelatihan
+    Route::get('/pelatihan', [UserController::class, 'getPelatihan'])->name('pelatihan.get');
+    Route::get('/course', [UserController::class, 'getPelatihan'])->name('course.index');
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/user/course1', [UserController::class, 'course1'])->name('user.course1');
     Route::get('/user/course3', [UserController::class, 'course3'])->name('user.course3');
@@ -34,9 +39,9 @@ Route::middleware('role:user')->group(function () {
     Route::get('/user/quiz1', [UserController::class, 'quiz1'])->name('user.quiz1');
     Route::get('/user/mycourse1', [UserController::class, 'mycourse1'])->name('user.mycourse1');
     Route::get('/user/banner3', [UserController::class, 'banner3'])->name('user.banner3');
-    Route::get('/mycourse', function () {
-        return view('User.course');
-    })->name('user.course');
+    // Route::get('/mycourse', function () {
+    //     return view('User.course');
+    // })->name('user.course');
     Route::get('/payment', function () {
         return view('User.payment');
     })->name('user.payment');
@@ -46,7 +51,17 @@ Route::middleware('role:user')->group(function () {
     Route::get('/profil', function () {
         return view('User.profil');
     })->name('user.profil');
+
+    // Rute untuk POST
+    Route::post('/ikut-pelatihan', [UserController::class, 'ikutPelatihan'])->name('ikut.pelatihan');
+    Route::post('/pelatihan/ikut/{id}', [UserController::class, 'ikutPelatihanOn'])->name('pelatihan.ikut');
+
+    // Rute untuk search
+    Route::get('/search-pelatihan', [UserController::class, 'search']);
+    
 });
+
+
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 

@@ -14,7 +14,11 @@
     <div class="container mx-auto mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4" style="width: 90%;">
     @foreach ($pelatihans as $pelatihan)
         @foreach($pelatihan->photos as $photo)
-            <a href="{{ route('course1.show', $pelatihan->id) }}">
+            <a href="{{ route(
+            ($pelatihan->jenis == 'online' && auth()->user()->hasRegistered($pelatihan->id)) 
+            ? 'online.show' 
+            : 'offline.show', 
+            $pelatihan->id) }}">
             <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
                 <img src="{{ asset($photo->photo) }}" class="h-40 w-auto rounded-md">
                 <div class="space-y-4">

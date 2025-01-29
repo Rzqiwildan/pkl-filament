@@ -37,7 +37,7 @@ class Pelatihan extends Model
     
     public function jadwalPelatihan(): BelongsTo
     {
-        return $this->belongsTo(Jadwal_Pelatihan::class, 'jadwal_id');
+        return $this->belongsTo(JadwalPelatihan::class, 'jadwal_id');
     }
     
     public function user(): BelongsTo
@@ -47,12 +47,18 @@ class Pelatihan extends Model
     
     public function photos(): HasMany
     {
-        return $this->hasMany(Pelatihan_Photos::class);
+        return $this->hasMany(PelatihanPhotos::class);
     }
 
     public function transaksis(): HasMany
     {
         return $this->hasMany(Transaksi::class);
+    }
+
+    // Mendefinisikan relasi dengan model User melalui tabel pivot 'user_pelatihans'
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_pelatihans'); // Pelatihan memiliki banyak pengguna melalui tabel pivot
     }
 
 }

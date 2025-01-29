@@ -36,8 +36,6 @@
             </div>
         </div>
 
-       
-
     <!-- Jadwal Pelatihan -->
     <div class="border rounded-lg mt-6 p-6 max-w-3xl" style="border: 1px solid #a2a2a2;">
         <h2 class="text-lg font-semibold mb-4">Jadwal Pelatihan</h2>

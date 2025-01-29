@@ -14,9 +14,14 @@
 
     <!-- Wrapper for the button to center it vertically -->
     <div class="flex items-center justify-center mb-8" style="height: 100px;">
-        <a href="{{ route('course1.show', $banners->pelatihan_id) }}">
+    <a href="{{ route(
+            ($pelatihans->jenis == 'online' && auth()->user()->hasRegistered($pelatihans->id)) 
+            ? 'online.show' 
+            : 'offline.show', 
+            $pelatihans->id) }}">
+        <!-- <a href="{{ route('course1.show', $banners->pelatihan_id) }}"> -->
             <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">
-                Daftar Sekarang
+                Lihat Detail Pelatihan
             </button>
         </a>
     </div>

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
-use App\Models\Pelatihan_Photos;
+use App\Models\PelatihanPhotos;
 use Illuminate\Database\Seeder;
 use App\Models\Banner;
 
@@ -30,21 +30,21 @@ class DatabaseSeeder extends Seeder
         //     'status' => true,
         // ]);
 
-        // Banner::create([
-        //     'cover_banner' => 'img/banner3.png',
-        //     'rincian_banner' => 'img/b3.png',
-        //     'pelatihan_id' => 3,
-        //     'order' => 1,
-        //     'status' => true,
-        // ]);
+        Banner::create([
+            'cover_banner' => 'img/banner3.png',
+            'rincian_banner' => 'img/b3.png',
+            'pelatihan_id' => 5,
+            'order' => 1,
+            'status' => true,
+        ]);
 
-        // Banner::create([
-        //     'cover_banner' => 'img/banner1.png',
-        //     'rincian_banner' => 'img/b1.png',
-        //     'pelatihan_id' => 4,
-        //     'order' => 1,
-        //     'status' => true,
-        // ]);
+        Banner::create([
+            'cover_banner' => 'img/banner2.png',
+            'rincian_banner' => 'img/b2.png',
+            'pelatihan_id' => 6,
+            'order' => 1,
+            'status' => true,
+        ]);
 
         // Category::create([
         //     'name' => 'Bisnis',
@@ -52,11 +52,25 @@ class DatabaseSeeder extends Seeder
         //     'image' => 'img/bisnis.jpg',
         // ]);
 
-        Pelatihan_Photos::create([
-            'photo' => 'img/jarkom.jpg',
-            'pelatihan_id' => 7,
-        ]);
+        // PelatihanPhotos::create([
+        //     'photo' => 'img/daspro.jpg',
+        //     'pelatihan_id' => 3,
+        // ]);
 
+        // PelatihanPhotos::create([
+        //     'photo' => 'img/pbo.jpg',
+        //     'pelatihan_id' => 4,
+        // ]);
+
+        // PelatihanPhotos::create([
+        //     'photo' => 'img/jarkom.jpg',
+        //     'pelatihan_id' => 5,
+        // ]);
+
+        // PelatihanPhotos::create([
+        //     'photo' => 'img/jahit.jpg',
+        //     'pelatihan_id' => 6,
+        // ]);
         
 
     }

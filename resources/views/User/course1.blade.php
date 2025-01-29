@@ -67,10 +67,181 @@
                             <p class="text-lg font-medium">Harga</p>
                             <p class="text-2xl font-bold">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</p>
                         </div>
-                        <a href="{{ $pelatihans->jenis === 'offline' ? route('offline.show', $pelatihans->id) : route('online.show', $pelatihans->id) }}">                            <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
-                                Ikuti Pelatihan
-                            </button>
-                        </a>
+                        @if($pelatihans->jenis === 'offline')
+                            <!-- Untuk pelatihan offline, gunakan link biasa -->
+                            <a href="{{ route('offline.show', $pelatihans->id) }}">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
+                                    Ikuti Pelatihan
+                                </button>
+                            </a>
+                            @else
+                            <!-- Formulir Pendaftaran Pelatihan -->
+                            <form id="form-ikut-pelatihan" action="{{ route('pelatihan.ikut', $pelatihans->id) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+                                <button id="registerButton" type="submit" 
+                                        class="{{ $isRegistered ? 'disabled' : '' }}" 
+                                        {{ $isRegistered ? 'disabled' : '' }}>
+                                    {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
+                                </button>
+                            </form>
+                        @endif
+
+                        <!-- Overlay gelap, tetapi hanya tampil saat pendaftaran baru -->
+                        <div id="overlay" style="display: none;"></div>
+
+                        <!-- Elemen notifikasi, hanya muncul sekali setelah pendaftaran -->
+                        <div id="notification" style="display: none;">
+                            <div id="iconContainer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div>
+                            <div class="mb-4 mt-4">
+                                <p>Anda Berhasil Mendaftar Pelatihan!</p>
+                            </div>
+                            <button id="closeButton">Mulai</button>
+                        </div>
+
+                        <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const button = document.getElementById("registerButton");
+
+                            // Styling tombol
+                            button.style.backgroundColor = "#3b82f6";
+                            button.style.color = "white";
+                            button.style.fontWeight = "600";
+                            button.style.width = "100%";
+                            button.style.padding = "0.5rem";
+                            button.style.borderRadius = "0.375rem";
+                            button.style.border = "none";
+                            button.style.cursor = "pointer";
+                            button.style.marginTop = "2rem";
+                            button.style.marginBottom = "1rem";
+                            button.style.transition = "0.3s";
+
+                            // Efek hover hanya jika tombol tidak disabled
+                            button.addEventListener("mouseenter", () => {
+                                if (!button.disabled) {
+                                    button.style.backgroundColor = "#2563eb";
+                                }
+                            });
+
+                            button.addEventListener("mouseleave", () => {
+                                if (!button.disabled) {
+                                    button.style.backgroundColor = "#3b82f6";
+                                }
+                            });
+
+                            // Jika tombol disabled, ubah warna menjadi abu-abu
+                            if (button.disabled) {
+                                button.style.backgroundColor = "gray";
+                                button.style.color = "white";
+                                button.style.cursor = "not-allowed";
+                            }
+
+                            // Event listener untuk menangani submit form
+                            const form = document.getElementById('form-ikut-pelatihan');
+                            form.addEventListener('submit', function(e) {
+                                e.preventDefault(); // Mencegah form dari submit biasa
+
+                                fetch('/pelatihan/ikut/' + form.pelatihan_id.value, {
+                                    method: 'POST',
+                                    body: new FormData(form), // Mengirimkan data form
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Menyertakan token CSRF
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Mengubah tombol menjadi disable dan update teksnya
+                                        button.disabled = true;
+                                        button.style.backgroundColor = "gray";
+                                        button.innerText = 'Anda telah terdaftar!';
+                                        
+                                        // Menampilkan notifikasi hanya jika pendaftaran baru
+                                        showNotification();
+                                    } else {
+                                        alert(data.error);  // Menampilkan pesan error jika ada
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error:", error);
+                                    alert('Terjadi kesalahan pada server.');
+                                });
+                            });
+
+                            // Fungsi untuk menampilkan notifikasi
+                            function showNotification() {
+                                const overlay = document.getElementById("overlay");
+                                const notification = document.getElementById("notification");
+
+                                // Menampilkan overlay dan notifikasi
+                                overlay.style.display = "block";
+                                notification.style.display = "block";
+
+                                // Menutup notifikasi dan mengarahkan pengguna kembali ke halaman pelatihan
+                                const closeButton = document.getElementById("closeButton");
+                                closeButton.addEventListener("click", () => {
+                                    overlay.style.display = "none";
+                                    notification.style.display = "none";
+                                    window.location.href = "{{ route('online.show', $pelatihans->id) }}";  // Redirect ke halaman pelatihan
+                                });
+                            }
+
+                            // Styling overlay dan notifikasi
+                            const overlay = document.getElementById("overlay");
+                            overlay.style.position = "fixed";
+                            overlay.style.top = "0";
+                            overlay.style.left = "0";
+                            overlay.style.width = "100%";
+                            overlay.style.height = "100%";
+                            overlay.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+                            overlay.style.zIndex = "1000";
+
+                            const iconContainer = document.getElementById("iconContainer");
+                            iconContainer.style.display = "flex";
+                            iconContainer.style.justifyContent = "center";
+                            iconContainer.style.marginBottom = "10px";
+
+                            const icon = document.querySelector(".icon");
+                            icon.style.width = "50px";
+                            icon.style.height = "50px";
+                            icon.style.color = "#3b82f6";
+
+                            const notification = document.getElementById("notification");
+                            notification.style.position = "fixed";
+                            notification.style.top = "50%";
+                            notification.style.left = "50%";
+                            notification.style.transform = "translate(-50%, -50%)";
+                            notification.style.backgroundColor = "#f3f4f6";
+                            notification.style.color = "#333";
+                            notification.style.padding = "20px";
+                            notification.style.borderRadius = "15px";
+                            notification.style.textAlign = "center";
+                            notification.style.width = "300px";
+                            notification.style.zIndex = "1010";
+
+                            const closeButton = document.getElementById("closeButton");
+                            closeButton.style.backgroundColor = "#3b82f6";
+                            closeButton.style.color = "white";
+                            closeButton.style.border = "none";
+                            closeButton.style.borderRadius = "5px";
+                            closeButton.style.padding = "10px";
+                            closeButton.style.cursor = "pointer";
+                            closeButton.style.marginTop = "10px";
+
+                            closeButton.addEventListener("mouseenter", () => {
+                                closeButton.style.backgroundColor = "#2563eb";
+                            });
+
+                            closeButton.addEventListener("mouseleave", () => {
+                                closeButton.style.backgroundColor = "#3b82f6";
+                            });
+                        });
+                        </script>
+
                         <p class="text-sm text-gray-600 mb-2">Program ini sudah termasuk:</p>
                         <ul class="text-sm text-gray-600 list-disc list-inside mb-4">
                             <li>Sertifikat Mengikuti Pelatihan</li>
