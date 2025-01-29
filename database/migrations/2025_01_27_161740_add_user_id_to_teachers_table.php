@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal_pelatihans', function (Blueprint $table) {
-            $table->id();
-            $table->string('start_date');
-            $table->string('end_date');
-            $table->string('image');
-            $table->string('location_name')->nullable();
-            $table->timestamps();
+        Schema::table('teachers', function (Blueprint $table) {
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal_pelatihans');
+        Schema::table('teachers', function (Blueprint $table) {
+            //
+        });
     }
 };
