@@ -114,7 +114,7 @@
         @foreach($pelatihan->photos as $photo)
         <a href="{{ route('course1.show', $pelatihan->id) }}">
             <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
-                <img src="{{ asset($photo->photo) }}" class="h-40 w-auto rounded-md">
+                <img src="{{ asset('storage/pelatihan-photos/' . $photo->photo) }}" class="h-40 w-auto rounded-md">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between mt-4">
                         <h2 class="text-sm font-semibold">{{ $pelatihan->name }}</h2>

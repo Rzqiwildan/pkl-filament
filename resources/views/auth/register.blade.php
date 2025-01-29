@@ -1,3 +1,5 @@
+<link rel="shortcut icon" href="https://digilib.undip.ac.id/wp-content/uploads/2020/11/cropped-Ikon-Undip-32x32.png"
+    type="image/x-icon">
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <div class="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-1 bg-white shadow-md rounded">
@@ -38,11 +40,13 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Register as:</label>
                     <div class="flex space-x-4">
                         <label class="inline-flex items-center">
-                            <input type="checkbox" name="role" value="mahasiswa" class="form-checkbox text-indigo-600" required>
+                            <input type="radio" name="role" value="mahasiswa" class="form-radio text-indigo-600"
+                                required>
                             <span class="ml-2">Mahasiswa</span>
                         </label>
                         <label class="inline-flex items-center">
-                            <input type="checkbox" name="role" value="umum" class="form-checkbox text-indigo-600" required>
+                            <input type="radio" name="role" value="umum" class="form-radio text-indigo-600"
+                                required>
                             <span class="ml-2">Umum</span>
                         </label>
                     </div>

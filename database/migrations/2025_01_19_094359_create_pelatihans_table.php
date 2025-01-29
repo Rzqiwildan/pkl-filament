@@ -23,9 +23,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
             $table->foreignId('materi_id')->constrained('materis')->onDelete('restrict');
             $table->foreignId('jadwal_id')->constrained('jadwal_pelatihans')->onDelete('restrict');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('email');
-            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('teachers')->onDelete('restrict');
             $table->timestamps();
         });
     }

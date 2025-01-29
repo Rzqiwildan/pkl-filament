@@ -29,8 +29,12 @@ class BannerResource extends Resource
                 Forms\Components\FileUpload::make('cover_banner')
                 ->label('Cover Banner')
                 ->required(),
-                Forms\Components\Textarea::make('rincian_banner')
-                ->label('Rincian Banner')
+                Forms\Components\FileUpload::make('rincian_banner')
+                ->label('Rincian')
+                ->required(),
+                Forms\Components\Select::make('pelatihan_id')
+                ->label('Nama Pelatihan') // Label untuk dropdown
+                ->relationship('pelatihan', 'name') // Relasi ke model Pelatihan
                 ->required(),
             ]);
     }
@@ -43,6 +47,10 @@ class BannerResource extends Resource
                     ->label('Cover Banner'),
                 Tables\Columns\TextColumn::make('rincian_banner')
                     ->label('Rincian'),
+                Tables\Columns\TextColumn::make('pelatihan.id')
+                    ->label('Pelatihan')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('end_date');
             $table->string('image');
             $table->string('location_name')->nullable();
-            $table->foreignId('pelatihan_id')->constrained('pelatihans')->onDelete('restrict');
+            $table->unsignedBigInteger('pelatihan_id');
+            $table->foreign('pelatihan_id')->references('id')->on('pelatihans')->onDelete('restrict');
             $table->timestamps();
         });
     }

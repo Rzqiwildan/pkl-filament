@@ -14,11 +14,24 @@ class CheckRoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (Auth::check() && Auth::user()->role !== 'user') {
-            return redirect()->route('unauthorized');
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
-        return $next($request);
+
+        $userRole = Auth::user()->role;
+
+        // Jika tidak ada role yang ditentukan, izinkan akses
+        if (empty($roles)) {
+            return $next($request);
+        }
+
+        // Cek apakah role user ada dalam daftar role yang diizinkan
+        if (in_array($userRole, $roles)) {
+            return $next($request);
+        }
+
+        return redirect()->route('unauthorized');
     }
 }
