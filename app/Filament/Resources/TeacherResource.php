@@ -67,6 +67,18 @@ class TeacherResource extends Resource
                     ->label('Email')
                     ->searchable()
                     ->sortable(),
+                    Tables\Columns\TextColumn::make('role')
+                    ->label('Role')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'admin' => 'danger',
+                        'teacher' => 'warning',
+                        'mahasiswa' => 'success',
+                        'umum' => 'info',
+                        default => 'gray',
+                    })
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat Pada')
                     ->dateTime()

@@ -24,7 +24,9 @@ class PelatihanPhotosResource extends Resource
                 Forms\Components\FileUpload::make('photo')
                     ->label('Photo')
                     ->image()
+                    ->disk('public')
                     ->directory('pelatihan-photos') // Folder penyimpanan
+                    ->visibility('public')
                     ->required(),
                 Forms\Components\Select::make('pelatihan_id')
                     ->label('Nama Pelatihan') // Label untuk dropdown
@@ -39,6 +41,7 @@ class PelatihanPhotosResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('photo')
                     ->label('Photo')
+                    ->disk('public')
                     ->circular(),
                 Tables\Columns\TextColumn::make('pelatihan.id')
                     ->label('Pelatihan')
@@ -56,7 +59,9 @@ class PelatihanPhotosResource extends Resource
                 Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

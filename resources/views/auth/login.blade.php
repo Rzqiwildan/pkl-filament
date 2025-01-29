@@ -1,3 +1,5 @@
+<link rel="shortcut icon" href="https://digilib.undip.ac.id/wp-content/uploads/2020/11/cropped-Ikon-Undip-32x32.png"
+    type="image/x-icon">
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <div class="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-1 bg-white shadow-md rounded">

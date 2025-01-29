@@ -67,6 +67,15 @@ Route::middleware(['auth', 'check.role.teacher'])->group(function () {
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
 });
 
+// Mahasiswa & Umum routes
+Route::middleware('role:mahasiswa')->group(function () {
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
+    // ... other user routes ...
+});
+Route::middleware('role:umum')->group(function () {
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
+    // ... other user routes ...
+});
 
 Route::get('/test-admin', function () {
     return 'Welcome Admin!';
