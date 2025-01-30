@@ -9,7 +9,7 @@
 <body>
     @include('components.navbar')
     <div class="container mx-auto mt-24" style="width: 90%;">
-        <img src="{{ asset($banners->rincian_banner) }}" style="width: 100%; height: 100%; object-fit: cover;"/>
+        <img src="{{ Storage::url($banner->rincian_banner) }}" style="width: 100%; height: 100%; object-fit: cover;"/>
     </div>
 
     <!-- Wrapper for the button to center it vertically -->

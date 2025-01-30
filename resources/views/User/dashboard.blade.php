@@ -17,7 +17,7 @@
                 @foreach ($banners as $banner)
                     <li class="splide__slide" style="flex: 0 0 100%; text-align: center;">
                         <a href="{{ route('banner3.show', $banner->id) }}">
-                            <img src="{{ $banner->cover_banner }}" style="width: 100%; height: auto; object-fit: cover;"/>
+                            <img src="{{ Storage::url($banner->cover_banner) }}" style="width: 100%; height: auto; object-fit: cover;"/>
                         </a>
                     </li>
                 @endforeach
@@ -111,6 +111,16 @@
                 .catch(error => console.error("Fetch Error:", error));
         });
 
+        // Arahkan ke halaman hasil pencarian ketika tekan Enter
+        searchInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                let query = searchInput.value.trim();
+                if (query.length > 0) {
+                    window.location.href = `/hasil-pencarian?query=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
         // Sembunyikan dropdown kalau klik di luar
         document.addEventListener("click", function (event) {
             if (!resultsContainer.contains(event.target) && event.target !== searchInput) {
@@ -119,7 +129,8 @@
             }
         });
     });
-</script>
+    </script>
+
     <!-- Kategori Pelatihan -->
     <div class="container mx-auto mt-16 mb-8" style="width: 90%;">
         <h2 class="text-xl font-bold">Berbagai Macam Kategori Pelatihan:</h2>
@@ -131,7 +142,7 @@
             @foreach ($categories as $categorie)
                 <li class="splide__slide text-center">
                     <a href="{{ route('kategori.show', $categorie->id) }}">
-                        <img src="{{ $categorie->image }}" class="h-auto w-32 rounded-md mx-auto"> <!-- Sesuaikan ukuran gambar -->
+                        <img src="{{ Storage::url($categorie->image) }}" class="h-auto w-32 rounded-md mx-auto"> <!-- Sesuaikan ukuran gambar -->
                         <p class="mt-2 text-gray-700">{{ $categorie->name }}</p>
                     </a>
                 </li>
@@ -174,7 +185,7 @@
             : 'offline.show', 
             $pelatihan->id) }}">
                 <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
-                    <img src="{{ asset($photo->photo) }}" class="h-40 w-auto rounded-md">
+                    <img src="{{ Storage::url($photo->photo) }}" class="h-40 w-auto rounded-md">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between mt-4">
                             <h2 class="text-sm font-semibold">{{ $pelatihan->name }}</h2>
@@ -208,4 +219,18 @@
         @endforeach
     </div>
 </body>
+<footer class="bg-gray-900 text-white py-6">
+    <div class="container mx-auto px-4" style="width: 90%;">
+        <div>
+            <h3 class="text-lg font-semibold">UPT Perpustakaan dan Undip Press</h3>
+            <p class="mt-2 text-sm">
+                Jl. Prof Sudarto, SH Gedung Widya Puraya, Tembalang,<br>
+                Semarang 024 – 7460042, NPP: 3374102D1000001
+            </p>
+            <p class="mt-2 text-sm">
+                Email: <a href="mailto:perpustakaanundip@gmail.com" class="text-blue-400 hover:underline">perpustakaanundip@gmail.com</a>
+            </p>
+        </div>
+    </div>
+</footer>
 </html>

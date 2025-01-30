@@ -27,6 +27,9 @@ Route::middleware('role:user')->group(function () {
     Route::get('/kategori/{id}', [UserController::class, 'showKategori'])->name('kategori.show');
     Route::get('/mycourse', [UserController::class, 'myCourses'])->name('user.course');
     
+    // Rute pencarian
+    Route::get('/hasil-pencarian', [UserController::class, 'hasilPencarian'])->name('hasil-pencarian');
+
     // Rute untuk POST request menyimpan pelatihan
     Route::get('/pelatihan', [UserController::class, 'getPelatihan'])->name('pelatihan.get');
     Route::get('/course', [UserController::class, 'getPelatihan'])->name('course.index');

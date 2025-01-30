@@ -17,7 +17,7 @@
                 @foreach ($banners as $banner)
                     <li class="splide__slide" style="flex: 0 0 100%; text-align: center;">
                         <a href="{{ route('banner3.show', $banner->id) }}">
-                            <img src="{{ $banner->cover_banner }}" style="width: 100%; height: auto; object-fit: cover;"/>
+                            <img src="{{ Storage::url($banner->cover_banner) }}" style="width: 100%; height: auto; object-fit: cover;"/>
                         </a>
                     </li>
                 @endforeach
@@ -76,7 +76,7 @@
             <ul class="splide__list">
             @foreach ($categories as $categorie)
                 <li class="splide__slide text-center">
-                    <img src="{{ $categorie->image }}" class="h-auto w-32 rounded-md mx-auto">  <!-- Sesuaikan ukuran gambar -->
+                    <img src=" {{ Storage::url($categorie->image) }} " class="h-auto w-32 rounded-md mx-auto">  <!-- Sesuaikan ukuran gambar -->
                     <p class="mt-2 text-gray-700">{{ $categorie->name }}</p>
                 </li>
             @endforeach
@@ -114,7 +114,7 @@
         @foreach($pelatihan->photos as $photo)
         <a href="{{ route('course1.show', $pelatihan->id) }}">
             <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
-                <img src="{{ asset($photo->photo) }}" class="h-40 w-auto rounded-md">
+                <img src="{{ Storage::url($photo->photo) }} " class="h-40 w-auto rounded-md">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between mt-4">
                         <h2 class="text-sm font-semibold">{{ $pelatihan->name }}</h2>

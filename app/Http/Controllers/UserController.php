@@ -34,6 +34,14 @@ class UserController extends Controller
         return view('user.dashboard', compact('pelatihans', 'photos', 'banners', 'categories', 'jenisOptions', 'kesulitanOptions'));
     }
 
+    public function hasilPencarian(Request $request)
+    {
+        $query = $request->input('query');
+        $pelatihans = Pelatihan::where('name', 'like', '%' . $query . '%')->get(); // Atau sesuaikan dengan field pencarian
+
+        return view('user.hasil_pencarian', compact('pelatihans', 'query'));
+    }
+
     public function myCourses()
     {
         // Ambil semua data pelatihan
