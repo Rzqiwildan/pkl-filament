@@ -47,11 +47,70 @@
                     <span class="font-semibold">Total Pembayaran</span>
                     <span class="font-semibold text-green-600">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</span>
                 </div>
-                <button id="registerButton">Daftar Sekarang</button>
+                <form id="form-ikut-pelatihan" action="{{ route('ikut.pelatihan') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+                    <button id="registerButton" type="submit" 
+                        class="{{ $isRegistered ? 'disabled' : '' }}" 
+                        {{ $isRegistered ? 'disabled' : '' }}>
+                        {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
+                    </button>
+                </form>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const button = document.getElementById("registerButton");
+
+                        // Styling tombol aktif
+                        button.style.backgroundColor = "#3b82f6";
+                        button.style.color = "white";
+                        button.style.fontWeight = "600";
+                        button.style.width = "100%";
+                        button.style.padding = "0.5rem";
+                        button.style.borderRadius = "0.375rem";
+                        button.style.border = "none";
+                        button.style.cursor = "pointer";
+                        button.style.marginTop = "2rem";
+                        button.style.marginBottom = "1rem";
+                        button.style.transition = "0.3s";
+
+                        // Efek hover hanya jika tombol tidak disabled
+                        button.addEventListener("mouseenter", () => {
+                            if (!button.disabled) {
+                                button.style.backgroundColor = "#2563eb";
+                            }
+                        });
+
+                        button.addEventListener("mouseleave", () => {
+                            if (!button.disabled) {
+                                button.style.backgroundColor = "#3b82f6";
+                            }
+                        });
+
+                        // Jika tombol disabled, ubah warna menjadi abu-abu
+                        if (button.disabled) {
+                            button.style.backgroundColor = "gray";
+                            button.style.color = "white";
+                            button.style.cursor = "not-allowed";
+                        }
+
+                        // Event listener untuk menangani submit form
+                        const form = document.getElementById('form-ikut-pelatihan');
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault(); // Mencegah form dari submit biasa
+                            fetch('/ikut-pelatihan', {
+                                method: 'POST',
+                                body: new FormData(form), // Mengirimkan data form
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Menyertakan token CSRF
+                                }
+                            });
+                        });
+                    });
+                </script>
 
                 <!-- Overlay gelap -->
                 <div id="overlay" style="display: none;"></div>
-
                 <!-- Elemen notifikasi -->
                 <div id="notification" style="display: none;">
                     <div id="iconContainer">
@@ -66,7 +125,7 @@
                 </div>
 
                 <script>
-                        const button = document.getElementById("registerButton");
+                    const button = document.getElementById("registerButton");
                     button.style.backgroundColor = "#3b82f6"; 
                     button.style.color = "white"; 
                     button.style.fontWeight = "600"; 
@@ -77,20 +136,17 @@
                     button.style.cursor = "pointer";
                     button.style.marginTop = "2rem"; 
                     button.style.marginBottom = "1rem"; 
-
                     // Hover hanya jika tombol tidak dinonaktifkan
                     button.addEventListener("mouseenter", () => {
                         if (!button.disabled) {
                             button.style.backgroundColor = "#2563eb";
                         }
                     });
-
                     button.addEventListener("mouseleave", () => {
                         if (!button.disabled) {
                             button.style.backgroundColor = "#3b82f6";
                         }
                     });
-
                     const overlay = document.getElementById("overlay");
                     overlay.style.position = "fixed";
                     overlay.style.top = "0";
@@ -99,17 +155,14 @@
                     overlay.style.height = "100%";
                     overlay.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
                     overlay.style.zIndex = "1000";
-
                     const iconContainer = document.getElementById("iconContainer");
                     iconContainer.style.display = "flex";
                     iconContainer.style.justifyContent = "center";
                     iconContainer.style.marginBottom = "10px";
-
                     const icon = document.querySelector(".icon");
                     icon.style.width = "50px";
                     icon.style.height = "50px";
                     icon.style.color = "#3b82f6";
-
                     const notification = document.getElementById("notification");
                     notification.style.position = "fixed";
                     notification.style.top = "50%";
@@ -122,7 +175,6 @@
                     notification.style.textAlign = "center";
                     notification.style.width = "300px";
                     notification.style.zIndex = "1010";
-
                     const closeButton = document.getElementById("closeButton");
                     closeButton.style.backgroundColor = "#3b82f6";
                     closeButton.style.color = "white";
@@ -131,26 +183,21 @@
                     closeButton.style.padding = "10px";
                     closeButton.style.cursor = "pointer";
                     closeButton.style.marginTop = "10px";
-
                     closeButton.addEventListener("mouseenter", () => {
                         closeButton.style.backgroundColor = "#2563eb";
                     });
-
                     closeButton.addEventListener("mouseleave", () => {
                         closeButton.style.backgroundColor = "#3b82f6";
                     });
-
                     // Menampilkan overlay dan notifikasi saat tombol diklik
                     button.addEventListener("click", () => {
                         overlay.style.display = "block";
                         notification.style.display = "block";
                     });
-
                     // Menutup notifikasi saat tombol "Oke" diklik
                     closeButton.addEventListener("click", () => {
                         overlay.style.display = "none"; 
                         notification.style.display = "none";
-
                         // Mengubah tombol "Daftar Sekarang"
                         button.textContent = "Anda telah terdaftar!";
                         button.style.backgroundColor = "gray";

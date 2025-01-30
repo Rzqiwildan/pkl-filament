@@ -55,4 +55,18 @@ class Pelatihan extends Model
         return $this->hasMany(Transaksi::class);
     }
 
+    // Mendefinisikan relasi dengan model User melalui tabel pivot 'user_pelatihans'
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_pelatihans'); // Pelatihan memiliki banyak pengguna melalui tabel pivot
+    }
+
+    public function decreaseCapacity()
+    {
+        if ($this->kapasitas > 0) {
+            $this->decrement('kapasitas');
+        }
+    }
+
+
 }

@@ -1,0 +1,16 @@
+<footer class="bg-gray-900 text-white py-6">
+    <div class="container mx-auto px-4" style="width: 90%;">
+        <div>
+            <h3 class="text-lg font-bold">UPT Perpustakaan dan Undip Press</h3>
+            <p class="mt-2 text-sm">
+                Jl. Prof Sudarto, SH Gedung Widya Puraya, Tembalang,<br>
+                Semarang 024 – 7460042, NPP: 3374102D1000001
+            </p>
+            <p class="mt-2 text-sm">
+                Email: <a href="mailto:perpustakaanundip@gmail.com" class="text-blue-400 hover:underline">
+                    perpustakaanundip@gmail.com
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>
