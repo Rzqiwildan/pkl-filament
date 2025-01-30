@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Models\PelatihanPhotos;
 use App\Models\Banner;
 use App\Filament\Resources\PelatihanResource;
 use App\Models\UserPelatihan;
+use App\Models\JadwalPelatihan;
 
 class UserController extends Controller
 {
@@ -223,15 +225,21 @@ class UserController extends Controller
 
     public function offline($id)
     {
+        // Mengambil data Pelatihan beserta foto yang terkait
         $pelatihans = Pelatihan::with('photos')->where('id', $id)->first();
 
-        // Cek apakah user sudah terdaftar di pelatihan ini
+        // Mengambil data JadwalPelatihan berdasarkan pelatihan_id
+        $jadwalPelatihan = JadwalPelatihan::where('pelatihan_id', $id)->first();
+
+        // Cek apakah pengguna sudah terdaftar untuk pelatihan ini
         $isRegistered = UserPelatihan::where('user_id', Auth::id())
-        ->where('pelatihan_id', $id)
-        ->exists();
-        
-        return view('user.offline', compact('pelatihans', 'isRegistered'));
+            ->where('pelatihan_id', $id)
+            ->exists();
+
+        // Mengirim data pelatihans, jadwalPelatihan, dan isRegistered ke view
+        return view('user.offline', compact('pelatihans', 'jadwalPelatihan', 'isRegistered'));
     }
+
 
     public function online($id)
     {
