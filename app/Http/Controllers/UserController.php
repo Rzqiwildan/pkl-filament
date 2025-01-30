@@ -70,6 +70,14 @@ class UserController extends Controller
         $userId = Auth::id();
         $pelatihanId = $request->pelatihan_id;
 
+        // Ambil data pelatihan
+        $pelatihan = Pelatihan::findOrFail($pelatihanId);
+
+        // Cek apakah kuota masih tersedia
+        if ($pelatihan->kapasitas <= 0) {
+            return redirect()->back()->with('error', 'Kuota sudah penuh.');
+        }
+
         // Cek apakah user sudah terdaftar
         $isAlreadyRegistered = UserPelatihan::where('user_id', $userId)
                                             ->where('pelatihan_id', $pelatihanId)
@@ -79,44 +87,58 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Anda sudah terdaftar dalam pelatihan ini.');
         }
 
-        // Simpan data jika belum terdaftar
+        // Simpan data pendaftaran
         UserPelatihan::create([
             'user_id' => $userId,
             'pelatihan_id' => $pelatihanId,
         ]);
+
+        // Kurangi kapasitas pelatihan
+        $pelatihan->decrement('kapasitas');
 
         return redirect()->back()->with('success', 'Anda telah berhasil mengikuti pelatihan!');
     }
 
+
     public function ikutPelatihanOn(Request $request, $id)
-    {
-        $pelatihan = Pelatihan::findOrFail($id);
+{
+    $pelatihan = Pelatihan::findOrFail($id);
 
-        // Cek apakah jenis pelatihan adalah online
-        if ($pelatihan->jenis !== 'online') {
-            return response()->json(['error' => 'Pelatihan ini tidak tersedia untuk pendaftaran online.'], 400);
-        }
-
-        $userId = Auth::id();
-        $pelatihanId = $id;
-
-        // Cek apakah user sudah terdaftar
-        $isAlreadyRegistered = UserPelatihan::where('user_id', $userId)
-                                            ->where('pelatihan_id', $pelatihanId)
-                                            ->exists();
-
-        if ($isAlreadyRegistered) {
-            return response()->json(['error' => 'Anda sudah terdaftar dalam pelatihan ini.'], 400);
-        }
-
-        // Simpan data jika belum terdaftar
-        UserPelatihan::create([
-            'user_id' => $userId,
-            'pelatihan_id' => $pelatihanId,
-        ]);
-
-        return response()->json(['success' => true, 'message' => 'Anda telah berhasil mengikuti pelatihan online!']);
+    // Cek apakah jenis pelatihan adalah online
+    if ($pelatihan->jenis !== 'online') {
+        return response()->json(['error' => 'Pelatihan ini tidak tersedia untuk pendaftaran online.'], 400);
     }
+
+    // Cek apakah kuota masih tersedia
+    if ($pelatihan->kapasitas <= 0) {
+        return response()->json(['error' => 'Kuota sudah penuh.'], 400);
+    }
+
+    $userId = Auth::id();
+
+    // Cek apakah user sudah terdaftar
+    $isAlreadyRegistered = UserPelatihan::where('user_id', $userId)
+                                        ->where('pelatihan_id', $id)
+                                        ->exists();
+
+    if ($isAlreadyRegistered) {
+        return response()->json(['error' => 'Anda sudah terdaftar dalam pelatihan ini.'], 400);
+    }
+
+    // Simpan data pendaftaran
+    UserPelatihan::create([
+        'user_id' => $userId,
+        'pelatihan_id' => $id,
+    ]);
+
+    // Kurangi kapasitas pelatihan
+    $pelatihan->decrement('kapasitas');
+
+    // Kembalikan respons JSON jika berhasil
+    return response()->json(['success' => true]);
+}
+
+
 
     public function getPelatihan()
     {

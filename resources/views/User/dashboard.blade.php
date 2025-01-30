@@ -180,11 +180,11 @@
         @foreach ($pelatihans as $pelatihan)
             @foreach($pelatihan->photos as $photo)
             <a href="{{ route(
-            ($pelatihan->jenis == 'online' && auth()->user()->hasRegistered($pelatihan->id)) 
-            ? 'online.show' 
-            : 'offline.show', 
+            auth()->user()->hasRegistered($pelatihan->id) 
+            ? (($pelatihan->jenis == 'online') ? 'online.show' : 'offline.show') 
+            : 'user.course1', 
             $pelatihan->id) }}">
-                <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
+                    <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">
                     <img src="{{ Storage::url($photo->photo) }}" class="h-40 w-auto rounded-md">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between mt-4">
@@ -219,18 +219,5 @@
         @endforeach
     </div>
 </body>
-<footer class="bg-gray-900 text-white py-6">
-    <div class="container mx-auto px-4" style="width: 90%;">
-        <div>
-            <h3 class="text-lg font-semibold">UPT Perpustakaan dan Undip Press</h3>
-            <p class="mt-2 text-sm">
-                Jl. Prof Sudarto, SH Gedung Widya Puraya, Tembalang,<br>
-                Semarang 024 – 7460042, NPP: 3374102D1000001
-            </p>
-            <p class="mt-2 text-sm">
-                Email: <a href="mailto:perpustakaanundip@gmail.com" class="text-blue-400 hover:underline">perpustakaanundip@gmail.com</a>
-            </p>
-        </div>
-    </div>
-</footer>
+@include('components.footer')
 </html>

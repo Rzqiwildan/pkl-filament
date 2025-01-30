@@ -87,10 +87,10 @@
                             </form>
                         @endif
 
-                        <!-- Overlay gelap, tetapi hanya tampil saat pendaftaran baru -->
+                        <!-- Overlay gelap, hanya tampil saat pendaftaran baru -->
                         <div id="overlay" style="display: none;"></div>
 
-                        <!-- Elemen notifikasi, hanya muncul sekali setelah pendaftaran -->
+                        <!-- Elemen notifikasi, hanya muncul setelah pendaftaran -->
                         <div id="notification" style="display: none;">
                             <div id="iconContainer">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
@@ -159,7 +159,7 @@
                                         button.disabled = true;
                                         button.style.backgroundColor = "gray";
                                         button.innerText = 'Anda telah terdaftar!';
-                                        
+
                                         // Menampilkan notifikasi hanya jika pendaftaran baru
                                         showNotification();
                                     } else {
