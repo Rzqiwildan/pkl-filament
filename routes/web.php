@@ -17,7 +17,7 @@ Route::middleware('guest')->group(function () {
 });
 
 //Rute untuk user
-Route::middleware('role:user')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
     Route::get('/course1/{id}', [UserController::class, 'course1'])->name('course1.show');
     Route::get('/offline/{id}', [UserController::class, 'offline'])->name('offline.show');

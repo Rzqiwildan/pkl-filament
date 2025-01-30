@@ -31,6 +31,10 @@ class LoginController extends Controller
                 return redirect('/admin'); // Arahkan ke Filament
             }elseif($user->role === 'teacher'){
                 return redirect('/teacher'); // Arahkan ke Teacher User
+            }elseif($user->role === 'mahasiswa'){
+                return redirect('/dashboard');
+            }elseif($user->role === 'umum'){
+                return redirect('/dashboard');
             }
             return redirect('/dashboard'); // Arahkan ke dashboard user biasa
         }
@@ -46,19 +50,24 @@ class LoginController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:mahasiswa,umum'
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'user'
+            'role' => $validated['role']
         ]);
 
         Auth::login($user);
 
         if ($user->role === 'teacher') {
             return redirect('/teacher');
+        }elseif($user->role === 'mahasiswa'){
+            return redirect('/dashboard');
+        }elseif($user->role === 'umum'){
+            return redirect('/dashboard');
         }
         
         return redirect('/dashboard');
