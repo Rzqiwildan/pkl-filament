@@ -15,7 +15,7 @@ class PelatihanPhotosResource extends Resource
     protected static ?string $model = PelatihanPhotos::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';
-    protected static ?string $navigationGroup = 'Manajemen Content';
+    protected static ?string $navigationGroup = 'Management Content';
 
     public static function form(Form $form): Form
     {

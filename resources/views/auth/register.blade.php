@@ -38,11 +38,11 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Register as:</label>
                     <div class="flex space-x-4">
                         <label class="inline-flex items-center">
-                            <input type="radio" name="role" value="mahasiswa" class="form-radio text-indigo-600" required>
+                            <input type="checkbox" name="role" value="mahasiswa" class="form-checkbox text-indigo-600" required>
                             <span class="ml-2">Mahasiswa</span>
                         </label>
                         <label class="inline-flex items-center">
-                            <input type="radio" name="role" value="umum" class="form-radio text-indigo-600" required>
+                            <input type="checkbox" name="role" value="umum" class="form-checkbox text-indigo-600" required>
                             <span class="ml-2">Umum</span>
                         </label>
                     </div>

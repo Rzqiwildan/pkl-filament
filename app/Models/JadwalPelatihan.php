@@ -11,16 +11,13 @@ class JadwalPelatihan extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'waktu',
-        'hari',
-        'lokasi',
+        'start_date',
+        'end_date',
+        'image',
         'pelatihan_id',
+        'location_name',
     ];
 
-    protected $casts = [
-        'waktu' => 'datetime',
-        'hari' => 'date'
-    ];
 
     public function pelatihan(): BelongsTo
     {

@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-    protected static ?string $navigationIcon = 'heroicon-o-folder';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Course';
 
     public static function form(Form $form): Form
@@ -35,7 +35,7 @@ class CategoryResource extends Resource
                     // ->directory('category-images') // Direktori penyimpanan
                     ->preserveFilenames() 
                     ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/jpg']) 
-                    ->maxSize(5120), 
+                    ->maxSize(size: 5120), 
             ]);
     }
 
