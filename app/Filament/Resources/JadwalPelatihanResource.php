@@ -54,6 +54,13 @@ class JadwalPelatihanResource extends Resource
                 ->directory('jadwal-pelatihan')
                 ->maxSize(5120)
                 ->label('Gambar'),
+            Forms\Components\FileUpload::make('jadwal') 
+                ->label('Upload File')
+                ->disk('public') // Disk penyimpanan
+                ->directory('pdf-materials') // Direktori file
+                ->preserveFilenames() // Jaga nama file asli
+                ->maxSize(5120) 
+                ->downloadable(),
             ]);
     }
 
@@ -84,6 +91,9 @@ class JadwalPelatihanResource extends Resource
             Tables\Columns\ImageColumn::make('image')
                 ->square()
                 ->label('Gambar'),
+            Tables\Columns\ImageColumn::make('jadwal')
+                ->square()
+                ->label('jadwal'),
             ])
             ->defaultSort('start_date', 'desc')
             ->filters([
