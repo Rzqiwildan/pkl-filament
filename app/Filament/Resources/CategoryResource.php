@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Validation\Rule;
 
 class CategoryResource extends Resource
 {
@@ -27,7 +28,8 @@ class CategoryResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->unique('categories', 'slug')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique('categories', 'slug', ignoreRecord: true),
                 
                 Forms\Components\FileUpload::make('image')
                     ->label('Gambar')

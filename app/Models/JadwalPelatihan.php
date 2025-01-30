@@ -16,6 +16,7 @@ class JadwalPelatihan extends Model
         'image',
         'pelatihan_id',
         'location_name',
+        'jadwal',
     ];
 
 
