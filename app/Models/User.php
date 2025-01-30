@@ -26,4 +26,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Mendefinisikan relasi dengan model Pelatihan melalui tabel pivot 'user_pelatihans'
+    public function pelatihans()
+    {
+        return $this->belongsToMany(Pelatihan::class, 'user_pelatihans'); // User dapat mengikuti banyak pelatihan
+    }
+
+    // Model User.php
+    public function hasRegistered($pelatihanId)
+    {
+        return $this->pelatihans()->where('pelatihan_id', $pelatihanId)->exists();
+    }
+
 }
