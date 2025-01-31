@@ -25,26 +25,26 @@
                 </div>
                 
                 <div class="flex items-start space-x-4">
-                <img src="{{ asset('storage/' . $jadwalPelatihan->image) }}" class="w-16 h-20 rounded-md mb-8 mr-8">
+                <img src="{{ Storage::url($jadwalPelatihan->image) }}" class="w-16 h-20 rounded-md mb-8 mr-8">
                     <div>
                         <p class="font-medium mb-4">{{ $jadwalPelatihan->location_name }}</p>
                         <p class="text-sm text-gray-600">
                             {{ $jadwalPelatihan->address }}
                         </p>
                         <div class="maps">
-    <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.4377353773596!2d110.4381257741071!3d-7.048600869476866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708c3e6c1a6d05%3A0xa5f69b96fddc3e51!2sUPT%20Perpustakaan%20dan%20UNDIP%20Press!5e0!3m2!1sid!2sid!4v1706698660243!5m2!1sid!2sid" 
-        width="200" 
-        height="200" 
-        style="border:0;" 
-        allowfullscreen="" 
-        loading="lazy" 
-        referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-</div>
-                    </div>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.4377353773596!2d110.4381257741071!3d-7.048600869476866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708c3e6c1a6d05%3A0xa5f69b96fddc3e51!2sUPT%20Perpustakaan%20dan%20UNDIP%20Press!5e0!3m2!1sid!2sid!4v1706698660243!5m2!1sid!2sid" 
+                        width="200" 
+                        height="200" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
+        </div>
+    </div>
 
             <!-- Ringkasan Pendaftaran -->
             <div class="border rounded-lg p-6" style="border: 1px solid #a2a2a2;">
