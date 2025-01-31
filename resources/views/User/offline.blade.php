@@ -25,16 +25,26 @@
                 </div>
                 
                 <div class="flex items-start space-x-4">
-                    <img src="https://i.pinimg.com/736x/2a/29/bd/2a29bdac0443c22be5023b94cea79e89.jpg" class="w-16 h-20 rounded-md mb-8 mr-8">
+                <img src="{{ Storage::url($jadwalPelatihan->image) }}" class="w-16 h-20 rounded-md mb-8 mr-8">
                     <div>
-                        <p class="font-medium mb-4">UPT Perpustakaan dan UNDIP Press</p>
+                        <p class="font-medium mb-4">{{ $jadwalPelatihan->location_name }}</p>
                         <p class="text-sm text-gray-600">
-                            Jl. Prof. Soedarto SH, Tembalang, Kec. Tembalang, Kota Semarang, Jawa Tengah 50275
+                            {{ $jadwalPelatihan->address }}
                         </p>
-                        <a href="https://maps.app.goo.gl/qbk6nmfRNckJwXEd6" target="_blank" class="text-blue-500 text-sm" style="text-decoration: underline;">Lihat di Google Maps</a>
-                    </div>
+                        <div class="maps">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.4377353773596!2d110.4381257741071!3d-7.048600869476866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708c3e6c1a6d05%3A0xa5f69b96fddc3e51!2sUPT%20Perpustakaan%20dan%20UNDIP%20Press!5e0!3m2!1sid!2sid!4v1706698660243!5m2!1sid!2sid" 
+                        width="200" 
+                        height="200" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
+        </div>
+    </div>
 
             <!-- Ringkasan Pendaftaran -->
             <div class="border rounded-lg p-6" style="border: 1px solid #a2a2a2;">
@@ -212,7 +222,10 @@
         <div class="border rounded-lg mt-6 p-6" style="border: 1px solid #a2a2a2;">
             <h2 class="text-lg font-semibold mb-4">Jadwal Pelatihan</h2>
             <div class="flex justify-between items-center bg-blue-50 border mb-4 px-4 py-2 rounded-lg" style="border: 1px solid #1E40AF;">
-                <span>14 Jan 2025 - 14 Mar 2025</span>
+            <span>
+                {{ \Carbon\Carbon::parse($jadwalPelatihan->start_date)->format('d M Y') }} - 
+                {{ \Carbon\Carbon::parse($jadwalPelatihan->end_date)->format('d M Y') }}
+            </span>
                 <span class="font-semibold">{{ $pelatihans->kapasitas }} kuota tersedia</span>
             </div>
         </div>

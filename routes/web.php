@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/quiz1', [UserController::class, 'quiz1'])->name('user.quiz1');
     Route::get('/user/mycourse1', [UserController::class, 'mycourse1'])->name('user.mycourse1');
     Route::get('/user/banner3', [UserController::class, 'banner3'])->name('user.banner3');
+    Route::get('/jadwal-pelatihan/{id}', [UserController::class, 'showJadwalPelatihan']);
     // Route::get('/mycourse', function () {
     //     return view('User.course');
     // })->name('user.course');
