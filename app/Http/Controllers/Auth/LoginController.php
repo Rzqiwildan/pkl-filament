@@ -35,6 +35,8 @@ class LoginController extends Controller
                 return redirect('/dashboard');
             }elseif($user->role === 'umum'){
                 return redirect('/dashboard');
+            }elseif($user->role === 'user'){
+                return redirect('/dashboard');
             }
             return redirect('/dashboard'); // Arahkan ke dashboard user biasa
         }
@@ -67,6 +69,8 @@ class LoginController extends Controller
         }elseif($user->role === 'mahasiswa'){
             return redirect('/dashboard');
         }elseif($user->role === 'umum'){
+            return redirect('/dashboard');
+        }elseif($user->role === 'user'){
             return redirect('/dashboard');
         }
         

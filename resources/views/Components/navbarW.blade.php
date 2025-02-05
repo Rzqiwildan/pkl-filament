@@ -1,4 +1,5 @@
-<link rel="shortcut icon" href="https://digilib.undip.ac.id/wp-content/uploads/2020/11/cropped-Ikon-Undip-32x32.png" type="image/x-icon">
+<link rel="shortcut icon" href="https://digilib.undip.ac.id/wp-content/uploads/2020/11/cropped-Ikon-Undip-32x32.png"
+    type="image/x-icon">
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -6,7 +7,8 @@
             <!-- Logo -->
             <div class="flex items-center gap-4">
                 <a href="{{ route('welcome') }}">
-                    <img class="w-10" src="https://sso.undip.ac.id/assets/app/images/logo-undip-mail.png" alt="Logo">
+                    <img class="w-10" src="https://sso.undip.ac.id/assets/app/images/logo-undip-mail.png"
+                        alt="Logo">
                 </a>
                 <div class="h-10 w-0.5 bg-black"></div>
                 <div class="flex flex-col">
@@ -30,7 +32,7 @@
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     Home
                 </a>
-                <a href="{{route('login')}}"
+                <a href="{{ route('login') }}"
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     Payment
                 </a>
@@ -38,14 +40,16 @@
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     MyCourse
                 </a>
-                <a href="{{route('login')}}"
+                <a href="{{ route('login') }}"
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     History
                 </a>
                 <!-- Login & Register Buttons -->
                 <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:mt-0">
-                    <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Login</a>
-                    <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-medium text-cblack-0 bg-white hover:bg-slate-100 border rounded-lg">Register</a>
+                    <a href="{{ route('login') }}"
+                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Login</a>
+                    <a href="{{ route('register') }}"
+                        class="px-4 py-2 text-sm font-medium text-cblack-0 bg-white hover:bg-slate-100 border rounded-lg">Register</a>
                 </div>
             </div>
         </div>
@@ -53,12 +57,12 @@
 </nav>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const menuBtn = document.getElementById('menuBtn');
         const navbarLinks = document.getElementById('navbarLinks');
         const hamburgerLines = menuBtn.querySelectorAll('span');
 
-        menuBtn.addEventListener('click', function () {
+        menuBtn.addEventListener('click', function() {
             const expanded = menuBtn.getAttribute('aria-expanded') === 'true' || false;
             menuBtn.setAttribute('aria-expanded', !expanded);
             navbarLinks.classList.toggle('hidden');
@@ -75,18 +79,18 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const profileImage = document.getElementById('profileImage');
         const dropdownMenu = document.getElementById('dropdownMenu');
 
         // Toggling dropdown menu saat gambar profil diklik
-        profileImage.addEventListener('click', function () {
+        profileImage.addEventListener('click', function() {
             const isVisible = dropdownMenu.style.display === 'block';
             dropdownMenu.style.display = isVisible ? 'none' : 'block';
         });
 
         // Menutup dropdown jika klik di luar gambar profil
-        window.addEventListener('click', function (e) {
+        window.addEventListener('click', function(e) {
             if (!profileImage.contains(e.target)) {
                 dropdownMenu.style.display = 'none';
             }
