@@ -170,7 +170,7 @@ class UserController extends Controller
         }
 
         // Debugging: tampilkan query yang dijalankan
-        \Log::info("Mencari pelatihan dengan query: " . $query);
+        Log::info("Mencari pelatihan dengan query: " . $query);
 
         $results = Pelatihan::where('name', 'LIKE', "%{$query}%")->limit(5)->get();
 
@@ -236,6 +236,17 @@ class UserController extends Controller
             ->where('pelatihan_id', $id)
             ->exists();
 
+            if (request()->has('pdf') && $jadwalPelatihan->file_pdf) {
+                // Ambil path file PDF
+                $path = storage_path('app/public/' . $jadwalPelatihan->jadwal);
+                
+                // Cek apakah file exist
+                if (file_exists($path)) {
+                    return response()->file($path);
+                    // Atau jika ingin di-download:
+                    // return response()->download($path, 'jadwal-pelatihan.pdf');
+                }
+            }
         // Mengirim data pelatihans, jadwalPelatihan, dan isRegistered ke view
         return view('user.offline', compact('pelatihans', 'jadwalPelatihan', 'isRegistered'));
     }

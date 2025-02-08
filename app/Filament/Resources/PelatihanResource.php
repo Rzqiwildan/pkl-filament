@@ -89,19 +89,28 @@ class PelatihanResource extends Resource
                     $get('jenis') === 'hybrid'
                 ) // Hanya tampil jika online atau hybrid
                 ->label('Materi'),
+                Forms\Components\Select::make('teacher_id')
+                ->relationship('teacher', 'name')  // Relasi dengan model Teacher, tampilkan field 'name'
+                ->multiple()
+                ->relationship('teachers', 'name')
+                ->required(),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('name'),
+            Tables\Columns\TextColumn::make('name')
+                ->searchable(),
             Tables\Columns\TextColumn::make('thumbnail'),
             Tables\Columns\TextColumn::make('kesulitan')->label('Kesulitan'),
             Tables\Columns\TextColumn::make('jenis'),
             Tables\Columns\TextColumn::make('harga'),
             Tables\Columns\TextColumn::make('kapasitas'),
             Tables\Columns\TextColumn::make('category.name')->label('Kategori'),
+            Tables\Columns\TextColumn::make('teachers.name')
+                ->label('teacher')
+                ->separator(', '),
         ])
         ->filters([
             SelectFilter::make('category_id')

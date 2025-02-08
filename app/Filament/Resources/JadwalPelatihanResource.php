@@ -55,12 +55,13 @@ class JadwalPelatihanResource extends Resource
                 ->maxSize(5120)
                 ->label('Gambar'),
             Forms\Components\FileUpload::make('jadwal') 
-                ->label('Upload File')
+                ->label('Upload Jadwal')
                 ->disk('public') // Disk penyimpanan
                 ->directory('pdf-materials') // Direktori file
-                ->preserveFilenames() // Jaga nama file asli
+                // ->preserveFilenames() // Jaga nama file asli
                 ->maxSize(5120) 
                 ->downloadable(),
+            
             ]);
     }
 

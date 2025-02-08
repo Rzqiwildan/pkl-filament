@@ -100,4 +100,7 @@ return [
         'check.role.admin',
     ],
 
+    'widgets' => [
+    App\Filament\Widgets\StatsOverviewWidget::class,
+    ],
 ];

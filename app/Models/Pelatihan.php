@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pelatihan extends Model
@@ -21,8 +22,7 @@ class Pelatihan extends Model
         'category_id',
         'materi_id',
         'jadwal_id',
-        'user_id',
-        'email'
+        'teacher_id'
     ];
     
     public function category(): BelongsTo
@@ -39,7 +39,10 @@ class Pelatihan extends Model
     {
         return $this->belongsTo(JadwalPelatihan::class, 'jadwal_id');
     }
-    
+    public function teachers(): BelongsToMany
+{
+    return $this->belongsToMany(Teacher::class, 'pelatihan_teacher');
+}
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -55,11 +58,6 @@ class Pelatihan extends Model
         return $this->hasMany(Transaksi::class);
     }
 
-    // Mendefinisikan relasi dengan model User melalui tabel pivot 'user_pelatihans'
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'user_pelatihans'); // Pelatihan memiliki banyak pengguna melalui tabel pivot
-    }
 
     public function decreaseCapacity()
     {

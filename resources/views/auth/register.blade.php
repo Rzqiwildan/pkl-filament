@@ -45,8 +45,7 @@
                             <span class="ml-2">Mahasiswa</span>
                         </label>
                         <label class="inline-flex items-center">
-                            <input type="radio" name="role" value="umum" class="form-radio text-indigo-600"
-                                required>
+                            <input type="radio" name="role" value="umum" class="form-radio text-indigo-600" required>
                             <span class="ml-2">Umum</span>
                         </label>
                     </div>
