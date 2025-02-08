@@ -10,10 +10,12 @@
                 <img class="w-10" src="https://sso.undip.ac.id/assets/app/images/logo-undip-mail.png" alt="Logo">
                 </a>
                 <div class="h-10 w-0.5 bg-black"></div>
-                <div class="flex flex-col">
-                    <span class="text-sm font-semibold">Universitas Diponegoro</span>
-                    <span class="text-xs font-medium">PKL</span>
-                </div>
+                <a href="{{ route('dashboard.index') }}">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-semibold">Universitas Diponegoro</span>
+                        <span class="text-xs font-medium">D-STEP</span>
+                    </div>
+                </a>
             </div>
 
             <!-- Hamburger Menu Button -->

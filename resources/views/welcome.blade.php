@@ -8,7 +8,7 @@
 </head>
 <body>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @include('components.navbarW')
+    @include('components.navbarWelcome')
     <!-- Carousel -->
     <div class="container mx-auto mt-24" style="width: 90%;">
         <div class="splide_banner rounded-md" style="width: 100%; max-height: 12rem; overflow: hidden; position: relative;">
