@@ -74,7 +74,7 @@
                     <div class="flex-1">
                     <div class="flex items-center justify-between mb-4">
                         <label class="text-sm font-medium w-24">NIK</label>
-                        <input type="text" class="flex-1 border border-gray-300 rounded-lg p-2" value="24060122140124" placeholder="Masukkan NIK Anda" disabled>
+                        <input type="text" class="flex-1 border border-gray-300 rounded-lg p-2" value="{{ $nik }}" placeholder="Masukkan NIK Anda" disabled>
                     </div>
                     <div class="flex items-center justify-between mb-4">
                         <label class="text-sm font-medium w-24">Nama</label>

@@ -12,27 +12,32 @@ use App\Models\Banner;
 use App\Filament\Resources\PelatihanResource;
 use App\Models\UserPelatihan;
 use App\Models\JadwalPelatihan;
+use App\Models\Umum; 
+use App\Models\HistoryUser;
+use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
     public function index()
     {
-        // Ambil semua data pelatihan
-        $pelatihans = Pelatihan::with('photos')->get(); 
+        // Ambil tanggal sekarang
+        $now = Carbon::now();
 
-        // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
+        // Ambil pelatihan yang memiliki jadwal dan belum lewat dari end_date
+        $pelatihans = Pelatihan::with(['photos', 'jadwalPelatihan'])
+            ->whereHas('jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '>=', $now); // Hanya yang belum lewat end_date
+            })
+            ->get();
+
+        // Ambil semua data lainnya
         $photos = PelatihanPhotos::all();
-
-        // Ambil semua data banner
         $banners = Banner::all();
-
-        // Ambil semua data banner
         $categories = Category::all();
-
         $jenisOptions = PelatihanResource::getJenisOptions();
         $kesulitanOptions = PelatihanResource::getKesulitanOptions();
 
-        // Kirimkan semua data ke view
         return view('user.dashboard', compact('pelatihans', 'photos', 'banners', 'categories', 'jenisOptions', 'kesulitanOptions'));
     }
 
@@ -46,20 +51,75 @@ class UserController extends Controller
 
     public function myCourses()
     {
+        // Pindahkan pelatihan yang sudah selesai ke history
+        $this->updateUserPelatihanHistory(); 
+
+        // Ambil tanggal sekarang
+        $now = Carbon::now();
+
+        // Ambil ID user yang sedang login
+        $userId = Auth::id(); 
+
         // Ambil semua data pelatihan
-        $pelatihans = Pelatihan::with('photos')->get(); 
+        $pelatihans = Pelatihan::with(['photos', 'jadwalPelatihan'])
+            ->whereHas('jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '>=', $now); // Hanya yang belum lewat end_date
+            })
+            ->get(); 
 
         // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
         $photos = PelatihanPhotos::all();
 
-        $userId = Auth::id(); // Ambil ID user yang sedang login
-
-        // Ambil semua pelatihan yang diikuti oleh user ini
+        // Ambil semua pelatihan yang diikuti oleh user yang BELUM berakhir
         $user_pelatihans = UserPelatihan::where('user_id', $userId)
-                                ->with('pelatihan') // Ambil data pelatihannya juga
-                                ->get();
+            ->whereHas('pelatihan.jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '>=', $now);
+            })
+            ->with('pelatihan.photos')
+            ->get();
 
         return view('user.course', compact('user_pelatihans', 'pelatihans', 'photos')); // Pastikan variabel ini diteruskan ke view
+    }
+
+    public function updateUserPelatihanHistory()
+    {
+        $now = Carbon::now();
+        $userId = Auth::id();
+
+        // Ambil semua pelatihan yang sudah berakhir dan diikuti oleh user
+        $expiredPelatihans = UserPelatihan::where('user_id', $userId)
+            ->whereHas('pelatihan.jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '<', $now); // Pelatihan yang sudah berakhir
+            })
+            ->get();
+
+        foreach ($expiredPelatihans as $pelatihan) {
+            // Pastikan data belum ada di history_users agar tidak duplikat
+            $exists = HistoryUser::where('user_id', $userId)
+                ->where('pelatihan_id', $pelatihan->pelatihan_id)
+                ->exists();
+
+            if (!$exists) {
+                HistoryUser::create([
+                    'user_id' => $userId,
+                    'pelatihan_id' => $pelatihan->pelatihan_id,
+                    'score' => $pelatihan->pelatihan->jenis === 'online' ? $this->getUserScore($userId, $pelatihan->pelatihan_id) : null,
+                ]);
+            }
+
+            // Hapus dari tabel user_pelatihans
+            $pelatihan->delete();
+        }
+    }
+
+    // Dummy function untuk mengambil score jika pelatihan online
+    private function getUserScore($userId, $pelatihanId)
+    {
+        // Misalnya kita ambil dari tabel `quiz_results`, sesuaikan dengan struktur database kamu
+        return DB::table('quiz_results')
+            ->where('user_id', $userId)
+            ->where('pelatihan_id', $pelatihanId)
+            ->value('score') ?? null;
     }
 
 
@@ -103,44 +163,42 @@ class UserController extends Controller
 
 
     public function ikutPelatihanOn(Request $request, $id)
-{
-    $pelatihan = Pelatihan::findOrFail($id);
+    {
+        $pelatihan = Pelatihan::findOrFail($id);
 
-    // Cek apakah jenis pelatihan adalah online
-    if ($pelatihan->jenis !== 'online') {
-        return response()->json(['error' => 'Pelatihan ini tidak tersedia untuk pendaftaran online.'], 400);
+        // Cek apakah jenis pelatihan adalah online
+        if ($pelatihan->jenis !== 'online') {
+            return response()->json(['error' => 'Pelatihan ini tidak tersedia untuk pendaftaran online.'], 400);
+        }
+
+        // Cek apakah kuota masih tersedia
+        if ($pelatihan->kapasitas <= 0) {
+            return response()->json(['error' => 'Kuota sudah penuh.'], 400);
+        }
+
+        $userId = Auth::id();
+
+        // Cek apakah user sudah terdaftar
+        $isAlreadyRegistered = UserPelatihan::where('user_id', $userId)
+                                            ->where('pelatihan_id', $id)
+                                            ->exists();
+
+        if ($isAlreadyRegistered) {
+            return response()->json(['error' => 'Anda sudah terdaftar dalam pelatihan ini.'], 400);
+        }
+
+        // Simpan data pendaftaran
+        UserPelatihan::create([
+            'user_id' => $userId,
+            'pelatihan_id' => $id,
+        ]);
+
+        // Kurangi kapasitas pelatihan
+        $pelatihan->decrement('kapasitas');
+
+        // Kembalikan respons JSON jika berhasil
+        return response()->json(['success' => true]);
     }
-
-    // Cek apakah kuota masih tersedia
-    if ($pelatihan->kapasitas <= 0) {
-        return response()->json(['error' => 'Kuota sudah penuh.'], 400);
-    }
-
-    $userId = Auth::id();
-
-    // Cek apakah user sudah terdaftar
-    $isAlreadyRegistered = UserPelatihan::where('user_id', $userId)
-                                        ->where('pelatihan_id', $id)
-                                        ->exists();
-
-    if ($isAlreadyRegistered) {
-        return response()->json(['error' => 'Anda sudah terdaftar dalam pelatihan ini.'], 400);
-    }
-
-    // Simpan data pendaftaran
-    UserPelatihan::create([
-        'user_id' => $userId,
-        'pelatihan_id' => $id,
-    ]);
-
-    // Kurangi kapasitas pelatihan
-    $pelatihan->decrement('kapasitas');
-
-    // Kembalikan respons JSON jika berhasil
-    return response()->json(['success' => true]);
-}
-
-
 
     public function getPelatihan()
     {
@@ -213,18 +271,17 @@ class UserController extends Controller
         return view('user.banner3', compact('pelatihans', 'banners'));  // Kirim variabel $pelatihans ke view
     }
 
-    public function course2()
-    {
-    return view('user.course2');
-    }
-
-    public function course3()
-    {
-        return view('user.course3');
-    }
-
     public function offline($id)
     {
+        $pelatihan = Pelatihan::find($id);
+
+        // Cek apakah pelatihan berbayar
+        if ($pelatihan->is_paid) {
+            return redirect()->route('payment.show', ['id' => $id]);  // Redirect ke halaman pembayaran
+        }
+
+        // Cek apakah pengguna sudah terdaftar
+        // $isRegistered = $pelatihan->users()->where('user_id', auth()->id())->exists();
         // Mengambil data Pelatihan beserta foto yang terkait
         $pelatihans = Pelatihan::with('photos')->where('id', $id)->first();
 
@@ -238,8 +295,27 @@ class UserController extends Controller
 
         // Mengirim data pelatihans, jadwalPelatihan, dan isRegistered ke view
         return view('user.offline', compact('pelatihans', 'jadwalPelatihan', 'isRegistered'));
+
+        // return view('offline', compact('pelatihan', 'isRegistered'));
     }
 
+    public function daftarPelatihan(Request $request)
+    {
+        $pelatihan = Pelatihan::find($request->pelatihan_id);
+
+        if ($pelatihan->harga == 0) {
+            // Logika untuk registrasi otomatis saat pelatihan gratis
+            // Contoh, menambahkan user ke database
+            Auth::user()->pelatihan()->attach($pelatihan->id);
+
+            // Notifikasi
+            session()->flash('success', 'Anda telah berhasil mendaftar pelatihan!');
+            return back(); // Kembali ke halaman yang sama
+        }
+
+        // Redirect ke halaman pembayaran jika pelatihan berbayar
+        return redirect()->route('payment.show', ['id' => $pelatihan->id]);
+    }
 
     public function online($id)
     {
@@ -271,11 +347,19 @@ class UserController extends Controller
 
     public function history()
     {
-        return view('user.history');
+        $userId = Auth::id();
+
+        // Ambil pelatihan yang sudah selesai dari history_users
+        $user_histories = HistoryUser::where('user_id', $userId)
+            ->with('pelatihan.photos') // Pastikan relasi sudah benar
+            ->get();
+
+        return view('user.history', compact('user_histories'));
     }
 
     public function profil()
     {
-        return view('user.profil');
+        $nik = Umum::first()->nik; // Mengambil NIK pertama dari tabel umums
+        return view('user.profil', compact('nik'));
     }
 }

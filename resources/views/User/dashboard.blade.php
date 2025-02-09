@@ -197,7 +197,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
-                            <span class="text-sm text-gray-700 font-medium">50 jam</span>
+                            <span class="text-sm text-gray-700 font-medium">{{$pelatihan->remaining_time}}</span>
                         </div>
                         <div class="flex items-center space-x-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
@@ -206,8 +206,12 @@
                             <span class="text-sm text-gray-700 font-medium">Tingkat: {{ $pelatihan->kesulitan }}</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-700 font-medium">Kuota: {{ $pelatihan->kapasitas }} Peserta</span>
-                        </div>                 
+                            @if ($pelatihan->kapasitas > 0)
+                                <span class="text-sm text-gray-700 font-medium">Kuota: {{ $pelatihan->kapasitas }} Peserta</span>
+                            @else
+                                <span class="text-sm text-red-600 font-medium">Kuota Pelatihan Sudah Terisi Penuh</span>
+                            @endif
+                        </div>                
                         <div class="mt-4">
                             <p class="text-sm font-medium">Harga</p>
                             <p class="text-lg font-bold">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</p>

@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 class Pelatihan extends Model
 {
@@ -35,9 +37,9 @@ class Pelatihan extends Model
         return $this->belongsTo(Materi::class);
     }
     
-    public function jadwalPelatihan(): BelongsTo
+    public function jadwalPelatihan(): HasOne
     {
-        return $this->belongsTo(JadwalPelatihan::class, 'jadwal_id');
+        return $this->hasOne(JadwalPelatihan::class, 'pelatihan_id');
     }
     
     public function user(): BelongsTo
@@ -67,6 +69,22 @@ class Pelatihan extends Model
             $this->decrement('kapasitas');
         }
     }
+
+    public function getRemainingTimeAttribute()
+    {
+        if (!$this->jadwalPelatihan) {
+            return "Tidak ada jadwal";
+        }
+
+        $endDate = Carbon::parse($this->jadwalPelatihan->end_date);
+        $now = Carbon::now();
+
+        $diffInDays = $endDate->diffInDays($now);
+        $diffInHours = $endDate->diffInHours($now);
+
+        return $diffInDays > 0 ? "$diffInDays hari tersisa" : "$diffInHours jam tersisa";
+    }
+
 
 
 }

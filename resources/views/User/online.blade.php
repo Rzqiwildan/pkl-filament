@@ -31,7 +31,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            <span class="text-gray-600 text-sm">50 jam</span>
+            <span class="text-gray-600 text-sm">{{$pelatihans->remaining_time}}</span>
         </div>
         <div class="flex items-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
@@ -102,11 +102,9 @@
                     <span class=" mb-4">Flowchart: representasi visual algoritma</span>
                 </div>
                 <div class="flex items-center space-x-2 mb-4">
-                    <a href="{{ route('user.quiz1') }}">
-                        <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Quiz</span>
-                        <span class="mb-4">Quiz 1</span>
-                    </a>
-                </div>
+    <a href="{{ route('quiz.soal') }}" class="mb-4 text-blue-600 hover:underline">Quiz 1</a>
+</div>
+
             </div>
         </div>
 

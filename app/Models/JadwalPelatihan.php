@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 class JadwalPelatihan extends Model
 {
@@ -33,5 +34,21 @@ class JadwalPelatihan extends Model
     public function getPelatihanName()
     {
         return $this->pelatihan ? $this->pelatihan->name : 'Tidak ada pelatihan';
+    }
+
+    // Accessor untuk menghitung waktu tersisa
+    public function getRemainingTimeAttribute()
+    {
+        if (!$this->end_date) {
+            return "Tanggal tidak tersedia";
+        }
+
+        $endDate = Carbon::parse($this->end_date);
+        $now = Carbon::now();
+
+        $diffInDays = $endDate->diffInDays($now);
+        $diffInHours = $endDate->diffInHours($now);
+
+        return $diffInDays > 0 ? "$diffInDays hari tersisa" : "$diffInHours jam tersisa";
     }
 }

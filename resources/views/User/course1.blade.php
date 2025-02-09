@@ -23,7 +23,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
-                                    <span class="text-gray-600 text-sm">50 jam</span>
+                                    <span class="text-gray-600 text-sm">{{$pelatihans->remaining_time}}</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
@@ -68,24 +68,39 @@
                             <p class="text-2xl font-bold">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</p>
                         </div>
                         @if($pelatihans->jenis === 'offline')
-                            <!-- Untuk pelatihan offline, gunakan link biasa -->
-                            <a href="{{ route('offline.show', $pelatihans->id) }}">
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
-                                    Ikuti Pelatihan
-                                </button>
-                            </a>
+                            <!-- Jika kuota masih tersedia -->
+                            @if($pelatihans->kapasitas > 0)
+                                <a href="{{ route('offline.show', $pelatihans->id) }}">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
+                                        Ikuti Pelatihan
+                                    </button>
+                                </a>
                             @else
-                            <!-- Formulir Pendaftaran Pelatihan -->
+                                <!-- Jika kuota habis -->
+                                <button class="bg-gray-400 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8 cursor-not-allowed" disabled>
+                                    Kuota Habis
+                                </button>
+                            @endif
+                        @else
+                            <!-- Form untuk pelatihan online -->
                             <form id="form-ikut-pelatihan" action="{{ route('pelatihan.ikut', $pelatihans->id) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
-                                <button id="registerButton" type="submit" 
-                                        class="{{ $isRegistered ? 'disabled' : '' }}" 
-                                        {{ $isRegistered ? 'disabled' : '' }}>
-                                    {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
-                                </button>
+
+                                @if($pelatihans->kapasitas > 0)
+                                    <button id="registerButton" type="submit" 
+                                            class="{{ $isRegistered ? 'disabled' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg" 
+                                            {{ $isRegistered ? 'disabled' : '' }}>
+                                        {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
+                                    </button>
+                                @else
+                                    <button class="bg-gray-400 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg cursor-not-allowed" disabled>
+                                        Kuota Habis
+                                    </button>
+                                @endif
                             </form>
                         @endif
+
 
                         <!-- Overlay gelap, hanya tampil saat pendaftaran baru -->
                         <div id="overlay" style="display: none;"></div>
