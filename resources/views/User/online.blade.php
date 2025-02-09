@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,23 +8,19 @@
     <title>Document</title>
 </head>
 @include('components.navbar')
-<body class="bg-gray-100">
-<div class="container mx-auto px-4 py-8 mt-16">
-    <!-- Header Section -->
-    <div class="flex items-start justify-between mb-4">
-        <!-- Gambar di Samping Kiri -->
-        <div class="w-1/3 mr-4">
-            <img src="https://i.pinimg.com/736x/9f/d5/94/9fd5943aa427907cee81950f59ac8f54.jpg" class="rounded-lg shadow-lg object-cover w-full h-48">
-        </div>
 
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8 mt-16">
+        <!-- Header Section -->
+        <div class="flex items-start justify-between mb-4">
         <!-- Teks di Samping Kanan -->
-        <div class="w-2/3">
-            <h1 class="text-3xl font-bold">{{ $pelatihans->name }}</h1>
-            <p class="text-gray-600 mt-2">
-            {{ $pelatihans->deskripsi }}
-            </p>
+            <div class="w-2/3">
+                <h1 class="text-3xl font-bold">{{ $pelatihans->name }}</h1>
+                <p class="text-gray-600 mt-2">
+                    {{ $pelatihans->deskripsi }}
+                </p>
+            </div>
         </div>
-    </div>
 
     <!-- Course Details -->
     <div class="flex items-center space-x-4">
@@ -47,33 +44,37 @@
         </div>
      </div>
 
-    <!-- Course Content -->
-    <div class="mt-6">
-        <!-- Dropdown Bagian 1 -->
-        <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
-            <button @click="open = !open" class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                <div class="mt-2 mb-2">
-                    Bagian 1
-                </div>
-                <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </svg>
-                <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                </svg>
-            </button>
+        <!-- Course Content -->
+        <div class="mt-6">
+            <!-- Dropdown Bagian 1 -->
+            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
+                <button @click="open = !open"
+                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
+                    <div class="mt-2 mb-2">
+                        Bagian 1
+                    </div>
+                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
+                    </svg>
+                </button>
 
-            <div x-show="open" class="px-4 py-2 space-y-2">
-                <div class="flex items-center space-x-2 mt-4 mb-4">
-                    
-                    <!-- <span>Pengenalan Algoritma Pemrograman</span> -->
-                    <a href="https://youtu.be/RadjAh0LT9I?si=18so-viuYNTMb2DS" target="_blank" class="text-sm text-gray-900">
-                        <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Video</span>
-                        <span class="hover:text-blue-500 hover:underline">Pengenalan Algoritma Pemrograman</span>
-                    </a>
+                <div x-show="open" class="px-4 py-2 space-y-2">
+                    <div class="flex items-center space-x-2 mt-4 mb-4">
+
+                        <!-- <span>Pengenalan Algoritma Pemrograman</span> -->
+                        <a href="https://youtu.be/RadjAh0LT9I?si=18so-viuYNTMb2DS" target="_blank"
+                            class="text-sm text-gray-900">
+                            <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Video</span>
+                            <span class="hover:text-blue-500 hover:underline">Pengenalan Algoritma Pemrograman</span>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <!-- Dropdown Bagian 2 -->
         <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
@@ -108,61 +109,73 @@
             </div>
         </div>
 
-        <!-- Dropdown Bagian 3 -->
-        <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
-            <button @click="open = !open" class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                <div class="mt-2 mb-2">
-                    Bagian 3
-                </div>
-                <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </svg>
-                <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                </svg>
-            </button>
-            <div x-show="open" class="px-4 py-2 space-y-2">
-                <div class="flex items-center space-x-2 mb-4">
-                    <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Video</span>
-                    <span  class="mt-4 mb-4">Struktur Dasar Algoritma: Urutan (Sequence)</span>
-                </div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
-                    <span class="mb-4">Struktur Dasar Algoritma: Percabangan (Selection)</span>
-                </div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
-                    <span class="mb-4">Struktur Dasar Algoritma: Perulangan (Looping)</span>
-                </div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Quiz</span>
-                    <span class="mb-4">Quiz 2</span>
+            <!-- Dropdown Bagian 3 -->
+            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border"
+                style="border: 1px solid #a2a2a2;">
+                <button @click="open = !open"
+                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
+                    <div class="mt-2 mb-2">
+                        Bagian 3
+                    </div>
+                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
+                    </svg>
+                </button>
+                <div x-show="open" class="px-4 py-2 space-y-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span
+                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Video</span>
+                        <span class="mt-4 mb-4">Struktur Dasar Algoritma: Urutan (Sequence)</span>
+                    </div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span
+                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
+                        <span class="mb-4">Struktur Dasar Algoritma: Percabangan (Selection)</span>
+                    </div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span
+                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
+                        <span class="mb-4">Struktur Dasar Algoritma: Perulangan (Looping)</span>
+                    </div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Quiz</span>
+                        <span class="mb-4">Quiz 2</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Dropdown Evaluasi Akhir -->
-        <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
-            <button @click="open = !open" class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                <div class="mt-2 mb-2">
-                    Evaluasi Akhir
-                </div>
-                <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </svg>
-                <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                </svg>
-            </button>
+            <!-- Dropdown Evaluasi Akhir -->
+            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border"
+                style="border: 1px solid #a2a2a2;">
+                <button @click="open = !open"
+                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
+                    <div class="mt-2 mb-2">
+                        Evaluasi Akhir
+                    </div>
+                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
+                    </svg>
+                </button>
 
-            <div x-show="open" class="px-4 py-2 space-y-2">
-                <div class="flex items-center space-x-2">
-                    <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Evaluasi</span>
-                    <span class="mt-4 mb-4">Evaluasi Akhir</span>
+                <div x-show="open" class="px-4 py-2 space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <span
+                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Evaluasi</span>
+                        <span class="mt-4 mb-4">Evaluasi Akhir</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Alpine.js -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
 </body>

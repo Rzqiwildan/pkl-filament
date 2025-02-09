@@ -88,9 +88,24 @@ Route::get('/unauthorized', function () {
 // Rute setelah login untuk teacher
 Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
-    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
-    Route::get('/teacher/courses', [TeacherController::class, 'courseT'])->name('teacher.courses');
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
+    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/teacher/courseT', [TeacherController::class, 'courseT'])->name('teacher.courseT');
+    Route::get('/teacher/courseT/{pelatihan}', [TeacherController::class, 'showCourse'])->name('teacher.showCourse');
+    Route::get('/teacher/courseT/{pelatihan}/upload-materi', [TeacherController::class, 'uploadMateri'])->name('teacher.uploadMateri');
+    Route::get('/teacher/courseT/upload-materi/{materi}/edit', [TeacherController::class, 'editMateri'])->name('teacher.editMateri');       
+    Route::delete('/teacher/courseT/upload-materi/{materi}', [TeacherController::class, 'deleteMateri'])->name('teacher.deleteMateri');
+    Route::post('/teacher/courseT/{pelatihan}/upload-materi', [TeacherController::class, 'storeMateri'])->name('teacher.storeMateri');
+    Route::post('/teacher/storeBagian/{pelatihanId}', [TeacherController::class, 'storeBagian'])->name('teacher.storeBagian');
+    Route::delete('/teacher/deleteBagian/{bagianId}', [TeacherController::class, 'deleteBagian'])->name('teacher.deleteBagian');
+    Route::get('/teacher/quiz/create/{bagianId}', [TeacherController::class, 'createQuiz'])->name('teacher.createQuiz');
+    Route::post('/teacher/quiz/store/{bagianId}', [TeacherController::class, 'storeQuiz'])->name('teacher.storeQuiz');
+    Route::get('/teacher/quiz/{quizId}', [TeacherController::class, 'showQuiz'])->name('teacher.showQuiz');
+    Route::post('/teacher/quiz/{quizId}/question/store', [TeacherController::class, 'storeQuestion'])->name('teacher.storeQuestion');
+    Route::delete('/teacher/quiz/{quizId}', [TeacherController::class, 'deleteQuiz'])->name('teacher.deleteQuiz');
+    Route::post('/teacher/storeBagianQuiz/{pelatihanId}', [TeacherController::class, 'storeBagianQuiz'])->name('teacher.storeBagianQuiz');
+    Route::get('/teacher/quiz/{quizId}/question/{questionId}/edit', [TeacherController::class, 'editQuestion'])->name('teacher.editQuestion');
+    Route::put('/teacher/quiz/{quizId}/question/{questionId}', [TeacherController::class, 'updateQuestion'])->name('teacher.updateQuestion');
 });
 
 Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {

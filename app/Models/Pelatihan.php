@@ -23,18 +23,30 @@ class Pelatihan extends Model
         'category_id',
         'materi_id',
         'jadwal_id',
-        'user_id',
-        'email'
+        'teacher_id'
     ];
     
+    public function setJenisAttribute($value)
+    {
+        $allowedValues = ['online', 'offline'];
+        if (!in_array($value, $allowedValues)) {
+            throw new \InvalidArgumentException("Jenis pelatihan harus 'online' atau 'offline'.");
+        }
+        $this->attributes['jenis'] = $value;
+    }
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-    
-    public function materi(): BelongsTo
+
+    public function bagianPelatihans()
     {
-        return $this->belongsTo(Materi::class);
+        return $this->hasMany(BagianPelatihan::class, 'pelatihan_id');
+    }
+    
+    public function materis()
+    {
+        return $this->hasMany(Materi::class, 'pelatihan_id');
     }
     
     public function jadwalPelatihan(): HasOne
@@ -57,11 +69,6 @@ class Pelatihan extends Model
         return $this->hasMany(Transaksi::class);
     }
 
-    // Mendefinisikan relasi dengan model User melalui tabel pivot 'user_pelatihans'
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'user_pelatihans'); // Pelatihan memiliki banyak pengguna melalui tabel pivot
-    }
 
     public function decreaseCapacity()
     {

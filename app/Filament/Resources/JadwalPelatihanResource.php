@@ -28,13 +28,20 @@ class JadwalPelatihanResource extends Resource
     {
         return $form
             ->schema([
-            Forms\Components\Select::make('pelatihan_id')
+                Forms\Components\Select::make('pelatihan_id')
                 ->relationship('pelatihan', 'name')
                 ->required()
                 ->searchable()
                 ->preload()
-                ->label('Nama Pelatihan'),
-                
+                ->label('Nama Pelatihan')
+                ->reactive()
+                ->afterStateUpdated(fn ($state, callable $set) => 
+                    $set('pelatihan_jenis', \App\Models\Pelatihan::find($state)?->jenis)
+                ),
+
+            Forms\Components\Hidden::make('pelatihan_jenis')
+                ->default(''),
+
             Forms\Components\DatePicker::make('start_date')
                 ->required()
                 ->label('Tanggal Mulai'),
@@ -43,24 +50,26 @@ class JadwalPelatihanResource extends Resource
                 ->required()
                 ->label('Tanggal Selesai')
                 ->afterOrEqual('start_date'),
-                
+
             Forms\Components\TextInput::make('location_name')
                 ->required()
                 ->maxLength(255)
-                ->label('Lokasi'),
-                
+                ->label('Lokasi')
+                ->hidden(fn (callable $get) => $get('pelatihan_jenis') === 'online'), // Sembunyikan jika online
+
             Forms\Components\FileUpload::make('image')
                 ->image()
                 ->directory('jadwal-pelatihan')
                 ->maxSize(5120)
                 ->label('Gambar'),
+
             Forms\Components\FileUpload::make('jadwal') 
-                ->label('Upload File')
-                ->disk('public') // Disk penyimpanan
-                ->directory('pdf-materials') // Direktori file
-                ->preserveFilenames() // Jaga nama file asli
+                ->label('Upload Jadwal')
+                ->disk('public')
+                ->directory('pdf-materials')
                 ->maxSize(5120) 
                 ->downloadable(),
+            
             ]);
     }
 

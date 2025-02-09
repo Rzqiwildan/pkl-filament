@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <title>Document</title>
 </head>
 @include('components.navbar')
+
 <body class="bg-gray-100">
     <div class="container mx-auto p-6 mt-16">
         <!-- Header -->
@@ -20,10 +22,11 @@
                 <div class="flex items-center justify-between border-b border-gray-400 mb-8">
                     <h2 class="text-lg font-semibold mb-4">{{ $pelatihans->name }}</h2>
                     <div class="text-sm mb-4">
-                        <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full" style="border: 1px solid #1E40AF">{{ $pelatihans->jenis }}</span>
+                        <span class="text-[#1E40AF] font-medium py-1 px-2 rounded-full"
+                            style="border: 1px solid #1E40AF">{{ $pelatihans->jenis }}</span>
                     </div>
                 </div>
-                
+
                 <div class="flex items-start space-x-4">
                     <img src="{{ Storage::url($jadwalPelatihan->image) }}" class="w-16 h-20 rounded-md mb-8 mr-8">
                         <div>
@@ -219,4 +222,5 @@
     <!-- Alpine.js -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
 </body>
+
 </html>

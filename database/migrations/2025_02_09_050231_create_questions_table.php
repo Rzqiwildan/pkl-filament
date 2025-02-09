@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materis', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('kode_materi');
-            $table->string('materials');
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade'); // Soal terkait dengan quiz
+            $table->text('question'); // Teks pertanyaan
+            $table->string('question_type')->default('multiple_choice');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('materis');
+        Schema::dropIfExists('questions');
     }
 };

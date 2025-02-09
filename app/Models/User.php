@@ -39,4 +39,10 @@ class User extends Authenticatable
         return $this->pelatihans()->where('pelatihan_id', $pelatihanId)->exists();
     }
 
+    public function teacher()
+{
+    return $this->hasOne(Teacher::class, 'user_id');
+}
+
+
 }
