@@ -25,6 +25,14 @@ class Pelatihan extends Model
         'teacher_id'
     ];
     
+    public function setJenisAttribute($value)
+    {
+        $allowedValues = ['online', 'offline'];
+        if (!in_array($value, $allowedValues)) {
+            throw new \InvalidArgumentException("Jenis pelatihan harus 'online' atau 'offline'.");
+        }
+        $this->attributes['jenis'] = $value;
+    }
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

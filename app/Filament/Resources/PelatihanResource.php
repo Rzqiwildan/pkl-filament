@@ -58,13 +58,10 @@ class PelatihanResource extends Resource
                 ->required(),
 
             Forms\Components\Select::make('jenis')
-                ->options([
-                    'offline' => 'Offline',
-                    'online' => 'Online',
-                    'hybrid' => 'Hybrid',
-                ])
-                ->live()
+                ->options(self::getJenisOptions())
+                ->live() // Memastikan form merespon perubahan langsung
                 ->required(),
+    
 
             Forms\Components\Textarea::make('deskripsi')
                 ->required(),
@@ -82,16 +79,7 @@ class PelatihanResource extends Resource
                 ->minValue(1)
                 ->required()
                 ->prefix('Qty'),
-        
-            Forms\Components\Select::make('materi_id')
-                ->relationship('materi', 'name')
-                ->required(fn (Forms\Get $get): bool => $get('jenis') === 'online') // Wajib diisi jika online
-                ->visible(fn (Forms\Get $get): bool =>
-                    $get('jenis') === 'online' ||
-                    $get('jenis') === 'hybrid'
-                ) // Hanya tampil jika online atau hybrid
-                ->label('Materi'),
-                Forms\Components\Select::make('teacher_id')
+            Forms\Components\Select::make('teacher_id')
                 ->relationship('teacher', 'name')  // Relasi dengan model Teacher, tampilkan field 'name'
                 ->multiple()
                 ->relationship('teachers', 'name')
@@ -106,7 +94,12 @@ class PelatihanResource extends Resource
                 ->searchable(),
             Tables\Columns\TextColumn::make('thumbnail'),
             Tables\Columns\TextColumn::make('kesulitan')->label('Kesulitan'),
-            Tables\Columns\TextColumn::make('jenis'),
+            Tables\Columns\TextColumn::make('jenis')
+            ->badge()
+            ->color(fn (string $state): string => match ($state) {
+                'online' => 'success',
+                'offline' => 'warning',
+            }),
             Tables\Columns\TextColumn::make('harga'),
             Tables\Columns\TextColumn::make('kapasitas'),
             Tables\Columns\TextColumn::make('category.name')->label('Kategori'),

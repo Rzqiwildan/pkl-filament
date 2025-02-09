@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class BagianPelatihan extends Model
 {
     use HasFactory;
-    protected $fillable = ['pelatihan_id', 'nama_bagian'];
+    protected $fillable = ['pelatihan_id', 'nama_bagian', 'is_quiz'];
+    protected $attributes = [
+        'is_quiz' => false, // Default false jika tidak diisi
+    ];
 
     public function pelatihan()
     {
@@ -19,4 +22,8 @@ class BagianPelatihan extends Model
 {
     return $this->hasMany(Materi::class, 'bagian_pelatihan_id');
 }
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class);
+    }
 }

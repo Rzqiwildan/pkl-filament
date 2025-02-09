@@ -11,8 +11,7 @@ class Materi extends Model
 
     protected $table = 'materis';
 
-    protected $fillable = [
-        'pelatihan_id', 
+    protected $fillable = [ 
         'name',
         'kode_materi',
         'file_path',
