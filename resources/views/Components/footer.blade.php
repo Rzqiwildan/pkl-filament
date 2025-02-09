@@ -14,4 +14,7 @@
             </p>
         </div>
     </div>
+    <p class="mt-4 text-xs text-gray-400 text-center">
+        © 2025 UPT Perpustakaan dan Undip Press. All rights reserved.
+    </p>
 </footer>

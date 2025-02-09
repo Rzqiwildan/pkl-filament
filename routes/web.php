@@ -84,7 +84,12 @@ Route::get('/unauthorized', function () {
 Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
     Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
-    Route::get('/teacher/courses', [TeacherController::class, 'courseT'])->name('teacher.courses');
+    Route::get('/teacher/courseT', [TeacherController::class, 'courseT'])->name('teacher.courseT');
+    Route::get('/teacher/courseT/{pelatihan}', [TeacherController::class, 'showCourse'])->name('teacher.showCourse');
+    Route::get('/teacher/courseT/{pelatihan}/upload-materi', [TeacherController::class, 'uploadMateri'])->name('teacher.uploadMateri');
+    Route::post('/teacher/courseT/{pelatihan}/upload-materi', [TeacherController::class, 'storeMateri'])->name('teacher.storeMateri');
+    Route::post('/teacher/storeBagian/{pelatihanId}', [TeacherController::class, 'storeBagian'])->name('teacher.storeBagian');
+    Route::delete('/teacher/deleteBagian/{bagianId}', [TeacherController::class, 'deleteBagian'])->name('teacher.deleteBagian');
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
 });
 

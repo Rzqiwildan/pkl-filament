@@ -20,31 +20,19 @@ class Teacher extends Model
         'tgl_lahir'
     ];
 
-    public static function boot()
-{
-    parent::boot();
-
-    static::saving(function ($teacher) {
-        if (User::where('email', $teacher->email)->where('id', '!=', $teacher->user_id)->exists()) {
-            throw new \Exception('Email sudah digunakan.');
-        }
-    });
-}
-
-
+    /**
+     * Relasi ke tabel users (Setiap teacher memiliki satu user).
+     */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function teacher()
-    {
-        return $this->hasOne(Teacher::class);
-    }
-
-
+    /**
+     * Relasi many-to-many ke tabel pelatihans melalui tabel pivot pelatihan_teacher.
+     */
     public function pelatihans(): BelongsToMany
-{
-    return $this->belongsToMany(Pelatihan::class, 'pelatihan_teacher');
-}
+    {
+        return $this->belongsToMany(Pelatihan::class, 'pelatihan_teacher', 'teacher_id', 'pelatihan_id');
+    }
 }

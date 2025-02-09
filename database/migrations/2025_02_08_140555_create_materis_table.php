@@ -7,21 +7,23 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Jalankan migrasi.
      */
     public function up(): void
     {
         Schema::create('materis', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('kode_materi');
-            $table->string('materials');
+            $table->foreignId('pelatihan_id')->constrained()->onDelete('cascade'); // Relasi ke pelatihan
+            $table->string('name'); // Nama Materi
+            $table->string('kode_materi')->unique(); // Kode Materi Unik
+            $table->string('file_path')->nullable(); // File (PDF/PPT) opsional
+            $table->string('link')->nullable(); // Link YouTube opsional
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse migrasi.
      */
     public function down(): void
     {

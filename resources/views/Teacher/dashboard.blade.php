@@ -19,7 +19,7 @@
 
     <!-- Container -->
     <div class="container mx-auto mt-24" style="width: 90%;">
-        <h2 class="text-xl font-bold">Pelatihan yang Anda Ikuti:</h2>
+        <h2 class="text-xl font-bold">Pelatihan yang Anda Ajarkan</h2>
     </div>
 
     <!-- Courses -->
@@ -32,7 +32,7 @@
                             ? ($pelatihan->jenis == 'online'
                                 ? 'online.show'
                                 : 'offline.show')
-                            : 'user.course1',
+                            : 'teacher.uploadMateri',
                         $pelatihan->id,
                     ) }}">
                     <div class="bg-white p-4 rounded-md border" style="border: 1px solid #a2a2a2;">

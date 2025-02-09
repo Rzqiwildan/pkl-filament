@@ -29,10 +29,15 @@ class Pelatihan extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    
-    public function materi(): BelongsTo
+
+    public function bagianPelatihans()
     {
-        return $this->belongsTo(Materi::class);
+        return $this->hasMany(BagianPelatihan::class, 'pelatihan_id');
+    }
+    
+    public function materis()
+    {
+        return $this->hasMany(Materi::class, 'pelatihan_id');
     }
     
     public function jadwalPelatihan(): BelongsTo
@@ -40,9 +45,9 @@ class Pelatihan extends Model
         return $this->belongsTo(JadwalPelatihan::class, 'jadwal_id');
     }
     public function teachers(): BelongsToMany
-{
-    return $this->belongsToMany(Teacher::class, 'pelatihan_teacher');
-}
+    {
+        return $this->belongsToMany(Teacher::class, 'pelatihan_teacher', 'pelatihan_id', 'teacher_id');
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

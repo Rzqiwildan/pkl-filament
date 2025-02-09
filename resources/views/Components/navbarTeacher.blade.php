@@ -33,7 +33,7 @@
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     Home
                 </a>
-                <a href="{{ route('teacher.courses') }}"
+                <a href="{{ route('teacher.courseT') }}"
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     Courses
                 </a>
