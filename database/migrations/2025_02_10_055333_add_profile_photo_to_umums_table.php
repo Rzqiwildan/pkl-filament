@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('umums', function (Blueprint $table) {
-            $table->string('profile_photo_path')->nullable();
-            
+            $table->string('profile_photo_path')->default('default.png')->nullable(false);
         });
     }
 

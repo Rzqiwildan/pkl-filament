@@ -38,7 +38,7 @@
             </div>
             <!-- NIK -->
             <div class="mb-4">
-                <label for="nik" class="block text-lg font-semibold text-gray-900 mb-2">NIK</label>
+                <label for="nik" class="block text-sm font-semibold text-gray-900 mb-2">NIK</label>
                 <input type="number" name="nik" id="nik" value="{{ old('nik', $umum->nik) }}"
                     class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 "
                     oninput="if(this.value.length > 16) this.value = this.value.slice(0, 16);" required
@@ -50,7 +50,7 @@
 
             <!-- Nama -->
             <div class="mb-4">
-                <label for="name" class="block text-lg font-semibold text-gray-900 mb-2">Nama</label>
+                <label for="name" class="block text-sm font-semibold text-gray-900 mb-2">Nama</label>
                 <input type="text" name="name" id="name" value="{{ old('name', $umum->name) }}"
                     class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 bg-gray-200 focus:outline-none"
                     readonly>
@@ -58,7 +58,7 @@
 
             <!-- Email -->
             <div class="mb-4">
-                <label for="email" class="block text-lg font-semibold text-gray-900 mb-2">Email</label>
+                <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">Email</label>
                 <input type="email" name="email" id="email" value="{{ old('email', $umum->email) }}"
                     class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 bg-gray-200 focus:outline-none"
                     readonly>
@@ -66,7 +66,7 @@
 
             <!-- Nomor Telepon -->
             <div class="mb-4">
-                <label for="no_telp" class="block text-lg font-semibold text-gray-900 mb-2">No Telepon</label>
+                <label for="no_telp" class="block text-sm font-semibold text-gray-900 mb-2">No Telepon</label>
                 <input type="number" name="no_telp" id="no_telp" value="{{ old('no_telp', $umum->no_telp) }}"
                     class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 "
                     oninput="if(this.value.length > 13) this.value = this.value.slice(0, 13);" required
@@ -78,7 +78,7 @@
 
             <!-- Tanggal Lahir -->
             <div class="mb-4">
-                <label for="tgl_lahir" class="block text-lg font-semibold text-gray-900 mb-2">Tanggal Lahir</label>
+                <label for="tgl_lahir" class="block text-sm font-semibold text-gray-900 mb-2">Tanggal Lahir</label>
                 <input type="date" name="tgl_lahir" id="tgl_lahir" value="{{ old('tgl_lahir', $umum->tgl_lahir) }}"
                     class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 ">
                 @error('tgl_lahir')
