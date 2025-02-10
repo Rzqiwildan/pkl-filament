@@ -12,6 +12,8 @@ use App\Models\Banner;
 use App\Filament\Resources\PelatihanResource;
 use App\Models\UserPelatihan;
 use App\Models\JadwalPelatihan;
+use App\Models\Umum;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -285,8 +287,58 @@ class UserController extends Controller
         return view('user.history');
     }
 
-    public function profil()
+    public function profile()
     {
-        return view('user.profil');
+        $umum = Umum::where('user_id', Auth::id())->first();
+
+        if (!$umum) {
+            return redirect()->route('dashboard')->with('error', 'Anda belum terdaftar sebagai user umum.');
+        }
+
+        // Kirim data umum ke view
+        return view('user.profil', compact('umum'));
     }
+
+    public function updateProfile(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'nik' => 'required|numeric|digits:16',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'no_telp' => 'nullable|numeric|digits_between:1,13',
+            'tgl_lahir' => 'nullable|date',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        // Ambil data Umum berdasarkan user_id dari user yang sedang login
+        $umum = Umum::where('user_id', Auth::id())->first();
+
+        if (!$umum) {
+            return redirect()->route('user.profile')->with('error', 'Anda belum terdaftar sebagai user umum.');
+        }
+
+        // Update data umum
+        $umum->nik = $request->nik;
+        $umum->name = $request->name;
+        $umum->email = $request->email;
+        $umum->no_telp = $request->no_telp;
+        $umum->tgl_lahir = $request->tgl_lahir;
+
+        if ($request->hasFile('profile_photo')) {
+            // Hapus foto lama jika ada
+            if ($umum->profile_photo_path) {
+                Storage::disk('public')->delete($umum->profile_photo_path);
+            }
+
+            // Simpan foto baru
+            $path = $request->file('profile_photo')->store('profile_photos', 'public');
+            $umum->profile_photo_path = $path;
+        }
+
+        $umum->save();
+
+        return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui!');
+    }
+
 }

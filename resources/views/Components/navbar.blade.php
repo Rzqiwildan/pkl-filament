@@ -46,34 +46,35 @@
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
                     History
                 </a>
+                <!-- User Profile Dropdown -->
                 <div class="relative">
-                    <!-- User Profile Dropdown -->
-                    <div class="relative">
-                        <img src="https://i.pinimg.com/736x/2d/9f/8d/2d9f8d4e12b1aceb0d77109f753e46cf.jpg"
-                            alt="User" class="w-10 h-10 rounded-full" style="border: 1px solid #000;"
+                    <div class="w-12 h-12">
+                        <img src="{{ Auth::user()->umum->profile_photo_path ? asset('storage/' . Auth::user()->umum->profile_photo_path) : 'https://via.placeholder.com/100' }}"
+                            alt="User"
+                            class="w-full h-full object-cover rounded-full border border-gray-300 cursor-pointer"
                             id="profileImage">
-                        <!-- Dropdown Menu with Inline CSS -->
-                        <div id="dropdownMenu"
-                            class="hidden absolute top-full right-0 bg-white shadow-lg rounded-lg w-48 z-10 border border-gray-500">
-                            <a href="{{ route('user.profil') }}"
-                                class="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-300 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
-                                Profile
-                            </a>
-                            <a href="http://127.0.0.1:8000/logout"
-                                class="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-300 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                                </svg>
-                                Logout
-                            </a>
-                        </div>
+                    </div>
+                    <!-- Dropdown Menu with Inline CSS -->
+                    <div id="dropdownMenu"
+                        class="hidden absolute top-full right-0 bg-white shadow-lg rounded-lg w-48 z-10 border border-gray-500">
+                        <a href="{{ route('user.profile') }}"
+                            class="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-300 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                            Profile
+                        </a>
+                        <a href="http://127.0.0.1:8000/logout"
+                            class="flex items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-300 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                            </svg>
+                            Logout
+                        </a>
                     </div>
                 </div>
             </div>
