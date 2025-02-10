@@ -45,21 +45,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/quiz1', [UserController::class, 'quiz1'])->name('user.quiz1');
     Route::get('/user/mycourse1', [UserController::class, 'mycourse1'])->name('user.mycourse1');
     Route::get('/user/banner3', [UserController::class, 'banner3'])->name('user.banner3');
-    Route::get('/payment/{id}', [TransaksiController::class, 'show'])->name('payment.show');
+    Route::get('/payment/{id}', [UserController::class, 'payment'])->name('payment.show');
     Route::get('/jadwal-pelatihan/{id}', [UserController::class, 'showJadwalPelatihan']);
 
     // Route untuk history
     Route::get('/history', [UserController::class, 'history'])->name('user.history');
-    
-    // Route::get('/mycourse', function () {
-    //     return view('User.course');
-    // })->name('user.course');
+
+    // Route untuk payment
     Route::get('/payment', function () {
         return view('User.payment');
     })->name('user.payment');
-    // Route::get('/history', function () {
-    //     return view('User.history');
-    // })->name('user.history');
+    
+    // Route untuk profil
     Route::get('/profil', function () {
         return view('User.profil');
     })->name('user.profil');
@@ -70,10 +67,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk search
     Route::get('/search-pelatihan', [UserController::class, 'search']);
-
-   
-
-
     
 });
 
@@ -138,7 +131,7 @@ Route::get('/unduh-sertifikat/{user_id}/{pelatihan_id}', [SertifikatController::
 
 // Route transaksi
 Route::middleware(['auth'])->group(function () {
-    Route::get('/upload-bukti', [TransaksiController::class, 'create'])->name('upload-bukti-form');
+    // Route::get('/upload-bukti', [TransaksiController::class, 'create'])->name('upload-bukti-form');
     Route::post('/upload-bukti', [TransaksiController::class, 'store'])->name('upload-bukti');
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');

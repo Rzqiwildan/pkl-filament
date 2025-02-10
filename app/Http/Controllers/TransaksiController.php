@@ -25,32 +25,36 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
 {
-    // Debugging untuk cek apakah request masuk
-    // dd($request->all());
-
-    // Validasi input
     $request->validate([
         'pelatihan_id' => 'required|exists:pelatihans,id',
-        'bukti_pembayaran' => 'required|file|mimes:jpg,png,pdf|max:5120',
+        'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:2048',
     ]);
 
-    // Simpan file bukti pembayaran ke folder storage/public/bukti_pembayaran
-    $file = $request->file('bukti_pembayaran');
-    $filePath = $file->store('bukti_pembayaran', 'public');
+    if ($request->hasFile('bukti_pembayaran')) {
+        $file = $request->file('bukti_pembayaran');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('bukti_pembayaran', $filename, 'public');
 
-    // Simpan data transaksi ke database
-    $transaksi = Transaksi::create([
-        'user_id' => Auth::id(),
-        'pelatihan_id' => $request->pelatihan_id,
-        'bukti_pembayaran' => $filePath,
-        'status_pembayaran' => 'pending', // Status awal
-    ]);
+        dd('Mau simpan ke database:', [
+            'user_id' => auth()->id(),
+            'pelatihan_id' => $request->pelatihan_id,
+            'bukti_pembayaran' => $filePath,
+            'status_pembayaran' => 'pending',
+        ]);
 
-    // Debugging: Periksa apakah transaksi tersimpan
-    // dd($transaksi);
+        $transaksi = Transaksi::create([
+            'user_id' => auth()->id(),
+            'pelatihan_id' => $request->pelatihan_id,
+            'status_pembayaran' => 'pending',
+            'bukti_pembayaran' => $filePath,
+        ]);
 
-    return redirect()->route('transaksi.index')->with('success', 'Bukti pembayaran berhasil diunggah, menunggu verifikasi.');
+        return redirect()->route('transaksi.index')->with('success', 'Bukti pembayaran berhasil diunggah!');
+    }
+
+    return back()->with('error', 'Gagal mengunggah bukti pembayaran.');
 }
+
 
 
     /**

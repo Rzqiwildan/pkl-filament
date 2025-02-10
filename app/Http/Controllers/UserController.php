@@ -122,7 +122,6 @@ class UserController extends Controller
             ->value('score') ?? null;
     }
 
-
     public function ikutPelatihan(Request $request)
     {
         $request->validate([
@@ -160,7 +159,6 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Anda telah berhasil mengikuti pelatihan!');
     }
-
 
     public function ikutPelatihanOn(Request $request, $id)
     {
@@ -351,9 +349,10 @@ class UserController extends Controller
         return view('user.banner3');
     }
 
-    public function payment()
+    public function payment($id)
     {
-        return view('user.payment');
+        $pelatihan = Pelatihan::findOrFail($id); // Ambil data pelatihan berdasarkan ID
+        return view('user.payment', compact('pelatihan'));
     }
 
     public function history()
