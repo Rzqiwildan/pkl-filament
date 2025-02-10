@@ -15,7 +15,6 @@ use App\Models\JadwalPelatihan;
 use App\Models\Umum;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Umum; 
 use App\Models\HistoryUser;
 use Illuminate\Support\Facades\DB;
 
@@ -369,6 +368,7 @@ class UserController extends Controller
 
         return view('user.history', compact('user_histories'));
     }
+
 
     public function profile()
 {

@@ -59,9 +59,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment', function () {
         return view('User.payment');
     })->name('user.payment');
-    Route::get('/history', function () {
-        return view('User.history');
-    })->name('user.history');
+    // Route::get('/history', function () {
+    //     return view('User.history');
+    // })->name('user.history');
     
     
     
