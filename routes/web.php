@@ -5,6 +5,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\TransaksiController;
+
 
 Route::get('/', [Controller::class, 'index'])->name('welcome');
 
@@ -41,19 +45,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/quiz1', [UserController::class, 'quiz1'])->name('user.quiz1');
     Route::get('/user/mycourse1', [UserController::class, 'mycourse1'])->name('user.mycourse1');
     Route::get('/user/banner3', [UserController::class, 'banner3'])->name('user.banner3');
+    Route::get('/payment/{id}', [UserController::class, 'payment'])->name('payment.show');
     Route::get('/jadwal-pelatihan/{id}', [UserController::class, 'showJadwalPelatihan']);
     Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
     // Route::get('/mycourse', function () {
     //     return view('User.course');
     // })->name('user.course');
+
+    // Route untuk history
+    Route::get('/history', [UserController::class, 'history'])->name('user.history');
+
+    // Route untuk payment
     Route::get('/payment', function () {
         return view('User.payment');
     })->name('user.payment');
-    Route::get('/history', function () {
-        return view('User.history');
-    })->name('user.history');
+    // Route::get('/history', function () {
+    //     return view('User.history');
+    // })->name('user.history');
     
     
+    
+    // Route untuk profil
+    Route::get('/profil', function () {
+        return view('User.profil');
+    })->name('user.profil');
+
     // Rute untuk POST
     Route::post('/ikut-pelatihan', [UserController::class, 'ikutPelatihan'])->name('ikut.pelatihan');
     Route::post('/pelatihan/ikut/{id}', [UserController::class, 'ikutPelatihanOn'])->name('pelatihan.ikut');
@@ -65,19 +81,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/unauthorized', function () {
     return view('unauthorized');
 })->name('unauthorized');
-
-
-// Rute setelah login untuk student
-// Route::middleware(['auth', 'check.role'])->group(function () {
-//     // Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
-//     Route::get('/teacher', [TeacherController::class, 'index'])->name('dashboard.index');
-// });
 
 
 // Rute setelah login untuk teacher
@@ -104,19 +112,6 @@ Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::put('/teacher/quiz/{quizId}/question/{questionId}', [TeacherController::class, 'updateQuestion'])->name('teacher.updateQuestion');
 });
 
-
-// Mahasiswa & Umum routes
-
-// Route::middleware('role:mahasiswa')->group(function () {
-//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
-//     // ... other user routes ...
-// });
-// Route::middleware('role:umum')->group(function () {
-//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
-//     // ... other user routes ...
-// });
-
-
 Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
 Route::middleware('role:mahasiswa')->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
@@ -132,3 +127,24 @@ Route::middleware(['auth', 'check.role:umum'])->group(function () {
 Route::get('/test-admin', function () {
     return 'Welcome Admin!';
 })->middleware('check.role.admin');
+
+// Route Quiz
+Route::get('/Quiz', [QuizController::class, 'soal'])->name('quiz.soal');
+Route::post('/Quiz/submit', [QuizController::class, 'submitAnswer'])->name('quiz.submit');
+Route::get('/Quiz/hasil', [QuizController::class, 'hasil'])->name('quiz.hasil');
+Route::get('/Quiz/ulangi', [QuizController::class, 'ulangi'])->name('quiz.ulangi');
+Route::post('/Quiz/save-answer', [QuizController::class, 'saveAnswer'])->name('quiz.saveAnswer');
+Route::post('/Quiz/hasil', [QuizController::class, 'hasil'])->name('quiz.hasil');
+
+// Route Sertif
+Route::get('/sertifikat', [SertifikatController::class, 'show'])->name('sertifikat.show');
+Route::get('/unduh-sertifikat/{user_id}/{pelatihan_id}', [SertifikatController::class, 'download'])->name('download.sertifikat');
+
+// Route transaksi
+Route::middleware(['auth'])->group(function () {
+    // Route::get('/upload-bukti', [TransaksiController::class, 'create'])->name('upload-bukti-form');
+    Route::post('/upload-bukti', [TransaksiController::class, 'store'])->name('upload-bukti');
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
+    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+});

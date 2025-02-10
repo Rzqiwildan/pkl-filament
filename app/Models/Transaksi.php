@@ -10,10 +10,13 @@ class Transaksi extends Model
 {
     use HasFactory;
 
+    protected $table = 'transaksis'; // Pastikan tabel benar
+
     protected $fillable = [
         'user_id',
         'pelatihan_id',
-        'status_pembayaran'
+        'status_pembayaran',
+        'bukti_pembayaran'
     ];
 
     protected $attributes = [
