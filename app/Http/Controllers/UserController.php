@@ -368,10 +368,12 @@ class UserController extends Controller
     }
 
     public function profile()
-    {
-        $nik = Umum::first()->nik; // Mengambil NIK pertama dari tabel umums
-        return view('user.profil', compact('nik'));
-    }
+{
+    $umum = optional(Umum::first()); // Ambil data pertama dari tabel umums
+    $nik = optional(Umum::first())->nik; // Jika data tidak ada, $nik = null
+    return view('user.profil', compact('umum', 'nik'));
+}
+
 
     public function updateProfile(Request $request)
     {

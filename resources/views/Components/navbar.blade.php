@@ -49,7 +49,7 @@
                 <!-- User Profile Dropdown -->
                 <div class="relative">
                     <div class="w-12 h-12">
-                        <img src="{{ Auth::user()->umum->profile_photo_path ? asset('storage/' . Auth::user()->umum->profile_photo_path) : 'https://via.placeholder.com/100' }}"
+                    <img src="{{ optional(Auth::user()->umum)->profile_photo_path ? asset('storage/' . optional(Auth::user()->umum)->profile_photo_path) : 'https://via.placeholder.com/100' }}"
                             alt="User"
                             class="w-full h-full object-cover rounded-full border border-gray-300 cursor-pointer"
                             id="profileImage">
