@@ -367,9 +367,52 @@ class UserController extends Controller
         return view('user.history', compact('user_histories'));
     }
 
-    public function profil()
+    public function profile()
     {
         $nik = Umum::first()->nik; // Mengambil NIK pertama dari tabel umums
         return view('user.profil', compact('nik'));
     }
+
+    public function updateProfile(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'nik' => 'required|numeric|digits:16',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'no_telp' => 'nullable|numeric|digits_between:1,13',
+            'tgl_lahir' => 'nullable|date',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        // Ambil data Umum berdasarkan user_id dari user yang sedang login
+        $umum = Umum::where('user_id', Auth::id())->first();
+
+        if (!$umum) {
+            return redirect()->route('user.profile')->with('error', 'Anda belum terdaftar sebagai user umum.');
+        }
+
+        // Update data umum
+        $umum->nik = $request->nik;
+        $umum->name = $request->name;
+        $umum->email = $request->email;
+        $umum->no_telp = $request->no_telp;
+        $umum->tgl_lahir = $request->tgl_lahir;
+
+        if ($request->hasFile('profile_photo')) {
+            // Hapus foto lama jika ada
+            if ($umum->profile_photo_path) {
+                Storage::disk('public')->delete($umum->profile_photo_path);
+            }
+
+            // Simpan foto baru
+            $path = $request->file('profile_photo')->store('profile_photos', 'public');
+            $umum->profile_photo_path = $path;
+        }
+
+        $umum->save();
+
+        return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui!');
+    }
+
 }

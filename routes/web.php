@@ -47,6 +47,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/banner3', [UserController::class, 'banner3'])->name('user.banner3');
     Route::get('/payment/{id}', [UserController::class, 'payment'])->name('payment.show');
     Route::get('/jadwal-pelatihan/{id}', [UserController::class, 'showJadwalPelatihan']);
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
+    // Route::get('/mycourse', function () {
+    //     return view('User.course');
+    // })->name('user.course');
 
     // Route untuk history
     Route::get('/history', [UserController::class, 'history'])->name('user.history');
@@ -55,6 +59,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment', function () {
         return view('User.payment');
     })->name('user.payment');
+    Route::get('/history', function () {
+        return view('User.history');
+    })->name('user.history');
+    
+    
     
     // Route untuk profil
     Route::get('/profil', function () {
@@ -64,7 +73,8 @@ Route::middleware(['auth'])->group(function () {
     // Rute untuk POST
     Route::post('/ikut-pelatihan', [UserController::class, 'ikutPelatihan'])->name('ikut.pelatihan');
     Route::post('/pelatihan/ikut/{id}', [UserController::class, 'ikutPelatihanOn'])->name('pelatihan.ikut');
-
+    // Rute untuk Put
+    Route::put('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
     // Rute untuk search
     Route::get('/search-pelatihan', [UserController::class, 'search']);
     
@@ -82,6 +92,7 @@ Route::get('/unauthorized', function () {
 Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
+    Route::put('/teacher/profile', [TeacherController::class, 'updateProfile'])->name('teacher.profile.update');
     Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
     Route::get('/teacher/courseT', [TeacherController::class, 'courseT'])->name('teacher.courseT');
     Route::get('/teacher/courseT/{pelatihan}', [TeacherController::class, 'showCourse'])->name('teacher.showCourse');

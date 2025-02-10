@@ -306,7 +306,50 @@ public function updateQuestion(Request $request, $quizId, $questionId)
      * Menampilkan halaman profil teacher.
      */
     public function profile()
-    {
-        return view('teacher.profile');
+{
+    $teacher = Teacher::where('user_id', Auth::id())->with('user')->first();
+
+    if (!$teacher) {
+        return redirect()->route('teacher.dashboard')->with('error', 'Anda belum terdaftar sebagai teacher.');
+    }
+
+    // Pastikan data dikirim ke view
+    return view('teacher.profileT', compact('teacher'));
+}
+
+public function updateProfile(Request $request)
+{
+    $request->validate([
+        'nip' => 'required|numeric|max:20',
+        'no_telp' => 'nullable|numeric|max:15',
+        'tgl_lahir' => 'nullable|date',
+        'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+    ]);
+
+    $teacher = Teacher::where('user_id', Auth::id())->first();
+
+    if (!$teacher) {
+        return redirect()->route('teacher.profile')->with('error', 'Anda belum terdaftar sebagai teacher.');
+    }
+
+    // Update data teacher
+    $teacher->nip = $request->nip;
+    $teacher->no_telp = $request->no_telp;
+    $teacher->tgl_lahir = $request->tgl_lahir;
+
+    if ($request->hasFile('profile_photo')) {
+        // Hapus foto lama jika ada
+        if ($teacher->profile_photo_path) {
+            Storage::disk('public')->delete($teacher->profile_photo_path);
+        }
+
+        // Simpan foto baru
+        $path = $request->file('profile_photo')->store('profile_photos', 'public');
+        $teacher->profile_photo_path = $path;
+    }
+
+    $teacher->save();
+
+    return redirect()->route('teacher.profile')->with('success', 'Profil berhasil diperbarui!');
     }
 }

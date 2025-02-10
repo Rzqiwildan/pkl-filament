@@ -11,10 +11,12 @@ class Umum extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'nik',
         'name',
         'email',
-        'no_telp'
+        'no_telp',
+        'profile_photo_path',
     ];
 
     public function user(): BelongsTo

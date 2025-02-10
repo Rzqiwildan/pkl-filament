@@ -17,7 +17,8 @@ class Teacher extends Model
         'name', 
         'email',
         'no_telp',
-        'tgl_lahir'
+        'tgl_lahir',
+        'profile_photo_path',
     ];
 
     /**
