@@ -48,4 +48,5 @@ public function umum()
     return $this->hasOne(Umum::class, 'user_id', 'id');
 }
 
+
 }

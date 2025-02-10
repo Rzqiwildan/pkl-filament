@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -60,7 +61,17 @@ class LoginController extends Controller
             'role' => $validated['role']
         ]);
 
-        Auth::login($user);
+        if ($user->role === 'umum') {
+            DB::table('umums')->insert([
+                'user_id' => $user->id,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+            Auth::login($user);
 
         if ($user->role === 'teacher') {
             return redirect('/teacher');

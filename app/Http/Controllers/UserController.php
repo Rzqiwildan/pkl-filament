@@ -12,6 +12,9 @@ use App\Models\Banner;
 use App\Filament\Resources\PelatihanResource;
 use App\Models\UserPelatihan;
 use App\Models\JadwalPelatihan;
+use App\Models\Umum;
+use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Umum; 
 use App\Models\HistoryUser;
 use Illuminate\Support\Facades\DB;
@@ -416,5 +419,30 @@ class UserController extends Controller
 
         return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui!');
     }
+
+    public function store(Request $request)
+    {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => 'umum',
+            'password' => bcrypt($request->password),
+        ]);
+    
+        if ($user->role === 'umum') {
+            Umum::create([
+                'user_id' => $user->id,
+                'nik' => $request->nik,
+                'name' => $user->name,
+                'email' => $user->email,
+                'no_telp' => $request->no_telp,
+                'tgl_lahir' => $request->tgl_lahir,
+                'profile_photo_path' => 'default.png', // Nilai default
+            ]);
+        }
+    
+        return redirect()->back()->with('success', 'User berhasil dibuat!');
+    }
+
 
 }
