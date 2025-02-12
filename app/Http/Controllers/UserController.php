@@ -12,6 +12,7 @@ use App\Models\Banner;
 use App\Filament\Resources\PelatihanResource;
 use App\Models\UserPelatihan;
 use App\Models\JadwalPelatihan;
+use App\Models\HistoryUser;
 use App\Models\Transaksi;
 use App\Models\Umum;
 use App\Models\User;
@@ -50,21 +51,68 @@ class UserController extends Controller
 
     public function myCourses()
     {
+        // Pindahkan pelatihan yang sudah selesai ke history
+        $this->updateUserPelatihanHistory(); 
+
+        // Ambil tanggal sekarang
+        $now = Carbon::now();
+
+        // Ambil ID user yang sedang login
+        $userId = Auth::id(); 
+
         // Ambil semua data pelatihan
-        $pelatihans = Pelatihan::with('photos')->get(); 
+        $pelatihans = Pelatihan::with(['photos', 'jadwalPelatihan'])
+            ->whereHas('jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '>=', $now); // Hanya yang belum lewat end_date
+            })
+            ->get(); 
 
         // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
         $photos = PelatihanPhotos::all();
 
-        $userId = Auth::id(); // Ambil ID user yang sedang login
-
-        // Ambil semua pelatihan yang diikuti oleh user ini
+        // Ambil semua pelatihan yang diikuti oleh user yang BELUM berakhir
         $user_pelatihans = UserPelatihan::where('user_id', $userId)
-                                ->with('pelatihan') // Ambil data pelatihannya juga
-                                ->get();
+            ->whereHas('pelatihan.jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '>=', $now);
+            })
+            ->with('pelatihan.photos')
+            ->get();
 
         return view('user.course', compact('user_pelatihans', 'pelatihans', 'photos')); // Pastikan variabel ini diteruskan ke view
     }
+
+    public function updateUserPelatihanHistory()
+    {
+        $now = Carbon::now();
+        $userId = Auth::id();
+
+        // Ambil semua pelatihan yang sudah berakhir dan diikuti oleh user
+        $expiredPelatihans = UserPelatihan::where('user_id', $userId)
+            ->whereHas('pelatihan.jadwalPelatihan', function ($query) use ($now) {
+                $query->where('end_date', '<', $now); // Pelatihan yang sudah berakhir
+            })
+            ->get();
+
+        foreach ($expiredPelatihans as $pelatihan) {
+            // Pastikan data belum ada di history_users agar tidak duplikat
+            $exists = HistoryUser::where('user_id', $userId)
+                ->where('pelatihan_id', $pelatihan->pelatihan_id)
+                ->exists();
+
+            if (!$exists) {
+                HistoryUser::create([
+                    'user_id' => $userId,
+                    'pelatihan_id' => $pelatihan->pelatihan_id,
+                    'score' => $pelatihan->pelatihan->jenis === 'online' ? $this->getUserScore($userId, $pelatihan->pelatihan_id) : null,
+                ]);
+            }
+
+            // Hapus dari tabel user_pelatihans
+            $pelatihan->delete();
+        }
+    }
+
+
 
 
     public function ikutPelatihan(Request $request)
@@ -289,7 +337,14 @@ class UserController extends Controller
 
     public function history()
     {
-        return view('user.history');
+        $userId = Auth::id();
+
+        // Ambil pelatihan yang sudah selesai dari history_users
+        $user_histories = HistoryUser::where('user_id', $userId)
+            ->with('pelatihan.photos') // Pastikan relasi sudah benar
+            ->get();
+
+        return view('user.history', compact('user_histories'));
     }
 
     public function profile()

@@ -82,19 +82,24 @@ public function teachers()
     }
 
     public function getRemainingTimeAttribute()
-    {
-        if (!$this->jadwalPelatihan) {
-            return "Tidak ada jadwal";
-        }
-
-        $endDate = Carbon::parse($this->jadwalPelatihan->end_date);
-        $now = Carbon::now();
-
-        $diffInDays = $endDate->diffInDays($now);
-        $diffInHours = $endDate->diffInHours($now);
-
-        return $diffInDays > 0 ? "$diffInDays hari tersisa" : "$diffInHours jam tersisa";
+{
+    if (!$this->jadwalPelatihan) {
+        return "Tidak ada jadwal";
     }
+
+    $endDate = Carbon::parse($this->jadwalPelatihan->end_date);
+    $now = Carbon::now();
+
+    // Cek apakah end_date sudah lewat
+    if ($now->gt($endDate)) {
+        return "Sudah Berakhir";
+    }
+
+    $diffInDays = $now->diffInDays($endDate);
+    $diffInHours = $now->diffInHours($endDate);
+
+    return $diffInDays > 0 ? "$diffInDays hari tersisa" : "$diffInHours jam tersisa";
+}
 
 
 
