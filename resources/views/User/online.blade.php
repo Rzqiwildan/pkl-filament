@@ -51,140 +51,62 @@
 
         <!-- Course Content -->
         <div class="mt-6">
-            <!-- Dropdown Bagian 1 -->
-            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
-                <button @click="open = !open"
-                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                    <div class="mt-2 mb-2">
-                        Bagian 1
-                    </div>
-                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                    </svg>
-                </button>
+            @foreach ($pelatihans->bagianPelatihans as $bagian)
+                <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border"
+                    style="border: 1px solid #a2a2a2;">
+                    <button @click="open = !open"
+                        class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
+                        <div class="mt-2 mb-2">
+                            {{ $bagian->nama_bagian }}
+                        </div>
+                        <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                        <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
+                        </svg>
+                    </button>
 
-                <div x-show="open" class="px-4 py-2 space-y-2">
-                    <div class="flex items-center space-x-2 mt-4 mb-4">
+                    <div x-show="open" class="px-4 py-2 space-y-2">
+                        <!-- Materi -->
+                        @foreach ($bagian->materis as $materi)
+                            <div class="flex items-center space-x-2 mt-4 mb-4">
+                                @if ($materi->link)
+                                    <a href="{{ $materi->link }}" target="_blank" class="text-sm text-gray-900">
+                                        <span
+                                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Video</span>
+                                        <span class="hover:text-blue-500 hover:underline">{{ $materi->name }}</span>
+                                    </a>
+                                @endif
 
-                        <!-- <span>Pengenalan Algoritma Pemrograman</span> -->
-                        <a href="https://youtu.be/RadjAh0LT9I?si=18so-viuYNTMb2DS" target="_blank"
-                            class="text-sm text-gray-900">
-                            <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Video</span>
-                            <span class="hover:text-blue-500 hover:underline">Pengenalan Algoritma Pemrograman</span>
-                        </a>
+                                @if ($materi->file_path)
+                                    <a href="{{ Storage::url($materi->file_path) }}" target="_blank"
+                                        class="text-sm text-gray-900">
+                                        <span
+                                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Materi</span>
+                                        <span class="hover:text-blue-500 hover:underline">{{ $materi->name }}</span>
+                                    </a>
+                                @endif
+                            </div>
+                        @endforeach
+
+                        <!-- Quiz -->
+                        @if ($bagian->is_quiz && $bagian->quizzes->count() > 0)
+                            @foreach ($bagian->quizzes as $quiz)
+                                <div class="flex items-center space-x-2 mb-4">
+                                    <a href="{{ route('quiz.show', $quiz->id) }}" class="text-sm text-gray-900">
+                                        <span
+                                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Quiz</span>
+                                        <span class="hover:text-blue-500 hover:underline">{{ $quiz->title }}</span>
+                                    </a>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
-            </div>
-
-            <!-- Dropdown Bagian 2 -->
-            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
-                <button @click="open = !open"
-                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                    <div class="mt-2 mb-2">
-                        Bagian 2
-                    </div>
-                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                    </svg>
-                </button>
-                <div x-show="open" class="px-4 py-2 space-y-2">
-                    <div class="flex items-center space-x-2">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Video</span>
-                        <span class="mt-4 mb-4">Logika pemrograman dasar</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
-                        <span class="mb-4">Memahami pseudocode: cara menulis logika tanpa kode</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
-                        <span class=" mb-4">Flowchart: representasi visual algoritma</span>
-                    </div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <a href="{{ route('quiz.soal') }}" class="mb-4 text-blue-600 hover:underline">Quiz 1</a>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Dropdown Bagian 3 -->
-            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border"
-                style="border: 1px solid #a2a2a2;">
-                <button @click="open = !open"
-                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                    <div class="mt-2 mb-2">
-                        Bagian 3
-                    </div>
-                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                    </svg>
-                </button>
-                <div x-show="open" class="px-4 py-2 space-y-2">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Video</span>
-                        <span class="mt-4 mb-4">Struktur Dasar Algoritma: Urutan (Sequence)</span>
-                    </div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
-                        <span class="mb-4">Struktur Dasar Algoritma: Percabangan (Selection)</span>
-                    </div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Video</span>
-                        <span class="mb-4">Struktur Dasar Algoritma: Perulangan (Looping)</span>
-                    </div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mb-4">Quiz</span>
-                        <span class="mb-4">Quiz 2</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Dropdown Evaluasi Akhir -->
-            <div x-data="{ open: false }" class="mb-4 bg-gray-100 rounded-lg border"
-                style="border: 1px solid #a2a2a2;">
-                <button @click="open = !open"
-                    class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                    <div class="mt-2 mb-2">
-                        Evaluasi Akhir
-                    </div>
-                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                    </svg>
-                </button>
-
-                <div x-show="open" class="px-4 py-2 space-y-2">
-                    <div class="flex items-center space-x-2">
-                        <span
-                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold mt-4 mb-4">Evaluasi</span>
-                        <span class="mt-4 mb-4">Evaluasi Akhir</span>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
     <!-- Alpine.js -->

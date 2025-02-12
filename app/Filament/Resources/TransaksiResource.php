@@ -13,6 +13,9 @@ use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\HtmlString;
 
 class TransaksiResource extends Resource
 {
@@ -35,6 +38,7 @@ class TransaksiResource extends Resource
                     ->options(Transaksi::getStatuses())
                     ->default('pending')
                     ->required()
+                
             ]);
     }
 
@@ -54,26 +58,49 @@ class TransaksiResource extends Resource
                         'pending' => 'warning',
                         'approved' => 'success',
                         default => 'gray',
-                    })
-            ])
+                    }),
+                Tables\Columns\ImageColumn::make('bukti_pembayaran')
+                    ->label('Bukti Pembayaran')
+                    ->disk('public')
+                    ->width(100)
+                    ->height(100),
+                ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status_pembayaran')
                     ->options(Transaksi::getStatuses())
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Action::make('accept')
-                    ->label('Accept')
-                    ->color('success')
-                    ->icon('heroicon-o-check-circle')
-                    ->action(function (Transaksi $record) {
-                        $record->update(['status_pembayaran' => 'approved']);
-                    })
-                    ->visible(fn (Transaksi $record) => $record->status_pembayaran === 'pending')
-                    ->requiresConfirmation()
-                    ->modalHeading('Terima Transaksi')
-                    ->modalDescription('Apakah Anda yakin ingin menerima transaksi ini?')
-                    ->modalSubmitActionLabel('Ya, Terima'),
+                Tables\Actions\DeleteAction::make(),
+                Action::make('view_bukti')
+                ->label('Lihat Bukti')
+                ->icon('heroicon-o-photo')
+                ->modalWidth('md')
+                ->modalHeading('Bukti Pembayaran')
+                ->modalContent(function (Transaksi $record) {
+                    if ($record->bukti_pembayaran) {
+                        return new HtmlString('<div class="flex justify-center"><img src="/storage/' . $record->bukti_pembayaran . '" class="max-w-full h-auto"></div>');
+                    }
+                    return 'Tidak ada bukti pembayaran';
+                })
+                ->visible(fn (Transaksi $record) => $record->bukti_pembayaran !== null),
+            Action::make('accept')
+                ->label('Accept')
+                ->color('success')
+                ->icon('heroicon-o-check-circle')
+                ->action(function (Transaksi $record) {
+                    $record->update(['status_pembayaran' => 'approved']);
+                    \App\Models\UserPelatihan::create([
+                        'user_id' => $record->user_id,
+                        'pelatihan_id' => $record->pelatihan_id,
+                    ]);
+                })
+                ->visible(fn (Transaksi $record) => $record->status_pembayaran === 'pending')
+                ->requiresConfirmation()
+                ->modalHeading('Terima Transaksi')
+                ->modalDescription('Apakah Anda yakin ingin menerima transaksi ini?')
+                ->modalSubmitActionLabel('Ya, Terima'),
+                    
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

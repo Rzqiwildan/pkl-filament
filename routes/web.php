@@ -56,14 +56,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/history', [UserController::class, 'history'])->name('user.history');
 
     // Route untuk payment
-    Route::get('/payment', function () {
-        return view('User.payment');
-    })->name('user.payment');
+    Route::get('/user/payment', [UserController::class, 'showPaymentPage'])->name('user.payment');
+    Route::post('/user/payment/upload', [UserController::class, 'uploadPaymentProof'])->name('payment.upload');
+    Route::get('/user/payment/{transaction_code}', [UserController::class, 'showPaymentPage'])->name('user.payment.show');
+    Route::post('/user/proses-pembayaran', [UserController::class, 'prosesPembayaran'])->name('user.proses.pembayaran');
+    Route::get('/user/konfirmasi-pembayaran/{kode_transaksi}', [UserController::class, 'konfirmasiPembayaran'])->name('user.konfirmasi.pembayaran');
     // Route::get('/history', function () {
     //     return view('User.history');
     // })->name('user.history');
-    Route::post('/user/proses-pembayaran', [UserController::class, 'prosesPembayaran'])->name('user.proses.pembayaran');
-    Route::get('/user/konfirmasi-pembayaran/{kode_transaksi}', [UserController::class, 'konfirmasiPembayaran'])->name('user.konfirmasi.pembayaran');
     
     
     // Route untuk profil
