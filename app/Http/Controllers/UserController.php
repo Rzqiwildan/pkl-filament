@@ -387,7 +387,6 @@ class UserController extends Controller
         'status_pembayaran' => 'menunggu'
     ]);
 
-    // Anda bisa menambahkan logika untuk menangani metode pembayaran yang berbeda di sini
     // Untuk saat ini, kita akan mengarahkan ke halaman konfirmasi pembayaran
     return redirect()->route('user.konfirmasi.pembayaran', [
         'kode_transaksi' => $transaksi->transaksi_code

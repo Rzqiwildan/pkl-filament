@@ -19,8 +19,8 @@ class Umum extends Model
         'profile_photo_path',
     ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'email', 'email');
-    }
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id', 'id');
+}
 }
