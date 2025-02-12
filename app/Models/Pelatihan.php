@@ -34,11 +34,15 @@ class Pelatihan extends Model
         }
         $this->attributes['jenis'] = $value;
     }
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
+    public function category()
+{
+    return $this->belongsTo(Category::class);
+}
 
+public function teachers()
+{
+    return $this->belongsToMany(Teacher::class);
+}
     public function bagianPelatihans()
     {
         return $this->hasMany(BagianPelatihan::class, 'pelatihan_id');

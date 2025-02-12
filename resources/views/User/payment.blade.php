@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Upload Bukti Pembayaran</title>
     @vite('resources/css/app.css') <!-- Tambahkan jika menggunakan Tailwind -->
+    @include('components.navbar')
 </head>
-@include('components.navbar')
 
 <body class="bg-gray-100">
     <div class="flex items-center justify-center min-h-screen">

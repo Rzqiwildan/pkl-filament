@@ -62,7 +62,8 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/history', function () {
     //     return view('User.history');
     // })->name('user.history');
-    
+    Route::post('/user/proses-pembayaran', [UserController::class, 'prosesPembayaran'])->name('user.proses.pembayaran');
+    Route::get('/user/konfirmasi-pembayaran/{kode_transaksi}', [UserController::class, 'konfirmasiPembayaran'])->name('user.konfirmasi.pembayaran');
     
     
     // Route untuk profil

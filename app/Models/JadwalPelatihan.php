@@ -21,10 +21,10 @@ class JadwalPelatihan extends Model
     ];
 
 
-    public function pelatihan(): BelongsTo
-    {
-        return $this->belongsTo(Pelatihan::class, 'pelatihan_id');
-    }
+    public function pelatihan()
+{
+    return $this->belongsTo(Pelatihan::class, 'pelatihan_id');
+}
     
     public function pelatihans(): HasMany
     {

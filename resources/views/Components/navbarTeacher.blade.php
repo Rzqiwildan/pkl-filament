@@ -36,7 +36,7 @@
                 </a>
                 <a href="{{ route('teacher.courseT') }}"
                     class="text-gray-900 hover:text-cgrey-0 px-3 py-2 rounded-md text-sm font-medium">
-                    Courses
+                    My Courses
                 </a>
                 <!-- User Profile Dropdown -->
                 <div class="relative">

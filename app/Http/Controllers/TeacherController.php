@@ -310,7 +310,7 @@ public function updateQuestion(Request $request, $quizId, $questionId)
     $teacher = Teacher::where('user_id', Auth::id())->with('user')->first();
 
     if (!$teacher) {
-        return redirect()->route('teacher.dashboard')->with('error', 'Anda belum terdaftar sebagai teacher.');
+        return redirect()->route('teacher.index')->with('error', 'Anda belum terdaftar sebagai teacher.');
     }
 
     // Pastikan data dikirim ke view
@@ -320,8 +320,8 @@ public function updateQuestion(Request $request, $quizId, $questionId)
 public function updateProfile(Request $request)
 {
     $request->validate([
-        'nip' => 'required|numeric|max:20',
-        'no_telp' => 'nullable|numeric|max:15',
+        'nip' => 'required|numeric|digits:16',
+        'no_telp' => 'nullable|numeric|digits_between:1,13',
         'tgl_lahir' => 'nullable|date',
         'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
     ]);

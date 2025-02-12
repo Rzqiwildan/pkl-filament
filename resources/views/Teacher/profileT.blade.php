@@ -25,8 +25,10 @@
         <!-- NIP -->
         <div class="mb-4">
             <label for="nip" class="block text-lg font-semibold text-gray-900 pl-3 mb-2">NIP</label>
-            <input type="text" name="nip" id="nip" value="{{ old('nip', $teacher->nip) }}"
-                class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+            <input type="number" name="nip" id="nip" value="{{ old('nip', $teacher->nip) }}"
+                oninput="if(this.value.length > 16) this.value = this.value.slice(0, 16);" required
+                title="NIK harus terdiri dari 16 angka"
+                class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2">
             @error('nip')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
@@ -49,8 +51,10 @@
         <!-- Nomor Telepon -->
         <div class="mb-4">
             <label for="no_telp" class="block text-lg font-semibold text-gray-900 pl-3 mb-2">No Telepon</label>
-            <input type="text" name="no_telp" id="no_telp" value="{{ old('no_telp', $teacher->no_telp) }}"
-                class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+            <input type="number" name="no_telp" id="no_telp" value="{{ old('no_telp', $teacher->no_telp) }}"
+                oninput="if(this.value.length > 13) this.value = this.value.slice(0, 13);" required
+                title="Nomor telepon maksimal 13 angka"
+                class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2">
             @error('no_telp')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
