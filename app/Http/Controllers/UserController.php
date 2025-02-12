@@ -346,6 +346,7 @@ class UserController extends Controller
         return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui!');
     }
 
+
     public function store(Request $request)
     {
         $user = User::create([
