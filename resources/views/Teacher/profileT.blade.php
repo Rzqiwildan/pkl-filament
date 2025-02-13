@@ -98,3 +98,5 @@
         @endif
     });
 </script>
+@include('components.footer')
+

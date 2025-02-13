@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<title>Detail Quiz - {{ $quiz->title }}</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Detail Quiz - {{ $quiz->title }}</title>
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+@include('components.navbarTeacher')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @include('components.navbarTeacher')
-</head>
-
-<body class="bg-gray-100">
+<div class="bg-gray-100">
     <div class="container mx-auto px-4 py-8 mt-16">
         <h1 class="text-3xl font-bold">Detail Quiz - {{ $quiz->title }}</h1>
         <p class="text-gray-600 mt-2">{{ $quiz->description ?? 'Tidak ada deskripsi' }}</p>
@@ -67,6 +59,5 @@
             </form>
         </div>
     </div>
-</body>
-
-</html>
+    @include('components.footer')
+</div>

@@ -16,7 +16,7 @@
     <!-- Navbar -->
 
     <!-- Profile Section -->
-    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-8">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 m-8">
         <h2 class="text-2xl font-semibold text-center mb-6 mt-6">Selamat Datang, {{ $umum->name }}</h2>
         <form method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data">
             @csrf
@@ -39,12 +39,10 @@
             <!-- NIK -->
             <div class="mb-4">
                 <label for="nik" class="block text-sm font-semibold text-gray-900 mb-2">NIK</label>
-                <input type="number" name="nik" id="nik" 
-                    value="{{ old('nik', optional($umum)->nik) }}" 
-                    class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2" 
-                    oninput="if(this.value.length > 16) this.value = this.value.slice(0, 16);" 
-                    required title="NIK harus terdiri dari 16 angka"
-                    placeholder="Masukkan NIK">
+                <input type="number" name="nik" id="nik" value="{{ old('nik', optional($umum)->nik) }}"
+                    class="mt-1 block w-full rounded-lg border border-gray-400 shadow-sm p-2"
+                    oninput="if(this.value.length > 16) this.value = this.value.slice(0, 16);" required
+                    title="NIK harus terdiri dari 16 angka" placeholder="Masukkan NIK">
                 @error('nik')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -123,6 +121,7 @@
             @endif
         });
     </script>
+    @include('components.footer')
 </body>
 
 </html>

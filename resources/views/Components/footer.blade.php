@@ -1,4 +1,4 @@
-<footer class="bg-gray-900 text-white py-6">
+<footer class="bg-gray-900 text-white py-6 mt-auto">
     <div class="container mx-auto px-4" style="width: 90%;">
         <div>
             <img decoding="async" class="alignnone  wp-image-2355" src="https://digilib.undip.ac.id/wp-content/uploads/2020/11/Logo-Footer-Undip-ID.png" alt width="93" height="106">
