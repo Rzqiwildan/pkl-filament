@@ -309,18 +309,19 @@ class UserController extends Controller
 
 
     public function online($id)
-{
-    $pelatihans = Pelatihan::with([
-        'photos',
-        'bagianPelatihans' => function($query) {
-            $query->orderBy('created_at', 'asc');
-        },
-        'bagianPelatihans.materis',
-        'bagianPelatihans.quizzes'
-    ])->findOrFail($id);
-    
-    return view('user.online', compact('pelatihans'));
-}
+    {
+        $pelatihans = Pelatihan::with([
+            'photos',
+            'bagianPelatihans' => function($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'bagianPelatihans.materis',
+            'bagianPelatihans.quizzes.questions.choices' // Ambil soal & pilihan jawaban
+        ])->findOrFail($id);
+        
+        return view('user.online', compact('pelatihans'));
+    }
+
 
     public function quiz1()
     {

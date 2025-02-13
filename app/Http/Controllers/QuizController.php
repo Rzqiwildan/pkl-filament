@@ -6,112 +6,95 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pelatihan;
 use App\Models\HistoryUser;
-
+use App\Models\Question;
+use App\Models\Quiz;
+use App\Models\Choice;
 
 class QuizController extends Controller
 {
-    // Daftar pertanyaan
-    protected $questions = [
-        ['question' => 'Apa ibukota Indonesia?', 'options' => ['Jakarta', 'Bandung', 'Surabaya', 'Medan'], 'answer' => 'Jakarta'],
-        ['question' => 'Siapa presiden pertama Indonesia?', 'options' => ['Soekarno', 'Soeharto', 'Habibie', 'Megawati'], 'answer' => 'Soekarno'],
-        ['question' => 'Berapa hasil dari 5 + 3?', 'options' => ['5', '8', '10', '12'], 'answer' => '8']
-    ];
-
-    // Menampilkan soal
-    public function soal(Request $request)
+    // Menampilkan soal dari database
+    public function soal(Request $request, $quiz_id)
     {
-        $currentQuestion = $request->query('question', 0); // Soal aktif (default ke soal pertama)
-        $answers = session('answers', []); // Jawaban yang sudah disimpan di session
+        $quiz = Quiz::findOrFail($quiz_id);
+        $questions = Question::where('quiz_id', $quiz_id)->with('choices')->get();
 
-        // Simpan waktu mulai quiz jika belum ada di session
-        if (!session('quiz_start_time')) {
-            session(['quiz_start_time' => now()]);
+        if ($questions->isEmpty()) {
+            return redirect()->route('home')->with('error', 'Tidak ada soal dalam kuis ini.');
         }
 
-        // Hitung waktu yang sudah berlalu
-        $elapsedTime = now()->diffInSeconds(session('quiz_start_time'));
-        $remainingTime = (30 * 60) - $elapsedTime; // 30 menit
+        $currentQuestionIndex = $request->query('question', 0);
+        $currentQuestion = $questions[$currentQuestionIndex] ?? null;
 
-        // Jika waktu habis, arahkan ke halaman hasil
+        if (!$currentQuestion) {
+            return redirect()->route('quiz.hasil', ['quiz_id' => $quiz_id]);
+        }
+
+        // Cek waktu quiz
+        if (!session("quiz_start_time_$quiz_id")) {
+            session(["quiz_start_time_$quiz_id" => now()]);
+        }
+
+        $elapsedTime = now()->diffInSeconds(session("quiz_start_time_$quiz_id"));
+        $remainingTime = ($quiz->duration * 60) - $elapsedTime; // Konversi menit ke detik
+
         if ($remainingTime <= 0) {
-            return redirect()->route('quiz.hasil');
+            return redirect()->route('quiz.hasil', ['quiz_id' => $quiz_id]);
         }
 
-        return view('quiz.soal', [
-            'questions' => $this->questions,
-            'currentQuestion' => $currentQuestion,
-            'answers' => $answers,  // Kirim jawaban yang sudah disimpan
-            'remainingTime' => $remainingTime
-        ]);
+        return view('quiz.soal', compact('quiz', 'questions', 'currentQuestion', 'currentQuestionIndex', 'remainingTime'));
     }
 
     // Menyimpan jawaban per soal
     public function submitAnswer(Request $request)
     {
-        // Ambil jawaban yang ada di session, jika belum ada, buat array kosong
         $answers = session('answers', []);
+        $currentQuestionIndex = (int) $request->input('current_question_index');
 
-        // Ambil soal yang aktif (current question)
-        $currentQuestion = (int) $request->input('next_question'); 
-
-        // Jika ada jawaban, simpan di session
         if ($request->has('answer')) {
-            $answers[$currentQuestion] = $request->input('answer');
+            $answers[$currentQuestionIndex] = $request->input('answer');
         }
 
-        // Simpan jawaban ke session
         session(['answers' => $answers]);
 
-        // Arahkan ke soal berikutnya
-        $nextQuestion = (int) $request->input('next_question', $currentQuestion);
+        $nextQuestionIndex = $currentQuestionIndex + 1;
+        $totalQuestions = Question::count();
 
-        // Jika sudah mencapai soal terakhir, arahkan ke halaman hasil
-        if ($nextQuestion >= count($this->questions)) {
+        if ($nextQuestionIndex >= $totalQuestions) {
             return redirect()->route('quiz.hasil');
         }
 
-        return redirect()->route('quiz.soal', ['question' => $nextQuestion]);
+        return redirect()->route('quiz.soal', ['question' => $nextQuestionIndex]);
     }
 
-    // Menghitung skor dan menampilkan hasil
+    // Menghitung skor
     public function hasil()
     {
         $answers = session('answers', []);
         $score = 0;
+        
+        $questions = Question::with('choices')->get();
 
-        foreach ($this->questions as $index => $question) {
-            if (isset($answers[$index]) && $answers[$index] === $question['answer']) {
+        foreach ($questions as $index => $question) {
+            $correctChoice = $question->choices->where('is_correct', 1)->first();
+            if (isset($answers[$index]) && $correctChoice && $answers[$index] == $correctChoice->id) {
                 $score++;
             }
         }
 
-        $passingScore = ceil(count($this->questions) * 0.7); // Lulus jika minimal 70% benar
-
-        // Jika sudah lulus, simpan hasil ke database history_user
-        if ($score >= $passingScore) {
-            $user = Auth::user();
-            $pelatihan = Pelatihan::find(1); // Ambil pelatihan berdasarkan ID atau sesuai kebutuhan
-
-            // Simpan ke history_user jika lulus
-            HistoryUser::updateOrCreate(
-                ['user_id' => $user->id, 'pelatihan_id' => $pelatihan->id],
-                ['score' => $score]
-            );
-        }
+        $passingScore = ceil(count($questions) * 0.7);
 
         return view('quiz.hasil', [
             'score' => $score,
-            'totalQuestions' => count($this->questions),
+            'totalQuestions' => count($questions),
             'passingScore' => $passingScore
         ]);
     }
 
-
-    // Reset jawaban untuk mengulang quiz
+    // Reset quiz
     public function ulangi()
     {
-        session()->forget('answers'); // Hapus semua jawaban
-        session()->forget('quiz_start_time'); // Hapus waktu mulai quiz
-        return redirect()->route('quiz.soal'); // Kembali ke soal pertama
+        session()->forget('answers');
+        return redirect()->route('quiz.soal');
     }
 }
+

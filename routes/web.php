@@ -130,7 +130,7 @@ Route::get('/test-admin', function () {
 })->middleware('check.role.admin');
 
 // Route Quiz
-Route::get('/Quiz', [QuizController::class, 'soal'])->name('quiz.soal');
+Route::get('/quiz/{quiz_id}', [QuizController::class, 'soal'])->name('quiz.soal');
 Route::post('/Quiz/submit', [QuizController::class, 'submitAnswer'])->name('quiz.submit');
 Route::get('/Quiz/hasil', [QuizController::class, 'hasil'])->name('quiz.hasil');
 Route::get('/Quiz/ulangi', [QuizController::class, 'ulangi'])->name('quiz.ulangi');
