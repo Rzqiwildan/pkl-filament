@@ -8,11 +8,10 @@
     <title>Upload Bukti Pembayaran</title>
     @vite('resources/css/app.css')
     @include('components.navbar')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 py-8 flex-grow">
         <h1 class="text-2xl font-semibold mb-6">Halaman Pembayaran</h1>
 
         @if ($transaksi)
@@ -117,6 +116,7 @@
         @endif
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function showUploadModal() {
             document.getElementById('uploadModal').classList.remove('hidden');
@@ -135,6 +135,7 @@
             });
         @endif
     </script>
+    @include('components.footer')
 </body>
 
 </html>

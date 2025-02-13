@@ -184,32 +184,33 @@
             </div>
         </div>
     </div>
-</body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const button = document.getElementById("registerButton");
+            const modalPembayaran = document.getElementById('modalPembayaran');
+            const tutupModal = document.getElementById('tutupModal');
+            const tombolMetodePembayaran = document.querySelectorAll('.tombol-metode-pembayaran');
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const button = document.getElementById("registerButton");
-        const modalPembayaran = document.getElementById('modalPembayaran');
-        const tutupModal = document.getElementById('tutupModal');
-        const tombolMetodePembayaran = document.querySelectorAll('.tombol-metode-pembayaran');
+            button.addEventListener("click", function() {
+                modalPembayaran.classList.remove('hidden');
+            });
 
-        button.addEventListener("click", function() {
-            modalPembayaran.classList.remove('hidden');
-        });
+            tutupModal.addEventListener('click', function() {
+                modalPembayaran.classList.add('hidden');
+            });
 
-        tutupModal.addEventListener('click', function() {
-            modalPembayaran.classList.add('hidden');
-        });
-
-        tombolMetodePembayaran.forEach(tombol => {
-            tombol.addEventListener('click', function() {
-                tombolMetodePembayaran.forEach(t => t.classList.remove('border-blue-500'));
-                this.classList.add('border-blue-500');
-                document.getElementById('metode_pembayaran_terpilih').value = this.dataset
-                    .metode;
+            tombolMetodePembayaran.forEach(tombol => {
+                tombol.addEventListener('click', function() {
+                    tombolMetodePembayaran.forEach(t => t.classList.remove('border-blue-500'));
+                    this.classList.add('border-blue-500');
+                    document.getElementById('metode_pembayaran_terpilih').value = this.dataset
+                        .metode;
+                });
             });
         });
-    });
-</script>
+    </script>
+    @include('components.footer')
+</body>
+
 
 </html>

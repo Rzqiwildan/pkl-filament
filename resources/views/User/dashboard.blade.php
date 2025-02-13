@@ -222,6 +222,6 @@
             @endforeach    
         @endforeach
     </div>
+    @include('components.footer')
 </body>
-@include('components.footer')
 </html>
