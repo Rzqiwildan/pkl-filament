@@ -23,7 +23,7 @@
                         @endforeach
                     </ul>
                     <!-- Tombol Edit Soal -->
-                    <a href="{{ route('teacher.editQuestion', ['quizId' => $quiz->id, 'questionId' => $question->id]) }}"
+                    <a href="{{ route('teacher.editQuiz', ['quizId' => $quiz->id, 'questionId' => $question->id]) }}"
                         class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition inline-block mt-2">
                         Edit Soal
                     </a>
@@ -42,7 +42,7 @@
                     <label class="block text-sm font-medium text-gray-700">Pertanyaan</label>
                     <input type="text" name="question" class="w-full p-2 border rounded-md" required>
                 </div>
-                <div class="mt-4">
+                <div class="mt-4">  
                     <label class="block text-sm font-medium text-gray-700">Pilihan Jawaban</label>
                     @for ($i = 0; $i < 4; $i++)
                         <div class="flex items-center space-x-2 mt-2">
