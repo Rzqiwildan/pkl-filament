@@ -138,6 +138,5 @@ Route::post('/quiz/submit', [QuizController::class, 'submitAnswer'])->name('quiz
 
 
 // Route Sertif
-Route::get('/sertifikat', [SertifikatController::class, 'show'])->name('sertifikat.show');
-Route::get('/unduh-sertifikat/{user_id}/{pelatihan_id}', [SertifikatController::class, 'download'])->name('download.sertifikat');
-
+Route::get('/sertifikat/{quiz_id}', [SertifikatController::class, 'show'])->name('sertifikat.show');
+Route::get('/sertifikat/download/{quiz_id}', [SertifikatController::class, 'download'])->name('download.sertifikat');

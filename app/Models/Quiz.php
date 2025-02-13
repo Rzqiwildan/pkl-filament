@@ -11,6 +11,11 @@ class Quiz extends Model
     use HasFactory;
     protected $fillable = ['bagian_pelatihan_id', 'title', 'description', 'duration'];
 
+    public function pelatihan()
+    {
+        return $this->belongsTo(Pelatihan::class);
+    }
+
     public function bagianPelatihan()
     {
         return $this->belongsTo(BagianPelatihan::class, 'bagian_pelatihan_id');

@@ -4,40 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\HistoryUser;
+use App\Models\Quiz_attempt;
 use App\Models\Pelatihan;
-
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SertifikatController extends Controller
 {
-    public function show(Request $request)
+    // Menampilkan sertifikat jika user lulus
+    public function show($quiz_id)
     {
         $user = Auth::user();
-        $pelatihan = Pelatihan::find($request->pelatihan_id);
 
-        // Cek apakah pengguna sudah mendapatkan skor pelatihan
-        $history = HistoryUser::where('user_id', $user->id)
-            ->where('pelatihan_id', $pelatihan->id)
+        // Ambil attempt terakhir user untuk quiz ini
+        $quizAttempt = Quiz_attempt::where('user_id', $user->id)
+            ->where('quiz_id', $quiz_id)
             ->first();
 
-        if (!$history || $history->score < 60) {
-            return redirect()->route('pelatihan.index')->with('error', 'Anda belum lulus pelatihan ini atau skor Anda kurang.');
+        // Cek apakah user lulus
+        if (!$quizAttempt || $quizAttempt->score < $quizAttempt->quiz->passing_score) {
+            return redirect()->route('pelatihan.index')->with('error', 'Anda belum lulus quiz ini.');
         }
 
-        // Tampilkan halaman sertifikat jika skor mencukupi
-        return view('sertifikat', compact('user', 'pelatihan'));
+        return view('quiz.sertifikat', compact('user', 'quizAttempt'));
     }
 
-    public function download($user_id, $pelatihan_id)
+    // Download sertifikat dalam format PDF
+    public function download($quiz_id)
     {
-        $user = User::findOrFail($user_id);
-        $pelatihan = Pelatihan::findOrFail($pelatihan_id);
+        $user = Auth::user();
 
-        // Generate PDF untuk sertifikat
-        $pdf = PDF::loadView('sertifikat_pdf', compact('user', 'pelatihan'));
+        // Ambil attempt terakhir user untuk quiz ini
+        $quizAttempt = Quiz_attempt::where('user_id', $user->id)
+            ->where('quiz_id', $quiz_id)
+            ->firstOrFail();
 
-        // Simpan atau unduh sertifikat dalam format PDF
-        return $pdf->download('sertifikat_' . $user->name . '.pdf');
+        // Cek apakah user lulus
+        if ($quizAttempt->score < $quizAttempt->quiz->passing_score) {
+            return redirect()->route('pelatihan.index')->with('error', 'Anda belum lulus quiz ini.');
+        }
+
+        // Generate PDF Sertifikat
+        $pdf = Pdf::loadView('sertifikat_pdf', compact('user', 'quizAttempt'));
+
+        return $pdf->download('quiz.sertifikat' . $user->name . '.pdf');
     }
 }
-

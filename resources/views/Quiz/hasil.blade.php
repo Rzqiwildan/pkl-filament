@@ -18,11 +18,16 @@
                     Maaf, Anda tidak lulus. Cobalah lagi.
                 @endif
             </p>
+
             <div class="mt-6">
-                <a href="{{ route('sertifikat.show') }}" class="text-blue-500">Unduh Sertifikat</a>
-                <br>
-                <a href="{{ route('quiz.ulangi', ['quiz_id' => $quiz_id]) }}" class="mt-2 text-green-500">Ulangi Quiz</a>
-                </div>
+                @if($score >= $passingScore)
+                    <a href="{{ route('sertifikat.show', ['quiz_id' => $quiz_id]) }}" class="text-blue-500">
+                        Unduh Sertifikat
+                    </a>
+                @else
+                    <a href="{{ route('quiz.ulangi', ['quiz_id' => $quiz_id]) }}" class="mt-2 text-green-500">Ulangi Quiz</a>
+                @endif
+            </div>
         </div>
     </div>
 </body>

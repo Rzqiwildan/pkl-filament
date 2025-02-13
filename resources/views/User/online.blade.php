@@ -72,38 +72,37 @@
                     <div x-show="open" class="px-4 py-2 space-y-2">
                         <!-- Materi -->
                         @foreach ($bagian->materis as $materi)
-                            <div class="flex items-center space-x-2 mt-4 mb-4">
+                            <div class="flex flex-col space-y-4 mt-4 mb-4">
                                 @if ($materi->link)
                                     <a href="{{ $materi->link }}" target="_blank" class="text-sm text-gray-900">
-                                        <span
-                                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Video</span>
+                                        <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Video</span>
                                         <span class="hover:text-blue-500 hover:underline">{{ $materi->name }}</span>
                                     </a>
                                 @endif
 
                                 @if ($materi->file_path)
-                                    <a href="{{ Storage::url($materi->file_path) }}" target="_blank"
-                                        class="text-sm text-gray-900">
-                                        <span
-                                            class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Materi</span>
+                                    <a href="{{ Storage::url($materi->file_path) }}" target="_blank" class="text-sm text-gray-900">
+                                        <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Materi</span>
                                         <span class="hover:text-blue-500 hover:underline">{{ $materi->name }}</span>
                                     </a>
                                 @endif
                             </div>
                         @endforeach
 
+
                         <!-- Quiz -->
                         @foreach ($pelatihans->bagianPelatihans as $bagian)
-                            @if ($bagian->quizzes->count() > 0) {{-- Hanya cek apakah ada quiz --}}
+                            <!-- Quiz -->
                                 @foreach ($bagian->quizzes as $quiz)
-                                    <div class="flex items-center space-x-2 mb-4">
-                                        <a href="{{ route('quiz.soal', $quiz->id) }}" class="text-sm text-gray-900">
-                                            <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Quiz</span>
-                                            <span class="hover:text-blue-500 hover:underline">{{ $quiz->title }}</span>
-                                        </a>
-                                    </div>
+                                    @if ($quiz->bagian_pelatihan_id == $bagian->id) 
+                                        <div class="flex flex-col space-y-4 mt-4 mb-4">
+                                            <a href="{{ route('quiz.soal', $quiz->id) }}" class="text-sm text-gray-900">
+                                                <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Quiz</span>
+                                                <span class="hover:text-blue-500 hover:underline">{{ $quiz->title }}</span>
+                                            </a>
+                                        </div>
+                                    @endif
                                 @endforeach
-                            @endif
                         @endforeach
                     </div>
                 </div>
