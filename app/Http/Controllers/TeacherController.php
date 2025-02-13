@@ -269,7 +269,7 @@ public function storeBagianQuiz(Request $request, $pelatihanId)
     $quiz = Quiz::findOrFail($quizId);
     $question = Question::with('choices')->findOrFail($questionId);
 
-    return view('teacher.editQuestion', compact('quiz', 'question'));
+    return view('teacher.editQuiz', compact('quiz', 'question'));
 }
 
 public function updateQuestion(Request $request, $quizId, $questionId)
@@ -299,6 +299,7 @@ public function updateQuestion(Request $request, $quizId, $questionId)
 
     return redirect()->route('teacher.showQuiz', $quizId)->with('success', 'Soal berhasil diperbarui!');
 }
+    
 
 
 

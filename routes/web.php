@@ -109,20 +109,20 @@ Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::post('/teacher/quiz/{quizId}/question/store', [TeacherController::class, 'storeQuestion'])->name('teacher.storeQuestion');
     Route::delete('/teacher/quiz/{quizId}', [TeacherController::class, 'deleteQuiz'])->name('teacher.deleteQuiz');
     Route::post('/teacher/storeBagianQuiz/{pelatihanId}', [TeacherController::class, 'storeBagianQuiz'])->name('teacher.storeBagianQuiz');
-    Route::get('/teacher/quiz/{quizId}/question/{questionId}/edit', [TeacherController::class, 'editQuestion'])->name('teacher.editQuestion');
+    Route::get('/teacher/quiz/{quizId}/question/{questionId}/edit', [TeacherController::class, 'editQuestion'])->name('teacher.editQuiz');
     Route::put('/teacher/quiz/{quizId}/question/{questionId}', [TeacherController::class, 'updateQuestion'])->name('teacher.updateQuestion');
 });
 
-Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
-Route::middleware('role:mahasiswa')->group(function () {
-    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
-    // ... other user routes ...
-});
-});
-Route::middleware(['auth', 'check.role:umum'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
-    // ... other user routes ...
-});
+// Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
+// Route::middleware('role:mahasiswa')->group(function () {
+//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
+//     // ... other user routes ...
+// });
+// });
+// Route::middleware(['auth', 'check.role:umum'])->group(function () {
+//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
+//     // ... other user routes ...
+// });
 
 
 Route::get('/test-admin', function () {
@@ -140,12 +140,3 @@ Route::post('/Quiz/hasil', [QuizController::class, 'hasil'])->name('quiz.hasil')
 // Route Sertif
 Route::get('/sertifikat', [SertifikatController::class, 'show'])->name('sertifikat.show');
 Route::get('/unduh-sertifikat/{user_id}/{pelatihan_id}', [SertifikatController::class, 'download'])->name('download.sertifikat');
-
-// Route transaksi
-Route::middleware(['auth'])->group(function () {
-    // Route::get('/upload-bukti', [TransaksiController::class, 'create'])->name('upload-bukti-form');
-    Route::post('/upload-bukti', [TransaksiController::class, 'store'])->name('upload-bukti');
-    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
-    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
-    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
-});
