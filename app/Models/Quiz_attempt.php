@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz_attempt extends Model
 {
     use HasFactory;
-    protected $fillable = ['quiz_id', 'user_id', 'score', 'completed_at'];
+    protected $fillable = ['quiz_id', 'user_id', 'score', 'tanggal','completed_at'];
 
+    protected $casts = [
+        'tanggal' => 'datetime'
+    ];
     public function quiz()
     {
         return $this->belongsTo(Quiz::class);

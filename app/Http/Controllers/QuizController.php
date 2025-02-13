@@ -98,6 +98,7 @@ class QuizController extends Controller
                 'quiz_id' => $quiz_id,
                 'user_id' => $user_id,
                 'score' => $score,
+                'tanggal' => now(),
                 'completed_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),

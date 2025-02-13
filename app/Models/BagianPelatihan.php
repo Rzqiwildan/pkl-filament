@@ -22,8 +22,8 @@ class BagianPelatihan extends Model
 {
     return $this->hasMany(Materi::class, 'bagian_pelatihan_id');
 }
-    public function quizzes()
-    {
-        return $this->hasMany(Quiz::class);
-    }
+public function quizzes()
+{
+    return $this->hasMany(Quiz::class, 'bagian_pelatihan_id');
+}
 }

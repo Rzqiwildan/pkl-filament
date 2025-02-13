@@ -13,40 +13,42 @@ class SertifikatController extends Controller
 {
     // Menampilkan sertifikat jika user lulus
     public function show($quiz_id)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // Ambil attempt terakhir user untuk quiz ini
-        $quizAttempt = Quiz_attempt::where('user_id', $user->id)
-            ->where('quiz_id', $quiz_id)
-            ->first();
+    $quizAttempt = Quiz_attempt::with(['quiz.bagianPelatihan.pelatihan', 'user'])
+        ->where('user_id', $user->id)
+        ->where('quiz_id', $quiz_id)
+        ->first();
 
-        // Cek apakah user lulus
-        if (!$quizAttempt || $quizAttempt->score < $quizAttempt->quiz->passing_score) {
-            return redirect()->route('pelatihan.index')->with('error', 'Anda belum lulus quiz ini.');
-        }
-
-        return view('quiz.sertifikat', compact('user', 'quizAttempt'));
+    if (!$quizAttempt) {
+        return redirect()->route('pelatihan.index')
+            ->with('error', 'Data quiz tidak ditemukan.');
     }
+
+    return view('quiz.sertifikat', compact('quizAttempt'));
+}
 
     // Download sertifikat dalam format PDF
     public function download($quiz_id)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // Ambil attempt terakhir user untuk quiz ini
-        $quizAttempt = Quiz_attempt::where('user_id', $user->id)
-            ->where('quiz_id', $quiz_id)
-            ->firstOrFail();
+    $quizAttempt = Quiz_attempt::with(['quiz.bagianPelatihan.pelatihan', 'user'])
+        ->where('user_id', $user->id)
+        ->where('quiz_id', $quiz_id)
+        ->firstOrFail();
 
-        // Cek apakah user lulus
-        if ($quizAttempt->score < $quizAttempt->quiz->passing_score) {
-            return redirect()->route('pelatihan.index')->with('error', 'Anda belum lulus quiz ini.');
-        }
+    // Generate PDF Sertifikat
+    $pdf = PDF::loadView('Quiz.sertifikat_pdf', compact('quizAttempt'))
+    ->setPaper('a4', 'landscape')
+    ->setOptions([
+        'dpi' => 150,
+        'defaultFont' => 'sans-serif',
+        'isHtml5ParserEnabled' => true,
+        'isRemoteEnabled' => true
+    ]);
 
-        // Generate PDF Sertifikat
-        $pdf = Pdf::loadView('sertifikat_pdf', compact('user', 'quizAttempt'));
-
-        return $pdf->download('quiz.sertifikat' . $user->name . '.pdf');
-    }
+    return $pdf->download('Sertifikat_'.$user->name.'.pdf');
+}
 }
