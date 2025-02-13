@@ -32,42 +32,38 @@
 
         <!-- Soal Section -->
         <div class="w-3/4 p-6">
-            <form id="quizForm" action="{{ route('quiz.submit', ['quiz_id' => $quiz->id]) }}" method="POST">
+            <h2 class="text-lg font-semibold mb-4">{{ $currentQuestion->question }}</h2>
+            <form action="{{ route('quiz.submit') }}" method="POST">
                 @csrf
                 <input type="hidden" name="quiz_id" value="{{ $quiz->id }}">
-                <input type="hidden" name="next_question" id="next_question" value="{{ $currentQuestionIndex }}">
-
-                <div class="mb-4 p-4 border rounded">
-                    <p class="text-lg font-bold">{{ $currentQuestion->question }}</p>
-                    
-                    @foreach($currentQuestion->choices as $choice)
-                        <label class="block">
-                            <input 
-                                type="radio" 
-                                name="answer" 
-                                value="{{ $choice->id }}" 
-                                class="mr-2 answer-option" 
-                                data-question-index="{{ $currentQuestionIndex }}"
-                                {{ isset($answers[$currentQuestionIndex]) && $answers[$currentQuestionIndex] == $choice->id ? 'checked' : '' }} 
-                            />
-                            {{ $choice->choice_text }}
-                        </label>
-                    @endforeach
-                </div>
-
-                <div class="flex flex-col items-end space-y-2">
-                    <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-1 rounded">Simpan</button>
-                    
-                    @if ($currentQuestionIndex == count($questions) - 1)
-                        <button type="button" id="finishBtn" class="px-4 py-1 bg-red-500 text-white rounded">Selesai</button>
-                    @else
-                        <button type="button" id="nextBtn" class="px-4 py-1 bg-blue-500 text-white rounded">Selanjutnya</button>
+                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                <input type="hidden" name="current_question_index" value="{{ $currentQuestionIndex }}">
+                @foreach($currentQuestion->choices as $choice)
+                    @php
+                        // Ambil jawaban dari session agar tetap tercentang jika halaman direfresh
+                        $savedAnswers = session("answers_$quiz->id", []);
+                        $isChecked = isset($savedAnswers[$currentQuestionIndex]) && $savedAnswers[$currentQuestionIndex] == $choice->id;
+                    @endphp
+                    <label class="block mb-2">
+                        <input type="radio" name="answer" value="{{ $choice->id }}" {{ $isChecked ? 'checked' : '' }} required> 
+                        {{ $choice->choice_text }}
+                    </label>
+                @endforeach
+                <div class="mt-4 flex {{ $currentQuestionIndex > 0 ? 'justify-between' : 'justify-end' }}">
+                    @if($currentQuestionIndex > 0)
+                        <a href="{{ route('quiz.soal', ['quiz_id' => $quiz->id, 'question' => $currentQuestionIndex - 1]) }}" 
+                        class="px-4 py-2 bg-gray-300 rounded">
+                            Sebelumnya
+                        </a>
                     @endif
+                    <button type="submit" name="action" value="{{ $currentQuestionIndex < count($questions) - 1 ? 'next' : 'finish' }}" 
+                            class="px-4 py-2 {{ $currentQuestionIndex < count($questions) - 1 ? 'bg-blue-500' : 'bg-green-500' }} text-white rounded">
+                        {{ $currentQuestionIndex < count($questions) - 1 ? 'Selanjutnya' : 'Selesai' }}
+                    </button>
                 </div>
             </form>
         </div>
     </div>
-
     <script>
         let currentQuestionIndex = {{ $currentQuestionIndex }};
         const totalQuestions = {{ count($questions) }};

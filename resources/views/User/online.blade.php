@@ -94,18 +94,17 @@
 
                         <!-- Quiz -->
                         @foreach ($pelatihans->bagianPelatihans as $bagian)
-    @if ($bagian->quizzes->count() > 0) {{-- Hanya cek apakah ada quiz --}}
-        @foreach ($bagian->quizzes as $quiz)
-            <div class="flex items-center space-x-2 mb-4">
-                <a href="{{ route('quiz.soal', $quiz->id) }}" class="text-sm text-gray-900">
-                    <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Quiz</span>
-                    <span class="hover:text-blue-500 hover:underline">{{ $quiz->title }}</span>
-                </a>
-            </div>
-        @endforeach
-    @endif
-@endforeach
-
+                            @if ($bagian->quizzes->count() > 0) {{-- Hanya cek apakah ada quiz --}}
+                                @foreach ($bagian->quizzes as $quiz)
+                                    <div class="flex items-center space-x-2 mb-4">
+                                        <a href="{{ route('quiz.soal', $quiz->id) }}" class="text-sm text-gray-900">
+                                            <span class="bg-black text-white rounded-full px-3 py-1 text-xs font-semibold">Quiz</span>
+                                            <span class="hover:text-blue-500 hover:underline">{{ $quiz->title }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             @endforeach

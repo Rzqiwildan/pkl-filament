@@ -131,21 +131,13 @@ Route::get('/test-admin', function () {
 
 // Route Quiz
 Route::get('/quiz/{quiz_id}', [QuizController::class, 'soal'])->name('quiz.soal');
-Route::post('/Quiz/submit', [QuizController::class, 'submitAnswer'])->name('quiz.submit');
-Route::get('/Quiz/hasil', [QuizController::class, 'hasil'])->name('quiz.hasil');
-Route::get('/Quiz/ulangi', [QuizController::class, 'ulangi'])->name('quiz.ulangi');
+Route::get('/quiz/ulangi/{quiz_id}', [QuizController::class, 'ulangi'])->name('quiz.ulangi');
 Route::post('/Quiz/save-answer', [QuizController::class, 'saveAnswer'])->name('quiz.saveAnswer');
-Route::post('/Quiz/hasil', [QuizController::class, 'hasil'])->name('quiz.hasil');
+Route::get('/Quiz/hasil/{quiz_id}', [QuizController::class, 'hasil'])->name('quiz.hasil');
+Route::post('/quiz/submit', [QuizController::class, 'submitAnswer'])->name('quiz.submit');
+
 
 // Route Sertif
 Route::get('/sertifikat', [SertifikatController::class, 'show'])->name('sertifikat.show');
 Route::get('/unduh-sertifikat/{user_id}/{pelatihan_id}', [SertifikatController::class, 'download'])->name('download.sertifikat');
 
-// Route transaksi
-Route::middleware(['auth'])->group(function () {
-    // Route::get('/upload-bukti', [TransaksiController::class, 'create'])->name('upload-bukti-form');
-    Route::post('/upload-bukti', [TransaksiController::class, 'store'])->name('upload-bukti');
-    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
-    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
-    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
-});
