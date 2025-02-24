@@ -47,7 +47,7 @@
     </script>
 
     <!-- Filters -->
-    <div class="container mx-auto mt-8 flex space-x-4 mb-8 mt-8" style="width: 90%;">
+    <div class="container mx-auto mt-8 flex space-x-4 mb-8" style="width: 90%;">
         <!-- Input -->
         <input type="text" id="search-input" placeholder="Cari pelatihan, lokasi pelatihan, dll" class="p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="width: 30%; border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.875rem; color: #000000"/>
         <!-- Tempat menampilkan hasil pencarian -->

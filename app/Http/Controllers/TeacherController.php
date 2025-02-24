@@ -11,6 +11,7 @@ use App\Models\Quiz;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
@@ -353,4 +354,19 @@ public function updateProfile(Request $request)
 
     return redirect()->route('teacher.profile')->with('success', 'Profil berhasil diperbarui!');
     }
+
+    public function peserta(Pelatihan $pelatihan)
+{
+    $peserta = DB::table('users')
+        ->join('user_pelatihans', 'users.id', '=', 'user_pelatihans.user_id')
+        ->where('user_pelatihans.pelatihan_id', $pelatihan->id)
+        ->select('users.*', 'user_pelatihans.created_at as tanggal_bergabung')
+        ->orderBy('users.name')
+        ->get();
+        
+    return view('teacher.peserta', [
+        'pelatihan' => $pelatihan,
+        'peserta' => $peserta
+    ]);
+}
 }

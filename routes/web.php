@@ -61,9 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/payment/{transaction_code}', [UserController::class, 'showPaymentPage'])->name('user.payment.show');
     Route::post('/user/proses-pembayaran', [UserController::class, 'prosesPembayaran'])->name('user.proses.pembayaran');
     Route::get('/user/konfirmasi-pembayaran/{kode_transaksi}', [UserController::class, 'konfirmasiPembayaran'])->name('user.konfirmasi.pembayaran');
-    // Route::get('/history', function () {
-    //     return view('User.history');
-    // })->name('user.history');
+
     
     
     // Route untuk profil
@@ -111,6 +109,7 @@ Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::post('/teacher/storeBagianQuiz/{pelatihanId}', [TeacherController::class, 'storeBagianQuiz'])->name('teacher.storeBagianQuiz');
     Route::get('/teacher/quiz/{quizId}/question/{questionId}/edit', [TeacherController::class, 'editQuestion'])->name('teacher.editQuiz');
     Route::put('/teacher/quiz/{quizId}/question/{questionId}', [TeacherController::class, 'updateQuestion'])->name('teacher.updateQuestion');
+    Route::get('/teacher/pelatihan/{pelatihan}/peserta', [TeacherController::class, 'peserta'])->name('teacher.peserta');
 });
 
 // Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {

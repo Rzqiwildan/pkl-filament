@@ -22,4 +22,6 @@ class Quiz_attempt extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }

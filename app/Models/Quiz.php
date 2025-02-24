@@ -17,13 +17,19 @@ class Quiz extends Model
     }
 
     public function bagianPelatihan()
-{
-    return $this->belongsTo(BagianPelatihan::class);
-}
+    {
+        return $this->belongsTo(BagianPelatihan::class);
+    }
 
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    // Tambahkan relasi ke Quiz_attempt
+    public function quiz_attempt()
+    {
+        return $this->hasMany(Quiz_attempt::class);
     }
 
     public function getRemainingTime()

@@ -13,6 +13,7 @@ use App\Filament\Resources\PelatihanResource;
 use App\Models\UserPelatihan;
 use App\Models\JadwalPelatihan;
 use App\Models\HistoryUser;
+use App\Models\Quiz_attempt;
 use App\Models\Transaksi;
 use App\Models\Umum;
 use App\Models\User;
@@ -114,7 +115,41 @@ class UserController extends Controller
     }
 
 
+    private function getUserScore($userId, $pelatihanId)
+{
+    // Ambil data pelatihan beserta bagian dan quiz
+    $pelatihan = Pelatihan::with(['bagianPelatihans.quizzes.quiz_attempt' => function($query) use ($userId) {
+        $query->where('user_id', $userId)
+              ->whereNotNull('completed_at')
+              ->orderBy('score', 'desc');
+    }])->findOrFail($pelatihanId);
 
+    $totalScore = 0;
+    $quizCount = 0;
+
+    // Hitung rata-rata skor dari semua quiz
+    foreach ($pelatihan->bagianPelatihans as $bagian) {
+        foreach ($bagian->quizzes as $quiz) {
+            // Ambil attempt dengan skor tertinggi yang sudah selesai
+            $bestAttempt = $quiz->quiz_attempt
+                ->where('user_id', $userId)
+                ->first();
+            
+            if ($bestAttempt && $bestAttempt->completed_at) {
+                $totalScore += $bestAttempt->score;
+                $quizCount++;
+            }
+        }
+    }
+
+    // Jika tidak ada quiz yang selesai dikerjakan, kembalikan 0
+    if ($quizCount === 0) {
+        return 0;
+    }
+
+    // Hitung rata-rata skor dan bulatkan ke 2 angka desimal
+    return round($totalScore / $quizCount, 2);
+}
 
     public function ikutPelatihan(Request $request)
     {
@@ -340,16 +375,16 @@ class UserController extends Controller
 
 
     public function history()
-    {
-        $userId = Auth::id();
+{
+    $userId = Auth::id();
 
-        // Ambil pelatihan yang sudah selesai dari history_users
-        $user_histories = HistoryUser::where('user_id', $userId)
-            ->with('pelatihan.photos') // Pastikan relasi sudah benar
-            ->get();
+    // Ambil pelatihan yang sudah selesai dari history_users
+    $user_histories = HistoryUser::where('user_id', $userId)
+        ->with(['pelatihan', 'pelatihan.photos']) // Pastikan relasi sudah benar
+        ->get();
 
-        return view('user.history', compact('user_histories'));
-    }
+    return view('user.history', compact('user_histories'));
+}
 
     public function profile()
     {
