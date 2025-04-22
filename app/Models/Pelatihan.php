@@ -100,6 +100,12 @@ public function teachers()
 
     return $diffInDays > 0 ? "$diffInDays hari tersisa" : "$diffInHours jam tersisa";
 }
+public function scopeAktif($query)
+{
+    return $query->whereHas('jadwalPelatihan', function ($q) {
+        $q->where('end_date', '>', now());
+    });
+}
 
 
 

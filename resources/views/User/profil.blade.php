@@ -16,7 +16,7 @@
     <!-- Navbar -->
 
     <!-- Profile Section -->
-    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 m-8">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 m-24">
         <h2 class="text-2xl font-semibold text-center mb-6 mt-6">Selamat Datang, {{ $umum->name }}</h2>
         <form method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data">
             @csrf

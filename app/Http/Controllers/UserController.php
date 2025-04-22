@@ -27,13 +27,16 @@ class UserController extends Controller
         // Ambil semua data pelatihan
         $pelatihans = Pelatihan::with('photos')->get(); 
 
+        $pelatihans = Pelatihan::aktif()->get();
+
+
         // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
         $photos = PelatihanPhotos::all();
 
         // Ambil semua data banner
         $banners = Banner::all();
 
-        // Ambil semua data banner
+        // Ambil semua data category
         $categories = Category::all();
 
         $jenisOptions = PelatihanResource::getJenisOptions();
