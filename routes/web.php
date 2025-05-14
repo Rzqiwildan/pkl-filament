@@ -1,14 +1,53 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\TransaksiController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
+// Routes untuk verifikasi email 
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
+    try {
+        // Temukan user
+        $user = User::findOrFail($id);
+        
+        // Verifikasi email secara manual
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            throw new \Exception('Link verifikasi tidak valid');
+        }
+        
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/login')->with('status', 'Email sudah diverifikasi sebelumnya.');
+        }
+        
+        // Update timestamp verifikasi
+        $user->markEmailAsVerified();
+        
+        // Redirect ke login
+        return redirect('/login')->with('status', 'Email berhasil diverifikasi! Silakan login.');
+    } catch (\Exception $e) {
+        return redirect('/login')->withErrors(['email' => 'Link verifikasi tidak valid atau sudah kadaluarsa.']);
+    }
+})->middleware('signed')->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', 'Link verifikasi telah dikirim ulang!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/', [Controller::class, 'index'])->name('welcome');
 
@@ -18,6 +57,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
     Route::get('register', [LoginController::class, 'showRegister'])->name('register');
     Route::post('register', [LoginController::class, 'register']);
+    // Lupa Password
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('password.email');
+    // Reset Password 
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
+    ->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
+    ->name('password.update');
 });
 
 //Rute untuk user
@@ -80,7 +129,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::match(['get', 'post'], '/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/unauthorized', function () {
     return view('unauthorized');
