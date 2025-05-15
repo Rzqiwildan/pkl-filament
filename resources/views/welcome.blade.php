@@ -33,14 +33,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var splide = new Splide('.splide_banner', {
-                type       : 'loop',      // Slider akan looping
-                perPage    : 1,           // Tampilkan 1 banner per halaman
-                perMove    : 1,           // Bergerak 1 banner setiap kali
-                gap        : '0rem',      // Tidak ada jarak antar banner
-                autoplay   : true,        // Auto play slider
-                interval   : 3000,        // Durasi antar slide (ms)
-                arrows     : true,        // Tombol navigasi prev/next
-                pagination : true,        // Pagination bulatan
+                type       : 'loop',       
+                perPage    : 1,           
+                perMove    : 1,           
+                gap        : '0rem',      
+                autoplay   : true,         
+                interval   : 3000,         
+                arrows     : true,         
+                pagination : true,        
             });
             splide.mount();
         });
@@ -126,7 +126,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        <span class="text-sm text-gray-700 font-medium">50 jam</span>
+                        <span class="text-sm text-gray-700 font-medium">{{$pelatihan->remaining_time}}</span>
                     </div>
                     <div class="flex items-center space-x-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#1B86B7" class="w-6 h-6">

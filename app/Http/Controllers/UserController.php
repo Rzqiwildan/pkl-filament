@@ -535,14 +535,27 @@ class UserController extends Controller
                 'transaction_code' => $transaksi->transaction_code
             ])->with('success', 'Silakan lakukan pembayaran sesuai dengan instruksi yang diberikan.');
     }
-
-    public function showPaymentPage()
-    {
-        // Mendapatkan transaksi berdasarkan user yang sedang login
-        $transaksi = Transaksi::where('user_id', Auth::id())->latest()->first(); // Ambil transaksi terakhir
-        
-        return view('user.payment', compact('transaksi'));
+    public function showPaymentPage($transaction_code = null)
+{
+    // Jika transaction_code ada, cari transaksi berdasarkan kode
+    if ($transaction_code) {
+        $transaksi = Transaksi::where('transaction_code', $transaction_code)
+            ->where('user_id', Auth::id())
+            ->first();
+    } else {
+        // Jika tidak ada transaction_code, ambil transaksi terbaru user
+        $transaksi = Transaksi::where('user_id', Auth::id())->latest()->first();
     }
+    
+    // Debug: cek apakah $transaksi ada
+    if ($transaksi) {
+        \Log::info('Transaksi ditemukan: ' . $transaksi->transaction_code);
+    } else {
+        \Log::info('Transaksi tidak ditemukan');
+    }
+    
+    return view('user.payment', compact('transaksi'));
+}
 
     public function uploadPaymentProof(Request $request)
     {
