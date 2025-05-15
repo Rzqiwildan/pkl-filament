@@ -53,14 +53,14 @@
         <!-- Tempat menampilkan hasil pencarian -->
         <div id="autocomplete-results" class="absolute bg-white border rounded-md mt-8 shadow-lg hidden" style=" overflow-y: auto; max-height: 200px; width: 20%; border: 1px solid #a2a2a2; height: 4rem; line-height: 1rem; font-size: 0.875rem;"></div>
         <!-- Select: Jenis Pelatihan -->
-        <select class="border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.8rem; color: #757575">
+        <select id="jenis-filter" class="border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.8rem; color: #757575">
             <option value="" disabled selected hidden>Jenis Pelatihan</option>
             @foreach ($jenisOptions as $key => $value)
                 <option value="{{ $key }}">{{ $value }}</option>
             @endforeach
         </select>
         <!-- Select: Kesulitan -->
-        <select class="border rounded-md text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.8rem; color: #757575;">
+        <select id="kesulitan-filter" class="border rounded-md text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" style="border: 1px solid #a2a2a2; height: 2rem; line-height: 2rem; text-align: left; font-size: 0.8rem; color: #757575;">
             <option value="" disabled selected hidden>Kesulitan</option>
             @foreach ($kesulitanOptions as $key => $value)
                 <option value="{{ $key }}">{{ $value }}</option>
@@ -72,56 +72,71 @@
     document.addEventListener("DOMContentLoaded", function () {
         const searchInput = document.getElementById("search-input");
         const resultsContainer = document.getElementById("autocomplete-results");
+        const jenisFilter = document.getElementById("jenis-filter");
+        const kesulitanFilter = document.getElementById("kesulitan-filter");
 
-        searchInput.addEventListener("input", function () {
-            let query = this.value.trim();
-            if (query.length < 0) {
-                resultsContainer.classList.add("hidden");
-                return;
-            }
+        // Fungsi untuk fetch data berdasarkan input & filter
+        function fetchPelatihan() {
+            const query = searchInput.value.trim();
+            const jenis = jenisFilter.value;
+            const kesulitan = kesulitanFilter.value;
 
-            fetch(`/search-pelatihan?query=${query}`)
+            // Bangun URL dengan parameter
+            const url = `/search-pelatihan?query=${encodeURIComponent(query)}&jenis=${jenis}&kesulitan=${kesulitan}`;
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("API Response:", data); // Debugging API
+                    console.log("API Response:", data); // Debug
 
-                    resultsContainer.innerHTML = ""; // Bersihkan hasil sebelumnya
+                    resultsContainer.innerHTML = "";
 
                     if (data.length === 0) {
                         resultsContainer.classList.add("hidden");
+                        resultsContainer.style.display = "none";
                         return;
                     }
 
                     data.forEach(item => {
-                        let div = document.createElement("div");
-                        div.textContent = item.name; // Pastikan pakai 'name' bukan 'nama'
+                        const div = document.createElement("div");
+                        div.textContent = item.name; // Pastikan 'name' sesuai field di DB
                         div.classList.add("p-2", "hover:bg-gray-200", "cursor-pointer");
 
                         div.addEventListener("click", function () {
                             searchInput.value = item.name;
                             resultsContainer.classList.add("hidden");
+                            resultsContainer.style.display = "none";
                         });
 
                         resultsContainer.appendChild(div);
                     });
 
                     resultsContainer.classList.remove("hidden");
-                    resultsContainer.style.display = "block"; // Pastikan dropdown terlihat
+                    resultsContainer.style.display = "block";
                 })
                 .catch(error => console.error("Fetch Error:", error));
-        });
+        }
 
-        // Arahkan ke halaman hasil pencarian ketika tekan Enter
+        // Event listeners
+        searchInput.addEventListener("input", fetchPelatihan);
+        jenisFilter.addEventListener("change", fetchPelatihan);
+        kesulitanFilter.addEventListener("change", fetchPelatihan);
+
+        // Tekan Enter langsung arahkan ke halaman hasil
         searchInput.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
-                let query = searchInput.value.trim();
-                if (query.length > 0) {
-                    window.location.href = `/hasil-pencarian?query=${encodeURIComponent(query)}`;
+                const query = searchInput.value.trim();
+                const jenis = jenisFilter.value;
+                const kesulitan = kesulitanFilter.value;
+
+                if (query.length > 0 || jenis || kesulitan) {
+                    const searchURL = `/hasil-pencarian?query=${encodeURIComponent(query)}&jenis=${jenis}&kesulitan=${kesulitan}`;
+                    window.location.href = searchURL;
                 }
             }
         });
 
-        // Sembunyikan dropdown kalau klik di luar
+        // Sembunyikan hasil ketika klik di luar dropdown
         document.addEventListener("click", function (event) {
             if (!resultsContainer.contains(event.target) && event.target !== searchInput) {
                 resultsContainer.classList.add("hidden");
@@ -130,6 +145,7 @@
         });
     });
     </script>
+
 
     <!-- Kategori Pelatihan -->
     <div class="container mx-auto mt-16 mb-8" style="width: 90%;">
