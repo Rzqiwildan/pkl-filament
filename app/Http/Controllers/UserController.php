@@ -50,10 +50,31 @@ class UserController extends Controller
     public function hasilPencarian(Request $request)
     {
         $query = $request->input('query');
-        $pelatihans = Pelatihan::where('name', 'like', '%' . $query . '%')->get(); // Atau sesuaikan dengan field pencarian
+        $jenis = $request->input('jenis');
+        $kesulitan = $request->input('kesulitan');
 
-        return view('user.hasil_pencarian', compact('pelatihans', 'query'));
+        $pelatihans = Pelatihan::query();
+
+        // Filter berdasarkan teks pencarian (hanya field name)
+        if ($query) {
+            $pelatihans->where('name', 'like', '%' . $query . '%');
+        }
+
+        // Filter berdasarkan jenis pelatihan
+        if ($jenis) {
+            $pelatihans->where('jenis', $jenis);
+        }
+
+        // Filter berdasarkan tingkat kesulitan
+        if ($kesulitan) {
+            $pelatihans->where('kesulitan', $kesulitan);
+        }
+
+        $pelatihans = $pelatihans->get();
+
+        return view('user.hasil_pencarian', compact('pelatihans', 'query', 'jenis', 'kesulitan'));
     }
+
 
     public function myCourses()
     {
