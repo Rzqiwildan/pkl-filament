@@ -27,7 +27,6 @@ class PelatihanResource extends Resource
         return [
             'offline' => 'Offline',
             'online' => 'Online',
-            'hybrid' => 'Hybrid',
         ];
     }
 
@@ -35,7 +34,7 @@ class PelatihanResource extends Resource
     {
         return [
             'pemula' => 'Pemula',
-            'medium' => 'Menengah',
+            'medium' => 'Medium',
             'hard' => 'Sulit',
         ];
     }

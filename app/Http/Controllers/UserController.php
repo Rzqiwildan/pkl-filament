@@ -317,16 +317,17 @@ class UserController extends Controller
     }
 
     public function showBanner($id)
-    {
-        // Ambil data banner berdasarkan ID
-        $pelatihans = Pelatihan::findOrFail($id);  // Ganti nama variabel menjadi $pelatihans
+{
+    // Ambil data banner berdasarkan ID banner
+    $banner = Banner::findOrFail($id);
 
-        // Ambil data banner berdasarkan ID
-        $banners = Banner::findOrFail($id);  // Gunakan $banners
+    // Ambil pelatihan berdasarkan relasi pelatihan_id
+    $pelatihan = Pelatihan::findOrFail($banner->pelatihan_id);
 
-        // Arahkan ke halaman detail banner
-        return view('user.banner3', compact('pelatihans', 'banners'));  // Kirim variabel $pelatihans ke view
-    }
+    // Kirim ke view
+    return view('user.banner3', compact('banner', 'pelatihan'));
+}
+
 
     public function course2()
     {
