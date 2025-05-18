@@ -58,41 +58,79 @@
                     <span class="font-semibold text-green-600">Rp
                         {{ number_format($pelatihans->harga, 0, ',', '.') }}</span>
                 </div>
-                <form id="form-ikut-pelatihan" action="{{ route('ikut.pelatihan') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
 
-                    @php
-                        $isExpired = $pelatihans->jadwalPelatihan->end_date < now(); // Cek apakah pelatihan sudah berakhir
-                    @endphp
+                @php
+                    $isExpired = $pelatihans->jadwalPelatihan->end_date < now(); // Cek apakah pelatihan sudah berakhir
+                    // Cek apakah user sudah terdaftar untuk pelatihan ini
+                    $isRegistered = $isRegistered ?? false;
+                    // Cek apakah user sudah memiliki transaksi approved untuk pelatihan ini
+                    $hasApprovedTransaction = Auth::check() ? 
+                        \App\Models\Transaksi::where('user_id', Auth::id())
+                            ->where('pelatihan_id', $pelatihans->id)
+                            ->where('status_pembayaran', 'approved')
+                            ->exists() : false;
+                @endphp
 
-                    @if ($isExpired)
+                @if ($isExpired)
+                    <button type="button" disabled
+                        class="w-full px-4 py-2 font-semibold text-white rounded-md border-none cursor-not-allowed mt-8 mb-4 bg-gray-400">
+                        Pelatihan Sudah Berakhir
+                    </button>
+                @elseif($hasApprovedTransaction)
+                    <button type="button" disabled
+                        class="w-full px-4 py-2 font-semibold text-white rounded-md border-none cursor-not-allowed mt-8 mb-4 bg-green-500">
+                        Pembayaran Sudah Diverifikasi
+                    </button>
+                @elseif($pelatihans->harga == 0)
+                    @if($isRegistered)
                         <button type="button" disabled
                             class="w-full px-4 py-2 font-semibold text-white rounded-md border-none cursor-not-allowed mt-8 mb-4 bg-gray-400">
-                            Anda Sudah Mengikuti Pelatihan
-                        </button>
-                    @elseif($pelatihans->harga == 0)
-                        <button id="registerButton" type="submit"
-                            class="w-full px-4 py-2 font-semibold text-white rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 
-                        {{ $isRegistered ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }}"
-                            {{ $isRegistered ? 'disabled' : '' }}>
-                            {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
+                            Anda telah terdaftar!
                         </button>
                     @else
-                        <button type="button"
-                            onclick="window.location.href='{{ route('payment.show', ['id' => $pelatihans->id]) }}'"
-                            class="bg-blue-500 text-white font-semibold w-full px-4 py-2 rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 hover:bg-blue-600">
-                            Daftar dan Bayar
-                        </button>
+                        <form id="form-ikut-pelatihan" action="{{ route('ikut.pelatihan') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+                            <button id="registerButton" type="submit"
+                                class="w-full px-4 py-2 font-semibold text-white rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 bg-blue-500 hover:bg-blue-600">
+                                Daftar Sekarang
+                            </button>
+                        </form>
                     @endif
-                </form>
-
+                @else
+                    @php
+                        // Cek apakah ada transaksi pending untuk pelatihan ini
+                        $hasPendingTransaction = Auth::check() ? 
+                            \App\Models\Transaksi::where('user_id', Auth::id())
+                                ->where('pelatihan_id', $pelatihans->id)
+                                ->where('status_pembayaran', 'pending')
+                                ->exists() : false;
+                    @endphp
+                    
+                    @if($hasPendingTransaction)
+                        <button type="button"
+                            onclick="window.location.href='{{ route('user.payment') }}'"
+                            class="bg-yellow-500 text-white font-semibold w-full px-4 py-2 rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 hover:bg-yellow-600">
+                            Lanjutkan Pembayaran
+                        </button>
+                    @else
+                        <form action="{{ route('user.proses.pembayaran') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+                            <button type="submit"
+                                class="bg-blue-500 text-white font-semibold w-full px-4 py-2 rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 hover:bg-blue-600">
+                                Daftar dan Bayar
+                            </button>
+                        </form>
+                    @endif
+                @endif
 
                 @if (session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
                     </div>
                 @endif
+                
                 <!-- Overlay gelap -->
                 <div id="overlay" class="fixed inset-0 w-full h-full bg-black bg-opacity-60 z-[1000] hidden"></div>
                 <!-- Elemen notifikasi -->
@@ -125,14 +163,12 @@
                     {{ \Carbon\Carbon::parse($jadwalPelatihan->start_date)->format('d M Y') }} -
                     {{ \Carbon\Carbon::parse($jadwalPelatihan->end_date)->format('d M Y') }}
                 </span>
-                @php
-                    $isExpired = $pelatihans->jadwalPelatihan->end_date < now(); // Cek apakah pelatihan sudah berakhir
-                @endphp
                 @if (!$isExpired)
                     <span class="font-semibold">{{ $pelatihans->kapasitas }} kuota tersedia</span>
                 @endif
             </div>
         </div>
+        
         <!-- Dropdown Rincian Jadwal -->
         <div x-data="{ open: false }" class="mt-4 mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
             <button @click="open = !open"
@@ -152,9 +188,6 @@
 
             <div x-show="open" class="px-4 py-2 space-y-2">
                 <div class="flex items-center space-x-2 mt-4 mb-4">
-
-                    <!-- <span>Pengenalan Algoritma Pemrograman</span> -->
-                    <!-- Tautan ke PDF -->
                     <span class="hover:text-blue-500 hover:underline cursor-pointer"
                         onclick="openPDF('{{ asset('storage/' . $jadwalPelatihan->jadwal) }}')">
                         {{ $jadwalPelatihan->jadwal }}
@@ -169,71 +202,72 @@
                             <iframe id="pdfViewer" class="w-full h-full"></iframe>
                         </div>
                     </div>
-
-                    <!-- Alpine.js -->
-                    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            // Elements
-                            const overlay = document.getElementById("overlay");
-                            const notification = document.getElementById("notification");
-                            const closeButton = document.getElementById("closeButton");
-                            const registerButton = document.getElementById("registerButton");
-                            const form = document.getElementById('form-ikut-pelatihan');
-
-                            // Event listener untuk form submission
-                            if (form) {
-                                form.addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    fetch('/ikut-pelatihan', {
-                                        method: 'POST',
-                                        body: new FormData(form),
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        }
-                                    });
-                                });
-                            }
-
-                            // Event listener untuk tombol register
-                            if (registerButton) {
-                                registerButton.addEventListener("click", () => {
-                                    overlay.classList.remove("hidden");
-                                    notification.classList.remove("hidden");
-                                });
-                            }
-
-                            // Event listener untuk tombol close
-                            if (closeButton) {
-                                closeButton.addEventListener("click", () => {
-                                    overlay.classList.add("hidden");
-                                    notification.classList.add("hidden");
-
-                                    if (registerButton) {
-                                        registerButton.textContent = "Anda telah terdaftar!";
-                                        registerButton.classList.add("bg-gray-400", "cursor-not-allowed");
-                                        registerButton.classList.remove("bg-blue-500", "hover:bg-blue-600");
-                                        registerButton.disabled = true;
-                                    }
-                                });
-                            }
-
-                            // PDF viewer functions
-                            window.openPDF = function(pdfUrl) {
-                                document.getElementById("pdfViewer").src = pdfUrl;
-                                document.getElementById("pdfModal").classList.remove("hidden");
-                            }
-
-                            window.closePDF = function() {
-                                document.getElementById("pdfModal").classList.add("hidden");
-                                document.getElementById("pdfViewer").src = "";
-                            }
-                        });
-                    </script>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Elements
+            const overlay = document.getElementById("overlay");
+            const notification = document.getElementById("notification");
+            const closeButton = document.getElementById("closeButton");
+            const registerButton = document.getElementById("registerButton");
+            const form = document.getElementById('form-ikut-pelatihan');
+
+            // Event listener untuk form submission
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    fetch('/ikut-pelatihan', {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    });
+                });
+            }
+
+            // Event listener untuk tombol register
+            if (registerButton) {
+                registerButton.addEventListener("click", () => {
+                    overlay.classList.remove("hidden");
+                    notification.classList.remove("hidden");
+                });
+            }
+
+            // Event listener untuk tombol close
+            if (closeButton) {
+                closeButton.addEventListener("click", () => {
+                    overlay.classList.add("hidden");
+                    notification.classList.add("hidden");
+
+                    if (registerButton) {
+                        registerButton.textContent = "Anda telah terdaftar!";
+                        registerButton.classList.add("bg-gray-400", "cursor-not-allowed");
+                        registerButton.classList.remove("bg-blue-500", "hover:bg-blue-600");
+                        registerButton.disabled = true;
+                    }
+                });
+            }
+
+            // PDF viewer functions
+            window.openPDF = function(pdfUrl) {
+                document.getElementById("pdfViewer").src = pdfUrl;
+                document.getElementById("pdfModal").classList.remove("hidden");
+            }
+
+            window.closePDF = function() {
+                document.getElementById("pdfModal").classList.add("hidden");
+                document.getElementById("pdfViewer").src = "";
+            }
+        });
+    </script>
+    
     @include('components.footer')
 </body>
 

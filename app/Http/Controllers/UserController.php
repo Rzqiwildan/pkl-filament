@@ -19,6 +19,7 @@ use App\Models\Umum;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -469,92 +470,121 @@ class UserController extends Controller
     }
 
     public function payment()
-    {
-        return view('user.payment');
+{
+    // Ambil transaksi terbaru user yang pending atau unpaid
+    $transaksi = Transaksi::where('user_id', Auth::id())
+        ->whereIn('status_pembayaran', ['pending', 'unpaid'])
+        ->latest()
+        ->first();
+    $currentTransaction = $transaksi->where('status_pembayaran', 'pending')->first();
+    return view('user.payment', compact('transaksi'));
+}
+
+public function prosesPembayaran(Request $request)
+{
+    // Debug: Log semua request data
+    \Log::info('prosesPembayaran dipanggil', $request->all());
+    
+    $request->validate([
+        'pelatihan_id' => 'required|exists:pelatihans,id'
+    ]);
+
+    // Cek transaksi pending
+    $existingTransaction = Transaksi::where('user_id', Auth::id())
+        ->where('pelatihan_id', $request->pelatihan_id)
+        ->where('status_pembayaran', 'pending')
+        ->first();
+
+    if ($existingTransaction) {
+        \Log::info('Transaksi existing ditemukan: ' . $existingTransaction->transaction_code);
+        return redirect()->route('user.payment.show', [
+            'transaction_code' => $existingTransaction->transaction_code
+        ])->with('info', 'Anda memiliki transaksi yang belum diselesaikan untuk pelatihan ini.');
     }
 
-    public function prosesPembayaran(Request $request)
-    {
-        $request->validate([
-            'pelatihan_id' => 'required|exists:pelatihans,id'
-        ]);
-
-        // Cek transaksi pending
-        $existingTransaction = Transaksi::where('user_id', Auth::id())
-            ->where('pelatihan_id', $request->pelatihan_id)
-            ->where('status_pembayaran', 'pending')
-            ->first();
-
-        if ($existingTransaction) {
-            return redirect()->route('user.payment.show', [
-                'transaction_code' => $existingTransaction->transaction_code
-            ])->with('info', 'Anda memiliki transaksi yang belum diselesaikan untuk pelatihan ini.');
-        }
-
-        // Buat transaksi baru
+    // Buat transaksi baru
+    try {
         $transaksi = Transaksi::create([
             'user_id' => Auth::id(),
             'pelatihan_id' => $request->pelatihan_id,
             'transaction_code' => Str::uuid()->toString(),
             'status_pembayaran' => 'pending'
         ]);
+        
+        \Log::info('Transaksi baru dibuat: ' . $transaksi->transaction_code);
 
         return redirect()->route('user.payment.show', [
             'transaction_code' => $transaksi->transaction_code
         ])->with('success', 'Silakan upload bukti pembayaran Anda.');
+        
+    } catch (\Exception $e) {
+        \Log::error('Error membuat transaksi: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran.');
     }
-
-    public function konfirmasiPembayaran($transactionCode)
-    {
-        $transaksi = Transaksi::where('transaction_code', $transactionCode)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        return redirect()->route('user.konfirmasi.pembayaran', [
-                'transaction_code' => $transaksi->transaction_code
-            ])->with('success', 'Silakan lakukan pembayaran sesuai dengan instruksi yang diberikan.');
-    }
-    public function showPaymentPage($transaction_code = null)
-{
-    // Jika transaction_code ada, cari transaksi berdasarkan kode
-    if ($transaction_code) {
-        $transaksi = Transaksi::where('transaction_code', $transaction_code)
-            ->where('user_id', Auth::id())
-            ->first();
-    } else {
-        // Jika tidak ada transaction_code, ambil transaksi terbaru user
-        $transaksi = Transaksi::where('user_id', Auth::id())->latest()->first();
-    }
-    
-    // Debug: cek apakah $transaksi ada
-    if ($transaksi) {
-        \Log::info('Transaksi ditemukan: ' . $transaksi->transaction_code);
-    } else {
-        \Log::info('Transaksi tidak ditemukan');
-    }
-    
-    return view('user.payment', compact('transaksi'));
 }
 
-    public function uploadPaymentProof(Request $request)
-    {
-        $request->validate([
-            'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'transaction_code' => 'required'
-        ]);
+public function konfirmasiPembayaran($transactionCode)
+{
+    $transaksi = Transaksi::where('transaction_code', $transactionCode)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
 
-        $transaksi = Transaksi::where('user_id', Auth::id())
-            ->where('transaction_code', $request->transaction_code)
-            ->firstOrFail();
+    return redirect()->route('user.konfirmasi.pembayaran', [
+            'transaction_code' => $transaksi->transaction_code
+        ])->with('success', 'Silakan lakukan pembayaran sesuai dengan instruksi yang diberikan.');
+}
 
-        // Simpan bukti pembayaran
-        $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
-        $transaksi->update([
-            'bukti_pembayaran' => $path,
-            'status_pembayaran' => 'pending'
-        ]);
-
-        return back()->with('success', 'Bukti pembayaran berhasil diunggah, menunggu verifikasi admin.');
+public function showPaymentPage($transaction_code = null)
+{
+     // Ambil semua transaksi user
+    $transaksis = Transaksi::where('user_id', Auth::id())
+        ->with('pelatihan')
+        ->latest()
+        ->get();
+    
+    // Jika ada transaction_code, cari transaksi spesifik untuk highlight
+    $currentTransaction = null;
+    if ($transaction_code) {
+        $currentTransaction = $transaksis->where('transaction_code', $transaction_code)->first();
+        
+        // Jika tidak ditemukan atau bukan milik user, ambil yang pending
+        if (!$currentTransaction) {
+            $currentTransaction = $transaksis->where('status_pembayaran', 'pending')->first();
+        }
+    } else {
+        // Jika tidak ada transaction_code, ambil yang pending
+        $currentTransaction = $transaksis->where('status_pembayaran', 'pending')->first();
     }
+    
+    // Debug log
+    if ($currentTransaction) {
+        \Log::info('Current transaction ditemukan: ' . $currentTransaction->transaction_code);
+    } else {
+        \Log::info('Tidak ada current transaction untuk user: ' . Auth::id());
+    }
+    
+    return view('user.payment', compact('transaksis', 'currentTransaction'));
+}
+
+public function uploadPaymentProof(Request $request)
+{
+    $request->validate([
+        'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        'transaction_code' => 'required'
+    ]);
+
+    $transaksi = Transaksi::where('user_id', Auth::id())
+        ->where('transaction_code', $request->transaction_code)
+        ->firstOrFail();
+
+    // Simpan bukti pembayaran
+    $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+    $transaksi->update([
+        'bukti_pembayaran' => $path,
+        'status_pembayaran' => 'pending'
+    ]);
+
+    return back()->with('success', 'Bukti pembayaran berhasil diunggah, menunggu verifikasi admin.');
+}
 
 }

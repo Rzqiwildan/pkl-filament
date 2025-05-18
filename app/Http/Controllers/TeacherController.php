@@ -300,10 +300,6 @@ public function updateQuestion(Request $request, $quizId, $questionId)
 
     return redirect()->route('teacher.showQuiz', $quizId)->with('success', 'Soal berhasil diperbarui!');
 }
-    
-
-
-
     /**
      * Menampilkan halaman profil teacher.
      */
