@@ -148,7 +148,7 @@
 
 
     <!-- Kategori Pelatihan -->
-    <div class="container mx-auto mt-16 mb-8" style="width: 90%;">
+    <div class="container mx-auto mt-8 mb-8" style="width: 90%;">
         <h2 class="text-xl font-bold">Berbagai Macam Kategori Pelatihan:</h2>
     </div>
 
@@ -190,7 +190,7 @@
 
     <!-- Courses -->
     <div class="container mx-auto mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 mt-8 mb-4" style="width: 90%;">
-        <h2 class="text-xl font-bold">Pelatihan Gratis:</h2>
+        <h2 class="text-xl font-bold">Macam-macam Pelatihan:</h2>
     </div>
     <div class="container mx-auto mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4" style="width: 90%;">
         @foreach ($pelatihans as $pelatihan)
