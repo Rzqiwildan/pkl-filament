@@ -73,17 +73,31 @@
                             <p class="text-lg font-medium">Harga</p>
                             <p class="text-2xl font-bold">Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}</p>
                         </div>
+                        
+                        {{-- Kondisi untuk pelatihan offline --}}
                         @if ($pelatihans->jenis === 'offline')
-                            <!-- Jika kuota masih tersedia -->
+                            {{-- Jika kuota masih tersedia --}}
                             @if ($pelatihans->kapasitas > 0)
-                                <a href="{{ route('offline.show', $pelatihans->id) }}">
-                                    <button
-                                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
-                                        Ikuti Pelatihan
+                                {{-- Jika pelatihan gratis --}}
+                                @if ($pelatihans->harga == 0)
+                                    <form action="{{ route('ikut.pelatihan') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+                                        <button type="submit"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
+                                            Daftar Sekarang
+                                        </button>
+                                    </form>
+                                @else
+                                    {{-- Jika pelatihan berbayar --}}
+                                    <button id="registerButton" type="button"
+                                        class="{{ $isRegistered ?? false ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8"
+                                        {{ $isRegistered ?? false ? 'disabled' : '' }}>
+                                        {{ $isRegistered ?? false ? 'Anda telah terdaftar!' : 'Daftar dan Bayar' }}
                                     </button>
-                                </a>
+                                @endif
                             @else
-                                <!-- Jika kuota habis -->
+                                {{-- Jika kuota habis --}}
                                 <button
                                     class="bg-gray-400 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8 cursor-not-allowed"
                                     disabled>
@@ -91,12 +105,26 @@
                                 </button>
                             @endif
                         @else
-                            <!-- Form untuk pelatihan online -->
-                            <button id="registerButton" type="button"
-                                class="{{ $isRegistered ? 'disabled' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg"
-                                {{ $isRegistered ? 'disabled' : '' }}>
-                                {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
-                            </button>
+                            {{-- Kondisi untuk pelatihan online --}}
+                            @if ($pelatihans->harga == 0)
+                                {{-- Pelatihan online gratis --}}
+                                <form action="{{ route('ikut.pelatihan') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+                                    <button type="submit"
+                                        class="{{ $isRegistered ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg"
+                                        {{ $isRegistered ? 'disabled' : '' }}>
+                                        {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
+                                    </button>
+                                </form>
+                            @else
+                                {{-- Pelatihan online berbayar --}}
+                                <button id="registerButton" type="button"
+                                    class="{{ $isRegistered ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg"
+                                    {{ $isRegistered ? 'disabled' : '' }}>
+                                    {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar dan Bayar' }}
+                                </button>
+                            @endif
                         @endif
 
                         <p class="text-sm text-gray-600 mb-2">Program ini sudah termasuk:</p>
@@ -118,99 +146,122 @@
                     </div>
                 </div>
 
-                <!-- Modal Pop-up Pembayaran -->
-                <div id="modalPembayaran"
-                    class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full"
-                    style="z-index: 1000;">
-                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                        <div class="mt-3">
-                            <h3 class="text-xl font-semibold text-center mb-4">Konfirmasi Pembayaran</h3>
+                {{-- Modal Pop-up Pembayaran (Untuk semua pelatihan berbayar) --}}
+                @if ($pelatihans->harga > 0)
+                    <div id="modalPembayaran"
+                        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full"
+                        style="z-index: 1000;">
+                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                            <div class="mt-3">
+                                <h3 class="text-xl font-semibold text-center mb-4">Konfirmasi Pembayaran</h3>
 
-                            <form action="{{ route('user.proses.pembayaran') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
-                                <input type="hidden" name="transaction_code" value="{{ $transactionCode }}">
+                                <form action="{{ route('user.proses.pembayaran') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
 
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Kode Transaksi</label>
-                                    <input type="text" id="transaction_code" name="transaction_code"
-                                        value="{{ $transactionCode }}" class="mt-1 p-2 w-full border rounded-md"
-                                        readonly>
-                                </div>
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Pelatihan</label>
+                                        <input type="text" value="{{ $pelatihans->name }}"
+                                            class="mt-1 p-2 w-full border rounded-md" readonly>
+                                    </div>
 
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Pelatihan</label>
-                                    <input type="text" value="{{ $pelatihans->name }}"
-                                        class="mt-1 p-2 w-full border rounded-md" readonly>
-                                </div>
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Jenis</label>
+                                        <input type="text" value="{{ ucfirst($pelatihans->jenis) }}"
+                                            class="mt-1 p-2 w-full border rounded-md" readonly>
+                                    </div>
 
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Metode Pembayaran</label>
-                                    <div class="space-y-2 mt-1">
-                                        <button type="button"
-                                            class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
-                                            data-metode="BRI">
-                                            <img src="{{ asset('img/BRI.svg') }}" class="h-6 mr-2" alt="BRI">
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Harga</label>
+                                        <input type="text" value="Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}"
+                                            class="mt-1 p-2 w-full border rounded-md" readonly>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Metode Pembayaran</label>
+                                        <div class="space-y-2 mt-1">
+                                            <button type="button"
+                                                class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
+                                                data-metode="BRI">
+                                                <img src="{{ asset('img/BRI.svg') }}" class="h-6 mr-2" alt="BRI">
+                                                Bank BRI
+                                            </button>
+                                            <button type="button"
+                                                class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
+                                                data-metode="Mandiri">
+                                                <img src="{{ asset('img/MANDIRI.svg.webp') }}" class="h-6 mr-2"
+                                                    alt="Mandiri">
+                                                Bank Mandiri
+                                            </button>
+                                            <button type="button"
+                                                class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
+                                                data-metode="BCA">
+                                                <img src="{{ asset('img/BCA.svg') }}" class="h-6 mr-2" alt="BCA">
+                                                Bank BCA
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="metode_pembayaran" id="metode_pembayaran_terpilih">
+                                    </div>
+
+                                    <div class="flex justify-between mt-4">
+                                        <button type="button" id="tutupModal"
+                                            class="px-4 py-2 bg-red-500 text-white rounded-md">
+                                            BATAL
                                         </button>
-                                        <button type="button"
-                                            class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
-                                            data-metode="Mandiri">
-                                            <img src="{{ asset('img/MANDIRI.svg.webp') }}" class="h-6 mr-2"
-                                                alt="Mandiri">
-                                        </button>
-                                        <button type="button"
-                                            class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
-                                            data-metode="BCA">
-                                            <img src="{{ asset('img/BCA.svg') }}" class="h-6 mr-2" alt="BCA">
+                                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                                            KONFIRMASI
                                         </button>
                                     </div>
-                                    <input type="hidden" name="metode_pembayaran" id="metode_pembayaran_terpilih">
-                                </div>
-
-                                <div class="flex justify-between mt-4">
-                                    <button type="button" id="tutupModal"
-                                        class="px-4 py-2 bg-red-500 text-white rounded-md">
-                                        BATAL
-                                    </button>
-                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
-                                        KONFIRMASI
-                                    </button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const button = document.getElementById("registerButton");
-            const modalPembayaran = document.getElementById('modalPembayaran');
-            const tutupModal = document.getElementById('tutupModal');
-            const tombolMetodePembayaran = document.querySelectorAll('.tombol-metode-pembayaran');
+    
+    {{-- Script untuk semua pelatihan berbayar --}}
+    @if ($pelatihans->harga > 0)
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const button = document.getElementById("registerButton");
+                const modalPembayaran = document.getElementById('modalPembayaran');
+                const tutupModal = document.getElementById('tutupModal');
+                const tombolMetodePembayaran = document.querySelectorAll('.tombol-metode-pembayaran');
 
-            button.addEventListener("click", function() {
-                modalPembayaran.classList.remove('hidden');
-            });
+                if (button && !button.disabled) {
+                    button.addEventListener("click", function() {
+                        modalPembayaran.classList.remove('hidden');
+                    });
+                }
 
-            tutupModal.addEventListener('click', function() {
-                modalPembayaran.classList.add('hidden');
-            });
+                if (tutupModal) {
+                    tutupModal.addEventListener('click', function() {
+                        modalPembayaran.classList.add('hidden');
+                    });
+                }
 
-            tombolMetodePembayaran.forEach(tombol => {
-                tombol.addEventListener('click', function() {
-                    tombolMetodePembayaran.forEach(t => t.classList.remove('border-blue-500'));
-                    this.classList.add('border-blue-500');
-                    document.getElementById('metode_pembayaran_terpilih').value = this.dataset
-                        .metode;
+                tombolMetodePembayaran.forEach(tombol => {
+                    tombol.addEventListener('click', function() {
+                        tombolMetodePembayaran.forEach(t => t.classList.remove('border-blue-500'));
+                        this.classList.add('border-blue-500');
+                        document.getElementById('metode_pembayaran_terpilih').value = this.dataset.metode;
+                    });
+                });
+
+                // Close modal when clicking outside
+                window.addEventListener('click', function(event) {
+                    if (event.target === modalPembayaran) {
+                        modalPembayaran.classList.add('hidden');
+                    }
                 });
             });
-        });
-    </script>
+        </script>
+    @endif
+    
     @include('components.footer')
 </body>
-
 
 </html>

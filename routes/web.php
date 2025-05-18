@@ -162,18 +162,6 @@ Route::middleware(['auth', 'check.role:teacher'])->group(function () {
     Route::get('/teacher/pelatihan/{pelatihan}/peserta', [TeacherController::class, 'peserta'])->name('teacher.peserta');
 });
 
-// Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
-// Route::middleware('role:mahasiswa')->group(function () {
-//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
-//     // ... other user routes ...
-// });
-// });
-// Route::middleware(['auth', 'check.role:umum'])->group(function () {
-//     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard.index');
-//     // ... other user routes ...
-// });
-
-
 Route::get('/test-admin', function () {
     return 'Welcome Admin!';
 })->middleware('check.role.admin');

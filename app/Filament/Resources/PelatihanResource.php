@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 
 class PelatihanResource extends Resource
 {
@@ -98,6 +99,7 @@ class PelatihanResource extends Resource
             ->color(fn (string $state): string => match ($state) {
                 'online' => 'success',
                 'offline' => 'warning',
+                default => 'primary',
             }),
             Tables\Columns\TextColumn::make('harga'),
             Tables\Columns\TextColumn::make('kapasitas'),
@@ -112,56 +114,42 @@ class PelatihanResource extends Resource
                 ->label('Kategori'),
         ])
         ->actions([
-            // Tables\Actions\ViewAction::make()
-            //     ->label('View')
-            //     ->icon('heroicon-o-eye')
-            //     ->modalHeading(fn ($record) => "View {$record->name}")
-            //     ->form([
-            //         Forms\Components\TextInput::make('name')
-            //             ->label('Nama Pelatihan')
-            //             ->disabled(),
-
-            //         Forms\Components\TextInput::make('category.name')
-            //             ->label('Kategori')
-            //             ->disabled(),
-
-            //         Forms\Components\TextInput::make('kesulitan')
-            //             ->label('Kesulitan')
-            //             ->disabled(),
-
-            //         Forms\Components\TextInput::make('jenis')
-            //             ->label('Jenis')
-            //             ->disabled(),
-
-            //         Forms\Components\Textarea::make('deskripsi')
-            //             ->label('Deskripsi')
-            //             ->disabled(),
-
-            //         Forms\Components\TextInput::make('harga')
-            //             ->label('Harga')
-            //             ->prefix('IDR')
-            //             ->disabled(),
-
-            //         Forms\Components\TextInput::make('kapasitas')
-            //             ->label('Kapasitas')
-            //             ->prefix('Qty')
-            //             ->disabled(),
-
-            //         Forms\Components\TextInput::make('thumbnail')
-            //             ->label('Thumbnail')
-            //             ->disabled(),
-            //     ])
-            //     ->formActions([  // Using formActions for buttons
-            //         Forms\Components\Button::make('Close')
-            //             ->label('Tutup')
-            //             ->color('secondary'),
-            //     ]),
-
             Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\DeleteAction::make()
+                ->before(function (Tables\Actions\DeleteAction $action, Pelatihan $record) {
+                    // Cek apakah pelatihan memiliki photos (PelatihanPhotos)
+                    if ($record->photos()->count() > 0) {
+                        // Batalkan penghapusan dengan notifikasi error
+                        Notification::make()
+                            ->title('Penghapusan ditolak')
+                            ->body('Tidak dapat menghapus pelatihan karena masih terdapat foto pelatihan yang terkait. Hapus semua foto pelatihan terlebih dahulu.')
+                            ->danger()
+                            ->send();
+                            
+                        // Hentikan proses delete dengan benar
+                        $action->halt();
+                    }
+                }),
         ])
         ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make(),
+            Tables\Actions\DeleteBulkAction::make()
+                ->before(function (Tables\Actions\DeleteBulkAction $action, \Illuminate\Database\Eloquent\Collection $records) {
+                    // Periksa setiap pelatihan yang akan dihapus
+                    foreach ($records as $record) {
+                        if ($record->photos()->count() > 0) {
+                            // Batalkan penghapusan dengan notifikasi error
+                            Notification::make()
+                                ->title('Penghapusan ditolak')
+                                ->body('Beberapa pelatihan tidak dapat dihapus karena masih memiliki foto pelatihan yang terkait. Hapus semua foto pelatihan terlebih dahulu.')
+                                ->danger()
+                                ->send();
+                                
+                            // Hentikan proses delete dengan benar
+                            $action->halt();
+                            return false;
+                        }
+                    }
+                }),
         ]);
     }
 

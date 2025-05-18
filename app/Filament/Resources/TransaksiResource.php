@@ -70,7 +70,7 @@ class TransaksiResource extends Resource
                     ->options(Transaksi::getStatuses())
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Action::make('view_bukti')
                 ->label('Lihat Bukti')

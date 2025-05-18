@@ -22,7 +22,6 @@
         <div class="p-4 m-10">
             <div class="mb-6 text-center">
                 <p class="text-gray-600">Email verifikasi telah dikirim ke alamat email Anda.</p>
-                <p class="text-gray-600 mt-2">Silakan periksa kotak masuk email Anda dan klik tautan verifikasi.</p>
                 <p class="text-gray-600 mt-2">Jika Anda tidak menerima email, klik tombol di bawah ini untuk mengirim ulang.</p>
             </div>
             
