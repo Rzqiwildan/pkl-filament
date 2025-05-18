@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <!-- Add SweetAlert CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 @include('components.navbar')
 
@@ -80,13 +82,16 @@
                             @if ($pelatihans->kapasitas > 0)
                                 {{-- Jika pelatihan gratis --}}
                                 @if ($pelatihans->harga == 0)
-                                    <form action="{{ route('ikut.pelatihan') }}" method="POST">
+                                    <button id="daftarGratisButton" type="button"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8"
+                                        data-pelatihan-id="{{ $pelatihans->id }}"
+                                        data-pelatihan-name="{{ $pelatihans->name }}"
+                                        data-pelatihan-jenis="{{ $pelatihans->jenis }}">
+                                        Daftar Sekarang
+                                    </button>
+                                    <form id="formDaftarGratis" action="{{ route('ikut.pelatihan') }}" method="POST" style="display: none;">
                                         @csrf
                                         <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
-                                        <button type="submit"
-                                            class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 w-full rounded-lg mb-8">
-                                            Daftar Sekarang
-                                        </button>
                                     </form>
                                 @else
                                     {{-- Jika pelatihan berbayar --}}
@@ -108,14 +113,17 @@
                             {{-- Kondisi untuk pelatihan online --}}
                             @if ($pelatihans->harga == 0)
                                 {{-- Pelatihan online gratis --}}
-                                <form action="{{ route('ikut.pelatihan') }}" method="POST">
+                                <button id="daftarGratisButton" type="button"
+                                    class="{{ $isRegistered ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg"
+                                    {{ $isRegistered ? 'disabled' : '' }}
+                                    data-pelatihan-id="{{ $pelatihans->id }}"
+                                    data-pelatihan-name="{{ $pelatihans->name }}"
+                                    data-pelatihan-jenis="{{ $pelatihans->jenis }}">
+                                    {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
+                                </button>
+                                <form id="formDaftarGratis" action="{{ route('ikut.pelatihan') }}" method="POST" style="display: none;">
                                     @csrf
                                     <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
-                                    <button type="submit"
-                                        class="{{ $isRegistered ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }} text-white text-sm font-semibold px-4 py-2 w-full rounded-lg"
-                                        {{ $isRegistered ? 'disabled' : '' }}>
-                                        {{ $isRegistered ? 'Anda telah terdaftar!' : 'Daftar Sekarang' }}
-                                    </button>
                                 </form>
                             @else
                                 {{-- Pelatihan online berbayar --}}
@@ -256,6 +264,76 @@
                     if (event.target === modalPembayaran) {
                         modalPembayaran.classList.add('hidden');
                     }
+                });
+            });
+        </script>
+    @endif
+    
+    {{-- Script untuk pendaftaran gratis (baru) --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const daftarGratisBtn = document.getElementById("daftarGratisButton");
+            const formDaftarGratis = document.getElementById("formDaftarGratis");
+            
+            if (daftarGratisBtn && !daftarGratisBtn.disabled) {
+                daftarGratisBtn.addEventListener("click", function() {
+                    const pelatihanId = this.dataset.pelatihanId;
+                    const pelatihanName = this.dataset.pelatihanName;
+                    const pelatihanJenis = this.dataset.pelatihanJenis;
+                    
+                    Swal.fire({
+                        title: 'Konfirmasi Pendaftaran',
+                        text: `Anda akan mendaftar pelatihan ${pelatihanJenis} "${pelatihanName}" secara gratis. Lanjutkan?`,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Daftar Sekarang',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Setelah konfirmasi, tampilkan SweetAlert loading
+                            Swal.fire({
+                                title: 'Memproses...',
+                                text: 'Pendaftaran sedang diproses',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    // Submit form
+                                    formDaftarGratis.submit();
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+    
+    {{-- Tambahkan script untuk menampilkan SweetAlert jika ada flash message dari controller --}}
+    @if(session('success'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: "{{ session('success') }}",
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
+    
+    @if(session('error'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
                 });
             });
         </script>

@@ -15,7 +15,7 @@
         <h1 class="text-2xl font-semibold mb-6">Halaman Pembayaran</h1>
 
         {{-- Transaksi yang sedang pending --}}
-        @if ($currentTransaction)
+        @if ($currentTransaction && $currentTransaction->status_pembayaran === 'pending')
             <div class="bg-white rounded-lg shadow-md overflow-x-auto mb-6">
                 <div class="p-4 bg-yellow-50 border-b">
                     <h2 class="text-lg font-semibold text-yellow-800">Transaksi Pending</h2>
@@ -47,7 +47,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ Auth::user()->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $currentTransaction->pelatihan->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                     Pending
                                 </span>
                             </td>
@@ -63,7 +64,7 @@
             </div>
         @endif
 
-        {{-- History semua transaksi --}}
+        {{-- History Transaksi --}}
         @if ($transaksis && $transaksis->count() > 0)
             <div class="bg-white rounded-lg shadow-md overflow-x-auto">
                 <div class="p-4 border-b">
@@ -90,58 +91,45 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($transaksis as $transaksi)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $transaksi->created_at->format('d M Y H:i') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaksi->transaction_code }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaksi->pelatihan->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($transaksi->status_pembayaran === 'pending')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Pending
-                                        </span>
-                                    @elseif($transaksi->status_pembayaran === 'approved')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Approved
-                                        </span>
-                                    @elseif($transaksi->status_pembayaran === 'rejected')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Rejected
-                                        </span>
-                                    @else
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                            {{ ucfirst($transaksi->status_pembayaran) }}
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($transaksi->status_pembayaran === 'pending')
-                                        <button onclick="showUploadModal('{{ $transaksi->transaction_code }}')"
-                                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
-                                            Upload Bukti
-                                        </button>
-                                    @elseif($transaksi->status_pembayaran === 'approved')
-                                        <span class="text-green-500 text-sm">✓ Selesai</span>
-                                    @elseif($transaksi->status_pembayaran === 'rejected')
-                                        <button onclick="showUploadModal('{{ $transaksi->transaction_code }}')"
-                                            class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm">
-                                            Upload Ulang
-                                        </button>
-                                    @endif
-                                </td>
-                            </tr>
+                        @foreach ($transaksis as $transaksi)
+                            @if ($transaksi->status_pembayaran !== 'pending')
+                                <!-- Hanya tampilkan yang approved -->
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $transaksi->created_at->format('d M Y H:i') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaksi->transaction_code }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaksi->pelatihan->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if ($transaksi->status_pembayaran === 'approved')
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Approved
+                                            </span>
+                                        @elseif($transaksi->status_pembayaran === 'rejected')
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Rejected
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if ($transaksi->status_pembayaran === 'approved')
+                                            <span class="text-green-500 text-sm">✓ Selesai</span>
+                                        @elseif($transaksi->status_pembayaran === 'rejected')
+                                            <button onclick="showUploadModal('{{ $transaksi->transaction_code }}')"
+                                                class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm">
+                                                Upload Ulang
+                                            </button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        @else
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <p class="text-gray-500">Anda belum memiliki transaksi.</p>
-            </div>
         @endif
-
         <!-- Modal Upload -->
         <div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
             <div class="flex items-center justify-center min-h-screen">
