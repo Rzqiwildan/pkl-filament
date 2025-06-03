@@ -25,26 +25,20 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Ambil semua data pelatihan
-        $pelatihans = Pelatihan::with('photos')->get(); 
-
-        $pelatihans = Pelatihan::aktif()->get();
-
-
-        // Ambil semua data foto (jika tetap ingin menyimpan $photos terpisah)
-        $photos = PelatihanPhotos::all();
-
-        // Ambil semua data banner
+            // Ambil semua pelatihan yang masih aktif (belum lewat tanggal end_date)
+        $pelatihans = Pelatihan::aktif()->with('photos', 'category')->get();  // Memanggil scopeAktif()
+        
+        // Ambil data banner
         $banners = Banner::all();
-
-        // Ambil semua data category
+        
+        // Ambil data kategori
         $categories = Category::all();
-
+        
         $jenisOptions = PelatihanResource::getJenisOptions();
         $kesulitanOptions = PelatihanResource::getKesulitanOptions();
-
+        
         // Kirimkan semua data ke view
-        return view('user.dashboard', compact('pelatihans', 'photos', 'banners', 'categories', 'jenisOptions', 'kesulitanOptions'));
+        return view('user.dashboard', compact('pelatihans', 'banners', 'categories', 'jenisOptions', 'kesulitanOptions'));
     }
 
     public function hasilPencarian(Request $request)

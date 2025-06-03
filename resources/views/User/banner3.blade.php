@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    @include('components.navbar')
 </head>
 <body>
-    @include('components.navbar')
     <div class="container mx-auto mt-24" style="width: 90%;">
         <img src="{{ Storage::url($banner->rincian_banner) }}" style="width: 100%; height: 100%; object-fit: cover;"/>
     </div>

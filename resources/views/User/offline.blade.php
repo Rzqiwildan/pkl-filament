@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>{{ $pelatihans->name }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @include('components.navbar')
 </head>
-@include('components.navbar')
 
 <body class="bg-gray-100">
     <div class="container mx-auto p-6 mt-16">
@@ -61,9 +62,7 @@
 
                 @php
                     $isExpired = $pelatihans->jadwalPelatihan->end_date < now(); // Cek apakah pelatihan sudah berakhir
-                    // Cek apakah user sudah terdaftar untuk pelatihan ini
                     $isRegistered = $isRegistered ?? false;
-                    // Cek apakah user sudah memiliki transaksi approved untuk pelatihan ini
                     $hasApprovedTransaction = Auth::check() ? 
                         \App\Models\Transaksi::where('user_id', Auth::id())
                             ->where('pelatihan_id', $pelatihans->id)
@@ -99,7 +98,6 @@
                     @endif
                 @else
                     @php
-                        // Cek apakah ada transaksi pending untuk pelatihan ini
                         $hasPendingTransaction = Auth::check() ? 
                             \App\Models\Transaksi::where('user_id', Auth::id())
                                 ->where('pelatihan_id', $pelatihans->id)
@@ -114,14 +112,10 @@
                             Lanjutkan Pembayaran
                         </button>
                     @else
-                        <form action="{{ route('user.proses.pembayaran') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
-                            <button type="submit"
-                                class="bg-blue-500 text-white font-semibold w-full px-4 py-2 rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 hover:bg-blue-600">
-                                Daftar dan Bayar
-                            </button>
-                        </form>
+                        <button id="daftarBayarButton" type="button"
+                            class="bg-blue-500 text-white font-semibold w-full px-4 py-2 rounded-md border-none cursor-pointer mt-8 mb-4 transition duration-300 hover:bg-blue-600">
+                            Daftar dan Bayar
+                        </button>
                     @endif
                 @endif
 
@@ -130,27 +124,6 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                
-                <!-- Overlay gelap -->
-                <div id="overlay" class="fixed inset-0 w-full h-full bg-black bg-opacity-60 z-[1000] hidden"></div>
-                <!-- Elemen notifikasi -->
-                <div id="notification"
-                    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 text-gray-800 p-5 rounded-xl text-center w-72 z-[1010] hidden">
-                    <div id="iconContainer" class="flex justify-center mb-2.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-12 h-12 text-blue-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                    </div>
-                    <div class="mb-4 mt-4">
-                        <p>Anda Berhasil Mendaftar Pelatihan!</p>
-                    </div>
-                    <button id="closeButton"
-                        class="bg-blue-500 text-white border-none rounded-md px-4 py-2 cursor-pointer mt-2 hover:bg-blue-600">
-                        Oke
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -168,107 +141,112 @@
                 @endif
             </div>
         </div>
-        
-        <!-- Dropdown Rincian Jadwal -->
-        <div x-data="{ open: false }" class="mt-4 mb-4 bg-gray-100 rounded-lg border" style="border: 1px solid #a2a2a2;">
-            <button @click="open = !open"
-                class="w-full text-left px-4 py-3 text-lg font-semibold hover:bg-gray-200 rounded-lg flex justify-between items-center">
-                <div class="mt-2 mb-2">
-                    Rincian Jadwal Pelatihan
-                </div>
-                <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </svg>
-                <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 15.75-7.5-7.5-7.5 7.5" />
-                </svg>
-            </button>
+    </div>
 
-            <div x-show="open" class="px-4 py-2 space-y-2">
-                <div class="flex items-center space-x-2 mt-4 mb-4">
-                    <span class="hover:text-blue-500 hover:underline cursor-pointer"
-                        onclick="openPDF('{{ asset('storage/' . $jadwalPelatihan->jadwal) }}')">
-                        {{ $jadwalPelatihan->jadwal }}
-                    </span>
+    {{-- Modal Pembayaran --}}
+    <div id="modalPembayaran"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full"
+        style="z-index: 1000;">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-xl font-semibold text-center mb-4">Konfirmasi Pembayaran</h3>
 
-                    <!-- Modal untuk PDF -->
-                    <div id="pdfModal"
-                        class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex items-center justify-center">
-                        <div class="bg-white w-3/4 h-3/4 p-4 relative">
-                            <button onclick="closePDF()"
-                                class="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded">Tutup</button>
-                            <iframe id="pdfViewer" class="w-full h-full"></iframe>
-                        </div>
+                <form action="{{ route('user.proses.pembayaran') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="pelatihan_id" value="{{ $pelatihans->id }}">
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Pelatihan</label>
+                        <input type="text" value="{{ $pelatihans->name }}"
+                            class="mt-1 p-2 w-full border rounded-md" readonly>
                     </div>
-                </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Jenis</label>
+                        <input type="text" value="{{ ucfirst($pelatihans->jenis) }}"
+                            class="mt-1 p-2 w-full border rounded-md" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Harga</label>
+                        <input type="text" value="Rp {{ number_format($pelatihans->harga, 0, ',', '.') }}"
+                            class="mt-1 p-2 w-full border rounded-md" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Metode Pembayaran</label>
+                        <div class="space-y-2 mt-1">
+                            <button type="button"
+                                class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
+                                data-metode="BRI">
+                                <img src="{{ asset('img/BRI.svg') }}" class="h-6 mr-2" alt="BRI">
+                            </button>
+                            <button type="button"
+                                class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
+                                data-metode="Mandiri">
+                                <img src="{{ asset('img/MANDIRI.svg.webp') }}" class="h-6 mr-2"
+                                    alt="Mandiri">
+                            </button>
+                            <button type="button"
+                                class="tombol-metode-pembayaran w-full p-2 border rounded-md text-left flex items-center"
+                                data-metode="BCA">
+                                <img src="{{ asset('img/BCA.svg') }}" class="h-6 mr-2" alt="BCA">
+                            </button>
+                        </div>
+                        <input type="hidden" name="metode_pembayaran" id="metode_pembayaran_terpilih">
+                    </div>
+
+                    <div class="flex justify-between mt-4">
+                        <button type="button" id="tutupModal"
+                            class="px-4 py-2 bg-red-500 text-white rounded-md">
+                            BATAL
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                            KONFIRMASI
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <!-- Alpine.js -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Elements
-            const overlay = document.getElementById("overlay");
-            const notification = document.getElementById("notification");
-            const closeButton = document.getElementById("closeButton");
-            const registerButton = document.getElementById("registerButton");
-            const form = document.getElementById('form-ikut-pelatihan');
+            const daftarBayarButton = document.getElementById("daftarBayarButton");
+            const modalPembayaran = document.getElementById('modalPembayaran');
+            const tutupModal = document.getElementById('tutupModal');
+            const tombolMetodePembayaran = document.querySelectorAll('.tombol-metode-pembayaran');
 
-            // Event listener untuk form submission
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    fetch('/ikut-pelatihan', {
-                        method: 'POST',
-                        body: new FormData(form),
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    });
+            if (daftarBayarButton) {
+                daftarBayarButton.addEventListener("click", function() {
+                    modalPembayaran.classList.remove('hidden');
                 });
             }
 
-            // Event listener untuk tombol register
-            if (registerButton) {
-                registerButton.addEventListener("click", () => {
-                    overlay.classList.remove("hidden");
-                    notification.classList.remove("hidden");
+            if (tutupModal) {
+                tutupModal.addEventListener('click', function() {
+                    modalPembayaran.classList.add('hidden');
                 });
             }
 
-            // Event listener untuk tombol close
-            if (closeButton) {
-                closeButton.addEventListener("click", () => {
-                    overlay.classList.add("hidden");
-                    notification.classList.add("hidden");
-
-                    if (registerButton) {
-                        registerButton.textContent = "Anda telah terdaftar!";
-                        registerButton.classList.add("bg-gray-400", "cursor-not-allowed");
-                        registerButton.classList.remove("bg-blue-500", "hover:bg-blue-600");
-                        registerButton.disabled = true;
-                    }
+            tombolMetodePembayaran.forEach(tombol => {
+                tombol.addEventListener('click', function() {
+                    tombolMetodePembayaran.forEach(t => t.classList.remove('border-blue-500'));
+                    this.classList.add('border-blue-500');
+                    document.getElementById('metode_pembayaran_terpilih').value = this.dataset.metode;
                 });
-            }
+            });
 
-            // PDF viewer functions
-            window.openPDF = function(pdfUrl) {
-                document.getElementById("pdfViewer").src = pdfUrl;
-                document.getElementById("pdfModal").classList.remove("hidden");
-            }
-
-            window.closePDF = function() {
-                document.getElementById("pdfModal").classList.add("hidden");
-                document.getElementById("pdfViewer").src = "";
-            }
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === modalPembayaran) {
+                    modalPembayaran.classList.add('hidden');
+                }
+            });
         });
     </script>
-    
-    @include('components.footer')
 </body>
-
 </html>

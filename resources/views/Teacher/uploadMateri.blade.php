@@ -189,3 +189,4 @@
         });
     }
 </script>
+@include('components.footer')

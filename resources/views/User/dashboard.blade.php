@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>D-STEP</title>
+    @include('components.navbar')
 </head>
 <body>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @include('components.navbar')
     <!-- Carousel -->
     <div class="container mx-auto mt-24" style="width: 90%;">
         <div class="splide_banner rounded-md" style="width: 100%; max-height: 12rem; overflow: hidden; position: relative;">

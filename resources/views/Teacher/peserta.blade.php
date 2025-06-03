@@ -3,7 +3,7 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @include('components.navbarTeacher')
 
-<div class="container mx-auto px-4 py-8 mt-16">
+<div class="container mx-auto px-4 py-8 mt-16 mb-10">
     <h1 class="text-2xl font-bold mb-4">Daftar Peserta {{ $pelatihan->name }}</h1>
 
     <div class="bg-white rounded-lg shadow-md">
@@ -35,3 +35,5 @@
         </table>
     </div>
 </div>
+
+@include('components.footer')

@@ -32,6 +32,7 @@ class CategoryResource extends Resource
                     ->unique('categories', 'slug', ignoreRecord: true),
                 
                 Forms\Components\FileUpload::make('image')
+                    ->required()
                     ->label('Gambar')
                     ->disk('public') // Disk penyimpanan
                     // ->directory('category-images') // Direktori penyimpanan
